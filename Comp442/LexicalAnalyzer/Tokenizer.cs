@@ -229,14 +229,21 @@ namespace LexicalAnalyzer
                                     if (!this.HasNextChar()) {
                                         return new Token() { Type = TokenType.Comment, TokenContent = content };
                                     }
+
+                                    content += symbol;
                                 }
                                 
                             case '/':
-                                content = "//";
+                                content = "/";
                                 do {
                                     content += symbol;
                                     symbol = this.NextCharNoEx();
                                 } while (symbol != '\n' && this.HasNextChar());
+
+                                if (!this.HasNextChar()) {
+                                    content += symbol;
+                                }
+
                                 return new Token() { Type = TokenType.Comment, TokenContent = content };
                             default:
                                 this.GoBack();
@@ -247,7 +254,7 @@ namespace LexicalAnalyzer
 
                 }
 
-                return new Token() { Type = TokenType.Invalid };
+                return new Token() { Type = TokenType.Invalid, TokenContent = symbol.ToString() };
             }
 
             return new Token() { Type = TokenType.EndOfStream };

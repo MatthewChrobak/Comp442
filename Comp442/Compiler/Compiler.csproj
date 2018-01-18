@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj">
+      <Project>{41a5320f-c903-48fb-b6bf-9743dea38855}</Project>
+      <Name>LexicalAnalyzer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
