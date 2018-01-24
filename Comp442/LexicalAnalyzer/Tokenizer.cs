@@ -17,6 +17,7 @@ namespace LexicalAnalyzer
             if (this.HasNextChar()) {
                 char symbol = this.NextCharNoEx();
                 string content = string.Empty;
+                int startPos = this.PointerPostion - 1;
 
                 // ID?
                 if (symbol.IsLetter()) {
@@ -27,10 +28,10 @@ namespace LexicalAnalyzer
                     this.GoBack();
 
                     if (Language.Language_Keywords.Contains(content)) {
-                        return new Token() { Type = TokenType.Keyword, TokenContent = content };
+                        return new Token() { Type = TokenType.Keyword, TokenContent = content, SourceLocation = startPos };
                     }
 
-                    return new Token() { Type = TokenType.Identifier, TokenContent = content };
+                    return new Token() { Type = TokenType.Identifier, TokenContent = content, SourceLocation = startPos };
                 }
 
                 // Number?
@@ -44,14 +45,14 @@ namespace LexicalAnalyzer
 
                         if (symbol != '.') {
                             this.GoBack();
-                            return new Token() { Type = TokenType.Integer, TokenContent = content };
+                            return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     } else {
                         content += symbol;
                         symbol = this.NextCharNoEx();
                         if (symbol != '.') {
                             this.GoBack();
-                            return new Token() { Type = TokenType.Integer, TokenContent = content };
+                            return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     }
 
@@ -76,7 +77,7 @@ namespace LexicalAnalyzer
                             if (!symbol.IsNonZero()) {
                                 this.GoBack(counter + 1); // + 1 to account for this new garbage character.
                                 content = content.Substring(0, content.Length - counter);
-                                return new Token() { Type = TokenType.Float, TokenContent = content };
+                                return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
                         }
 
@@ -91,7 +92,7 @@ namespace LexicalAnalyzer
 
                             if (!symbol.IsDigit()) {
                                 this.GoBack();
-                                return new Token() { Type = TokenType.Float, TokenContent = content };
+                                return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
 
                             if (symbol.IsNonZero()) {
@@ -113,7 +114,7 @@ namespace LexicalAnalyzer
                             if (!symbol.IsNonZero()) {
                                 this.GoBack(counter + 1); // + 1 to account for this new garbage character.
                                 content = content.Substring(0, content.Length - counter);
-                                return new Token() { Type = TokenType.Float, TokenContent = content };
+                                return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
                         }
 
@@ -128,11 +129,11 @@ namespace LexicalAnalyzer
 
                         if (!symbol.IsDigit()) {
                             this.GoBack(pad.Length + 1);
-                            return new Token() { Type = TokenType.Float, TokenContent = content };
+                            return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                         }
 
                         if (symbol == '0') {
-                            return new Token() { Type = TokenType.Float, TokenContent = content + pad + "0" };
+                            return new Token() { Type = TokenType.Float, TokenContent = content + pad + "0", SourceLocation = startPos };
                         }
 
                         do {
@@ -141,68 +142,68 @@ namespace LexicalAnalyzer
                         } while (symbol.IsDigit());
                         this.GoBack();
 
-                        return new Token() { Type = TokenType.Float, TokenContent = content + pad };
+                        return new Token() { Type = TokenType.Float, TokenContent = content + pad, SourceLocation = startPos };
 
                     } else {
                         this.GoBack(2);
-                        return new Token() { Type = TokenType.Integer, TokenContent = content };
+                        return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                     }
                 }
 
                 switch (symbol) {
                     case '.':
-                        return new Token() { Type = TokenType.DotOperator, TokenContent = "." };
+                        return new Token() { Type = TokenType.DotOperator, TokenContent = ".", SourceLocation = startPos };
                     case '+':
                     case '-':
                     case '*':
-                        return new Token() { Type = TokenType.ArithmaticOperator, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.ArithmaticOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case '(':
-                        return new Token() { Type = TokenType.OpenParanthesis, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.OpenParanthesis, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ')':
-                        return new Token() { Type = TokenType.CloseParanthesis, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.CloseParanthesis, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ',':
-                        return new Token() { Type = TokenType.Comma, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.Comma, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ';':
-                        return new Token() { Type = TokenType.Semicolon, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.Semicolon, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case '[':
-                        return new Token() { Type = TokenType.OpenBracket, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.OpenBracket, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ']':
-                        return new Token() { Type = TokenType.CloseBracket, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.CloseBracket, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case '{':
-                        return new Token() { Type = TokenType.OpenCurlyBracket, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.OpenCurlyBracket, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case '}':
-                        return new Token() { Type = TokenType.CloseCurlyBracket, TokenContent = symbol.ToString() };
+                        return new Token() { Type = TokenType.CloseCurlyBracket, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ':':
                         if (this.NextCharNoEx() == ':') {
                             return new Token() { Type = TokenType.ScopeOperator, TokenContent = "::" };
                         } else {
                             this.GoBack();
-                            return new Token() { Type = TokenType.Colon, TokenContent = symbol.ToString() };
+                            return new Token() { Type = TokenType.Colon, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '=':
                         if (this.NextCharNoEx() == '=') {
                             return new Token() { Type = TokenType.Comparator, TokenContent = "==" };
                         } else {
                             this.GoBack();
-                            return new Token() { Type = TokenType.AssignmentOperator, TokenContent = symbol.ToString() };
+                            return new Token() { Type = TokenType.AssignmentOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '>':
                         if (this.NextCharNoEx() == '=') {
                             return new Token() { Type = TokenType.Comparator, TokenContent = ">=" };
                         } else {
                             this.GoBack();
-                            return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString() };
+                            return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '<': {
                         char next = this.NextCharNoEx();
                         switch (next) {
                             case '>':
-                                return new Token() { Type = TokenType.Comparator, TokenContent = "<>" };
+                                return new Token() { Type = TokenType.Comparator, TokenContent = "<>", SourceLocation = startPos };
                             case '=':
-                                return new Token() { Type = TokenType.Comparator, TokenContent = "<=" };
+                                return new Token() { Type = TokenType.Comparator, TokenContent = "<=", SourceLocation = startPos };
                             default:
                                 this.GoBack();
-                                return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString() };
+                                return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     }
                     case '/': {
@@ -223,11 +224,11 @@ namespace LexicalAnalyzer
                                     // Is this a closing comment or the end of the file?
                                     if (symbol == '/') {
                                         content += symbol;
-                                        return new Token() { Type = TokenType.Comment, TokenContent = content };
+                                        return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                                     }
 
                                     if (!this.HasNextChar()) {
-                                        return new Token() { Type = TokenType.Comment, TokenContent = content };
+                                        return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                                     }
 
                                     content += symbol;
@@ -244,17 +245,17 @@ namespace LexicalAnalyzer
                                     content += symbol;
                                 }
 
-                                return new Token() { Type = TokenType.Comment, TokenContent = content };
+                                return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                             default:
                                 this.GoBack();
-                                return new Token() { Type = TokenType.ArithmaticOperator, TokenContent = symbol.ToString() };
+                                return new Token() { Type = TokenType.ArithmaticOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     }
 
 
                 }
 
-                return new Token() { Type = TokenType.Invalid, TokenContent = symbol.ToString() };
+                return new Token() { Type = TokenType.Invalid, TokenContent = symbol.ToString(), SourceLocation = startPos };
             }
 
             return new Token() { Type = TokenType.EndOfStream };

@@ -6,7 +6,7 @@ namespace LexicalAnalyzer
     {
         public TokenType Type { set; get; }
         public string TokenContent { get; set; } = String.Empty;
-        public (uint lineNumber, uint characterNumber) SourceLocation { get; set; }
+        public int? SourceLocation { get; set; } = null;
 
         public static Token operator|(Token t1, Token t2)
         {

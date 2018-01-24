@@ -4,7 +4,9 @@
     {
         private string _characters { get; set; }
         private int _ptr { get; set; }
-        private int _length { get; set; }
+        private int? _length { get; set; }
+
+        public int PointerPostion => this._ptr;
 
         public Scanner(string characterStream)
         {

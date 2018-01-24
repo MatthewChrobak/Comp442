@@ -15,7 +15,7 @@ namespace Compiler
 
                 do {
                     token = tokenizer.NextToken();
-                    Console.Write($"[{token.Type}:{token.TokenContent}] ");
+                    Console.Write($"[{token.Type}:{token.TokenContent}:{token.SourceLocation}] ");
                 } while (token.Type != TokenType.EndOfStream);
                 Console.WriteLine();
             }
