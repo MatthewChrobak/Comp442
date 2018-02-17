@@ -1,6 +1,7 @@
-﻿using System;
+﻿using LexicalAnalyzer;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using LexicalAnalyzer;
 
 namespace Assignment1
 {
@@ -17,17 +18,33 @@ namespace Assignment1
 
         private static void Main(string[] args)
         {
-            var tokenizer = new Tokenizer(File.ReadAllText(_inputFile));
+            while (true) {
+                Console.Write("Please enter a filename for input: ");
+                string file = Console.ReadLine();
 
-            Token token;
-            do {
-                token = tokenizer.NextToken();
-                Console.Write($"[{token.Type}:{token.TokenContent}:{token.SourceLocation}] ");
-            } while (token.Type != TokenType.EndOfStream);
-            Console.WriteLine();
+                if (!File.Exists(file)) {
+                    Console.WriteLine("File does not exist.");
+                    continue;
+                }
 
-            Console.WriteLine("Press enter to continue...");
-            Console.ReadLine();
+                Console.WriteLine();
+                var tokenizer = new Tokenizer(File.ReadAllText(file).Replace('\r', '\0'));
+
+                var tokens = new List<Token>();
+
+                Token token;
+                do {
+                    token = tokenizer.NextToken();
+                    tokens.Add(token);
+                    Console.Write($"[{token.Type}:{token.TokenContent.Replace("\n", "\\n")}:{token.SourceLocation}] ");
+                } while (token.Type != TokenType.EndOfStream);
+                Console.WriteLine("\n");
+
+                tokenizer.Dispose(new FileInfo(file).Name.Replace(".", "_report."));
+
+                File.WriteAllText(new FileInfo(file).Name.Replace(".", "_AtoCC."), new AtoCC().Convert(tokens.ToArray()));
+            }
         }
     }
+
 }

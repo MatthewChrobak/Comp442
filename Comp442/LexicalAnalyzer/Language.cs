@@ -2,7 +2,7 @@
 {
     public static class Language
     {
-        public static string[] Language_Keywords = new string[]
+        public static readonly string[] Keywords = new string[]
                 {
                     "and",
                     "not",

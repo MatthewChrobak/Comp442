@@ -21,7 +21,7 @@
         OpenCurlyBracket,
         CloseCurlyBracket,
         Keyword,
-        Invalid,
+        InvalidCharacter,
         EndOfStream,
         Comment
     }

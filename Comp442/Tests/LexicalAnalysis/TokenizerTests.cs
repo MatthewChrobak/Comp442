@@ -52,13 +52,13 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void NextToken_AllKeywords_Found()
         {
-            var tokenizer = new Tokenizer(String.Join(" ", Language.Language_Keywords));
-            for (int i = 0; i < Language.Language_Keywords.Length; i++) {
+            var tokenizer = new Tokenizer(String.Join(" ", Language.Keywords));
+            for (int i = 0; i < Language.Keywords.Length; i++) {
                 var token = tokenizer.NextToken();
 
                 Assert.IsNotNull(token, "Null token");
                 Assert.IsTrue(token.Type == TokenType.Keyword, $"{i}: {token.Type.ToString()}");
-                Assert.IsTrue(token.TokenContent == Language.Language_Keywords[i], $"{i}: {token.TokenContent}");
+                Assert.IsTrue(token.TokenContent == Language.Keywords[i], $"{i}: {token.TokenContent}");
             }
         }
 
