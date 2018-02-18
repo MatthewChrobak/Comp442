@@ -42,12 +42,37 @@
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="Nodes\Prog.cs" />
+    <Compile Include="Parser\AccessorP.cs" />
+    <Compile Include="Parser\AParams.cs" />
+    <Compile Include="Parser\ArithExpr.cs" />
+    <Compile Include="Parser\ArraySize.cs" />
+    <Compile Include="Parser\ClassDecl.cs" />
+    <Compile Include="Parser\Expr.cs" />
+    <Compile Include="Parser\Factor.cs" />
     <Compile Include="Parser\FParams.cs" />
+    <Compile Include="Parser\FParamsTail.cs" />
+    <Compile Include="Parser\FuncBody.cs" />
+    <Compile Include="Parser\InfAccessorDot_AndID_AndVoFC.cs" />
+    <Compile Include="Parser\InfAccessorDot_AndID_AndVoFCP.cs" />
     <Compile Include="Parser\InfArraySize.cs" />
     <Compile Include="Parser\InfClassDecl.cs" />
+    <Compile Include="Parser\InfIdTrail.cs" />
+    <Compile Include="Parser\InfParamsTail.cs" />
+    <Compile Include="Parser\InfVarAndFunc_FuncFinish.cs" />
+    <Compile Include="Parser\InfVarAndFunc_FuncStart.cs" />
+    <Compile Include="Parser\InfVarAndFunc_VarFinish.cs" />
+    <Compile Include="Parser\InfVarAndFun_VarStart.cs" />
+    <Compile Include="Parser\InfVarAndState.cs" />
+    <Compile Include="Parser\InfVarAndState_IdHandler.cs" />
+    <Compile Include="Parser\OptInheritance.cs" />
     <Compile Include="Parser\Prog.cs" />
     <Compile Include="NonTerminals\Parser.cs" />
+    <Compile Include="Parser\Sign.cs" />
+    <Compile Include="Parser\Term.cs" />
     <Compile Include="Parser\Type.cs" />
+    <Compile Include="Parser\Type_NoID.cs" />
+    <Compile Include="Parser\VariabeP.cs" />
+    <Compile Include="Parser\VariablePP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
