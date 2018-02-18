@@ -4,6 +4,90 @@ namespace LexicalAnalyzer
 {
     public class AtoCC
     {
+        public static string Convert(Token token)
+        {
+            switch (token.Type) {
+                case TokenType.ArithmaticOperator:
+                    return (token.TokenContent);
+                    
+                case TokenType.AssignmentOperator:
+                    return ("=");
+                    
+                case TokenType.CloseBracket:
+                    return ("]");
+                    
+                case TokenType.CloseCurlyBracket:
+                    return ("}");
+                    
+                case TokenType.CloseParanthesis:
+                    return (")");
+                    
+                case TokenType.Colon:
+                    return (":");
+                    
+                case TokenType.Comma:
+                    return (",");
+
+                case TokenType.Comparator:
+                    switch (token.TokenContent) {
+                        case ">":
+                            return ("gt");
+                            
+                        case "<":
+                            return ("lt");
+                            
+                        case ">=":
+                            return ("geq");
+                            
+                        case "<=":
+                            return ("leq");
+                            
+                        case "<>":
+                            return ("neq");
+                            
+                        case "==":
+                            return ("eq"); 
+                    }
+                    break;
+                    
+                case TokenType.DotOperator:
+                    return (".");
+                    
+                case TokenType.Float:
+                    return ("floatNum");
+                    
+                case TokenType.Identifier:
+                    return ("id");
+                    
+                case TokenType.Integer:
+                    return ("intNum");
+                    
+                case TokenType.InvalidCharacter:
+                    
+                    throw new System.Exception("Invalid character");
+
+                case TokenType.Keyword:
+                    return (token.TokenContent);
+                    
+                case TokenType.OpenBracket:
+                    return ("[");
+                    
+                case TokenType.OpenCurlyBracket:
+                    return ("{");
+                    
+                case TokenType.OpenParanthesis:
+                    return ("(");
+                    
+                case TokenType.ScopeOperator:
+                    return ("sr");
+                    
+                case TokenType.Semicolon:
+                    return (";");
+            }
+
+            return string.Empty;
+        }
+
         public string Convert(Token[] tokens)
         {
             var sb = new StringBuilder();

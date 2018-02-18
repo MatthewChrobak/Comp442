@@ -4,11 +4,16 @@ using System.Linq;
 
 namespace LexicalAnalyzer
 {
-    public class Tokenizer : Scanner
+    public class Tokenizer : MultiLineScanner
     {
         private string _errorOutput = string.Empty;
 
         public Tokenizer(string characterStream) : base(characterStream)
+        {
+
+        }
+
+        public Tokenizer(string[] characterStream) : base(characterStream)
         {
 
         }
@@ -21,6 +26,15 @@ namespace LexicalAnalyzer
             }
         }
 
+        public Token NextRealToken()
+        {
+            Token token;
+            do {
+                token = this.NextToken();
+            } while (token.Type == TokenType.Comment);
+            return token;
+        }
+
         public Token NextToken()
         {
             this.RemoveWhitespacePrefix();
@@ -28,7 +42,7 @@ namespace LexicalAnalyzer
             if (this.HasNextChar()) {
                 char symbol = this.NextCharNoEx();
                 string content = string.Empty;
-                int startPos = this.PointerPostion - 1;
+                int startPos = this.CursorPosition.characterNumber - 1;
 
                 // ID?
                 if (symbol.IsLetter()) {
@@ -38,7 +52,7 @@ namespace LexicalAnalyzer
                     } while (symbol.IsLetterOrDigitOrUnderscore());
                     this.GoBack();
 
-                    _errorOutput += $"Invalid symbol in identifier sequence: '{symbol}' at {PointerPostion}\r\n";
+                    _errorOutput += $"Invalid symbol in identifier sequence: '{symbol}' at {CursorPosition}\r\n";
 
                     if (Language.Keywords.Contains(content)) {
                         return new Token() { Type = TokenType.Keyword, TokenContent = content, SourceLocation = startPos };
@@ -58,7 +72,7 @@ namespace LexicalAnalyzer
 
                         if (symbol != '.') {
                             this.GoBack();
-                            _errorOutput += $"Invalid symbol in integer sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in integer sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     } else {
@@ -66,7 +80,7 @@ namespace LexicalAnalyzer
                         symbol = this.NextCharNoEx();
                         if (symbol != '.') {
                             this.GoBack();
-                            _errorOutput += $"Invalid symbol in integer sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in integer sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     }
@@ -91,7 +105,7 @@ namespace LexicalAnalyzer
                             // Did we see a non-digit? 
                             if (!symbol.IsNonZero()) {
                                 this.GoBack(counter + 1); // + 1 to account for this new garbage character.
-                                _errorOutput += $"Invalid float in float sequence: '{symbol}' at {PointerPostion}\r\n";
+                                _errorOutput += $"Invalid float in float sequence: '{symbol}' at {CursorPosition}\r\n";
                                 content = content.Substring(0, content.Length - counter);
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
@@ -108,7 +122,7 @@ namespace LexicalAnalyzer
 
                             if (!symbol.IsDigit()) {
                                 this.GoBack();
-                                _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {PointerPostion}\r\n";
+                                _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {CursorPosition}\r\n";
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
 
@@ -130,7 +144,7 @@ namespace LexicalAnalyzer
                             // Did we see a non-digit?
                             if (!symbol.IsNonZero()) {
                                 this.GoBack(counter + 1); // + 1 to account for this new garbage character.
-                                _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {PointerPostion}\r\n";
+                                _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {CursorPosition}\r\n";
                                 content = content.Substring(0, content.Length - counter);
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
@@ -147,7 +161,7 @@ namespace LexicalAnalyzer
 
                         if (!symbol.IsDigit()) {
                             this.GoBack(pad.Length + 1);
-                            _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                         }
 
@@ -165,7 +179,7 @@ namespace LexicalAnalyzer
 
                     } else {
                         this.GoBack(2);
-                        _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {PointerPostion}\r\n";
+                        _errorOutput += $"Invalid symbol in float sequence: '{symbol}' at {CursorPosition}\r\n";
                         return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                     }
                 }
@@ -198,7 +212,7 @@ namespace LexicalAnalyzer
                             return new Token() { Type = TokenType.ScopeOperator, TokenContent = "::" };
                         } else {
                             this.GoBack();
-                            _errorOutput += $"Invalid symbol in :: sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in :: sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.Colon, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '=':
@@ -206,7 +220,7 @@ namespace LexicalAnalyzer
                             return new Token() { Type = TokenType.Comparator, TokenContent = "==" };
                         } else {
                             this.GoBack();
-                            _errorOutput += $"Invalid symbol in == sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in == sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.AssignmentOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '>':
@@ -214,7 +228,7 @@ namespace LexicalAnalyzer
                             return new Token() { Type = TokenType.Comparator, TokenContent = ">=" };
                         } else {
                             this.GoBack();
-                            _errorOutput += $"Invalid symbol in >= sequence: '{symbol}' at {PointerPostion}\r\n";
+                            _errorOutput += $"Invalid symbol in >= sequence: '{symbol}' at {CursorPosition}\r\n";
                             return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '<': {
@@ -226,7 +240,7 @@ namespace LexicalAnalyzer
                                 return new Token() { Type = TokenType.Comparator, TokenContent = "<=", SourceLocation = startPos };
                             default:
                                 this.GoBack();
-                                _errorOutput += $"Invalid symbol in <= or <> sequence: '{symbol}' at {PointerPostion}\r\n";
+                                _errorOutput += $"Invalid symbol in <= or <> sequence: '{symbol}' at {CursorPosition}\r\n";
                                 return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     }
@@ -278,7 +292,7 @@ namespace LexicalAnalyzer
 
 
                 }
-                _errorOutput += $"Invalid symbol found '{symbol}' at {PointerPostion}\r\n";
+                _errorOutput += $"Invalid symbol found '{symbol}' at {CursorPosition}\r\n";
                 return new Token() { Type = TokenType.InvalidCharacter, TokenContent = symbol.ToString(), SourceLocation = startPos };
             }
 

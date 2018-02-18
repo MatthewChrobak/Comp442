@@ -43,6 +43,7 @@
     <Compile Include="AtoCC.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="MultiLineScanner.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Tokenizer.cs" />

@@ -6,7 +6,7 @@
         private int _ptr { get; set; }
         private int? _length { get; set; }
 
-        public int PointerPostion => this._ptr;
+        public int CursorPosition => this._ptr;
 
         public Scanner(string characterStream)
         {

@@ -28,7 +28,7 @@ namespace Assignment1
                 }
 
                 Console.WriteLine();
-                var tokenizer = new Tokenizer(File.ReadAllText(file).Replace('\r', '\0'));
+                var tokenizer = new Tokenizer(File.ReadAllLines(file));
 
                 var tokens = new List<Token>();
 
