@@ -4,17 +4,13 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndState_IdHandler()
+        private bool Variable()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id".HasToken(lookahead)) {
-                if (Match("id") && InfArraySize() && Match(";") && InfVarAndState()) {
-                    return true;
-                }
-            } else if ("( [ . =".HasToken(lookahead)) {
-                if (VariableP() && Match("=") && Expr() && Match(";") && InfStatement()) {
+                if (Match("id") && VariableP()) {
                     return true;
                 }
             }
