@@ -4,9 +4,6 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        // FIRST 'program', epsilon, 'class', 'id', 'int', 'float'
-        // FOLLOW $
-
         public bool Prog()
         {
             var lookaheadToken = this._tokenStream.Peek();
@@ -15,7 +12,7 @@ namespace SyntacticAnalyzer.Parser
             // Do we have the lookahead?
             if ("program class id int float".HasToken(lookahead)) {
                 // Parse the rest.
-                if (InfClassDecl() /*&& infFuncDef()*/ && Match("program") /*&& funcBody()*/ && Match(";")) {
+                if (InfClassDecl() /*&& infFuncDef()*/ && Match("program") && FuncBody() && Match(";")) {
                     return true;
                 }
             }

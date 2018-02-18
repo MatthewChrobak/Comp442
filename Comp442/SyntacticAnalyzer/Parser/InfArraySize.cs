@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        public bool InfArraySize()
+        private bool InfArraySize()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
@@ -17,15 +17,6 @@ namespace SyntacticAnalyzer.Parser
                 if (", ; )".HasToken(lookahead)) {
                     return true;
                 }
-            }
-
-            return false;
-        }
-
-        public bool ArraySize()
-        {
-            if (Match("[") && Match("intNum") && Match("]")) {
-                return true;
             }
 
             return false;

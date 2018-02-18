@@ -4,17 +4,17 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        public bool InfClassDecl()
+        private bool InfIdTrail()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
-            if ("class".HasToken(lookahead)) {
-                if (ClassDecl() && InfClassDecl()) {
+            if (",".HasToken(lookahead)) {
+                if (Match(",") && Match("id") && InfIdTrail()) {
                     return true;
                 }
             } else {
-                if ("program id int float".HasToken(lookahead)) {
+                if ("{".HasToken(lookahead)) {
                     return true;
                 }
             }
