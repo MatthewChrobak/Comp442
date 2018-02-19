@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool InfStatement()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("id if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");

@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         public bool Prog()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
             
             if ("program class id int float".HasToken(lookahead)) {
                 this.ApplyDerivation("prog -> infClassDecl infFuncDef 'program' funcBody ';'");

@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool InfVarAndState_IdHandler()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState_IdHandler -> 'id' infArraySize ';' infVarAndState");

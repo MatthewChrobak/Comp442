@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool NoASS()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("if".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'if' '(' expr ')' 'then' statBlock 'else' statBlock ';'");

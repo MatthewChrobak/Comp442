@@ -11,8 +11,9 @@ namespace SyntacticAnalyzer.Derivation
 
         public Deriver()
         {
-            this.Derivations = new List<(string Rule, string Derivation)>();
-            this.Derivations.Add(("$ -> prog", "prog"));
+            this.Derivations = new List<(string Rule, string Derivation)> {
+                ("$ -> prog", "prog")
+            };
         }
 
         public void ApplyDerivation(string rule)
@@ -22,14 +23,14 @@ namespace SyntacticAnalyzer.Derivation
 
             string lastDerivation = this.Derivations.Last().Derivation;
             string nonTerminal = chunks[0];
-            string production = chunks[1] == "EPSILON" ? string.Empty : chunks[1];
+            string production = chunks[1] == "EPSILON" ? String.Empty : chunks[1];
             regex = new Regex(nonTerminal);
 
             if (lastDerivation.IndexOf(nonTerminal) == -1) {
                 Console.WriteLine("Could not find " + nonTerminal);
             }
 
-            var newDerivation = regex.Replace(lastDerivation, production, 1).Replace("  ", " ").Trim();
+            string newDerivation = regex.Replace(lastDerivation, production, 1).Replace("  ", " ").Trim();
             this.Derivations.Add((rule, newDerivation));
         }
     }

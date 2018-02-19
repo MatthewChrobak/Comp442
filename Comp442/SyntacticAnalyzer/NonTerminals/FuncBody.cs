@@ -8,7 +8,7 @@ namespace SyntacticAnalyzer.Parser
         private bool FuncBody()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("{".HasToken(lookahead)) {
                 this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");

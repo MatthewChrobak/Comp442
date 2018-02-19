@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool VariablePP()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if (".".HasToken(lookahead)) {
                 this.ApplyDerivation("variablePP -> '.' 'id' variableP");

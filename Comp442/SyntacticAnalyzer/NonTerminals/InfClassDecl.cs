@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         public bool InfClassDecl()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("class".HasToken(lookahead)) {
                 this.ApplyDerivation("infClassDecl -> classDecl infClassDecl");

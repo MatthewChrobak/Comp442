@@ -1,4 +1,5 @@
 ﻿using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -10,7 +11,7 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void NextToken_EmptyString_NullToken()
         {
-            var tokenizer = new Tokenizer(string.Empty);
+            var tokenizer = new Tokenizer(String.Empty);
             Assert.IsTrue(tokenizer.NextToken()?.Type == TokenType.EndOfStream);
         }
 

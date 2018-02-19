@@ -40,15 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtoCC.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Language.cs" />
-    <Compile Include="MultiLineScanner.cs" />
-    <Compile Include="Scanner.cs" />
-    <Compile Include="Token.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Scanners\Scanner.cs" />
+    <Compile Include="Models\Token.cs" />
     <Compile Include="Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenTypes.cs" />
+    <Compile Include="Models\TokenTypes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

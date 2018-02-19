@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 
-namespace LexicalAnalyzer
+namespace LexicalAnalyzer.Scanners
 {
-    public class MultiLineScanner
+    public class Scanner
     {
         private string[] _lines { get; set; }
         private int _linePtr { get; set; }
@@ -10,12 +10,12 @@ namespace LexicalAnalyzer
 
         public (int lineNumber, int characterNumber) CursorPosition => (this._linePtr, this._characterPtr);
 
-        public MultiLineScanner(string line) : this(new string[] { line })
+        public Scanner(string line) : this(new string[] { line })
         {
 
         }
 
-        public MultiLineScanner(string[] lines)
+        public Scanner(string[] lines)
         {
             if (lines.Length != 0) {
                 lines = lines.Select(line => line + "\n").ToArray();

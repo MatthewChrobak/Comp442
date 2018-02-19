@@ -1,4 +1,5 @@
 ﻿using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace SyntacticAnalyzer
 
         public static string DequeueAToCC(this Queue<Token> queue)
         {
-            return AtoCC.Convert(queue.Dequeue());
+            return queue.Dequeue().AToCC();
         }
     }
 }

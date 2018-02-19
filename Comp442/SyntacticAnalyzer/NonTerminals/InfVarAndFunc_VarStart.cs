@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool InfVarAndFunc_VarStart()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("id int float".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarStart -> type 'id' infVarAndFunc_VarFinish");

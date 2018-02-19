@@ -1,6 +1,6 @@
-﻿using System;
+﻿using LexicalAnalyzer.Scanners;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LexicalAnalyzer;
+using System;
 
 namespace Tests.LexicalAnalysis
 {
@@ -13,7 +13,7 @@ namespace Tests.LexicalAnalysis
             string testString = "Test";
             var scanner = new Scanner(testString);
 
-            foreach (var character in testString) {
+            foreach (char character in testString) {
                 Assert.AreEqual(scanner.NextChar(), character);
             }
         }
@@ -24,7 +24,7 @@ namespace Tests.LexicalAnalysis
             string testString = "Test";
             var scanner = new Scanner(testString);
 
-            foreach (var character in testString) {
+            foreach (char character in testString) {
                 Assert.AreEqual(scanner.NextChar(), character);
             }
 
@@ -40,7 +40,7 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void PrevChar_FromStart_ExceptionThrown()
         {
-            var scanner = new Scanner(string.Empty);
+            var scanner = new Scanner(String.Empty);
 
             // Test for the failure.
             try {

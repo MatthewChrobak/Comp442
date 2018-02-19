@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool Factor()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("intNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> intNum");

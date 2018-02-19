@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool Type_NoID()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("int".HasToken(lookahead)) {
                 this.ApplyDerivation("type_NoID -> 'int'");

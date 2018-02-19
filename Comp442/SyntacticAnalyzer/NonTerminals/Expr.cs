@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool Expr()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("intNum floatNum ( not id + -".HasToken(lookahead)) {
                 this.ApplyDerivation("expr -> arithExpr arithExprOrRelExpr");

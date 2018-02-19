@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool ArithExprP()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("+ - or".HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> addOp term arithExprP");

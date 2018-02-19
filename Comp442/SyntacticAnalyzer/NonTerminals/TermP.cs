@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool TermP()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("* / and".HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> multOp factor termP");

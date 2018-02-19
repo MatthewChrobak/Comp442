@@ -1,4 +1,5 @@
 ﻿using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,15 +8,6 @@ namespace Assignment1
 {
     public class Program
     {
-        private const string _inputFile = "input.txt";
-
-        static Program()
-        {
-            if (!File.Exists(_inputFile)) {
-                File.Create(_inputFile).Close();
-            }
-        }
-
         private static void Main(string[] args)
         {
             while (true) {
@@ -40,9 +32,9 @@ namespace Assignment1
                 } while (token.Type != TokenType.EndOfStream);
                 Console.WriteLine("\n");
 
-                tokenizer.Dispose(new FileInfo(file).Name.Replace(".", "_report."));
+                //tokenizer.Dispose(new FileInfo(file).Name.Replace(".", "_report."));
 
-                File.WriteAllText(new FileInfo(file).Name.Replace(".", "_AtoCC."), new AtoCC().Convert(tokens.ToArray()));
+                File.WriteAllText(new FileInfo(file).Name.Replace(".", "_AtoCC."), tokens.ToArray().AToCC());
             }
         }
     }

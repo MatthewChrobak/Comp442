@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool RelOp()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("eq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'eq'");

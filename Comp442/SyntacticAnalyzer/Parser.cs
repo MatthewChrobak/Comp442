@@ -1,4 +1,5 @@
 ﻿using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using SyntacticAnalyzer.Derivation;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace SyntacticAnalyzer.Parser
             do {
                 token = tokenizer.NextRealToken();
                 this._tokenStream.Enqueue(token);
-                sb.Append(AtoCC.Convert(token));
+                sb.Append(token.AToCC());
             } while (token.Type != TokenType.EndOfStream);
 
             this.ProgramTokenStream_AToCC = sb.ToString();
@@ -36,8 +37,8 @@ namespace SyntacticAnalyzer.Parser
 
         public bool Match(string atocc)
         {
-            var tok = this._tokenStream.DequeueAToCC();
-            var res = tok == atocc;
+            string tok = this._tokenStream.DequeueAToCC();
+            bool res = tok == atocc;
 
             if (!res) {
                 Console.WriteLine($"\n\nWas expecting {atocc} and instead got {tok}\n");
@@ -49,14 +50,14 @@ namespace SyntacticAnalyzer.Parser
         public bool Verify()
         {
             var regex = new Regex(@"\s+|\'");
-            string formattedDerivation = regex.Replace(this.Derivations.Last().Derivation, string.Empty);
+            string formattedDerivation = regex.Replace(this.Derivations.Last().Derivation, String.Empty);
             
             if (formattedDerivation.Length != this.ProgramTokenStream_AToCC.Length) {
                 return false;
             }
 
             for (int i = 0; i < formattedDerivation.Length; i++) {
-                if (formattedDerivation[i] != ProgramTokenStream_AToCC[i]) {
+                if (formattedDerivation[i] != this.ProgramTokenStream_AToCC[i]) {
                     Console.WriteLine(i);
                 }
             }

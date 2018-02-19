@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool FParams()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("id int float".HasToken(lookahead)) {
                 this.ApplyDerivation("fParams -> type 'id' infArraySize infFParamsTail");

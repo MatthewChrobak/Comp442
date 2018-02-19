@@ -1,4 +1,4 @@
-﻿namespace LexicalAnalyzer
+﻿namespace LexicalAnalyzer.Models
 {
     public enum TokenType
     {

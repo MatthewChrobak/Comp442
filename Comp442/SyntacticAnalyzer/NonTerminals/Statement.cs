@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool Statement()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("statement -> assignStat ';'");

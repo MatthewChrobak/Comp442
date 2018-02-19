@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Parser
         private bool ArithExprOrRelExpr()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = AtoCC.Convert(lookaheadToken);
+            string lookahead = lookaheadToken.AToCC();
 
             if ("eq neq lt gt leq geq".HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> relOp arithExpr");

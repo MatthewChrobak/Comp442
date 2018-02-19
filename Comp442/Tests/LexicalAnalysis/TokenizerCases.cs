@@ -1,5 +1,6 @@
 ﻿using System;
 using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.LexicalAnalysis

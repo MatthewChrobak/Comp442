@@ -1,6 +1,7 @@
 ﻿using SyntacticAnalyzer.Parser;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Assignment2
 {
@@ -19,9 +20,10 @@ namespace Assignment2
                 var parser = new Parser(File.ReadAllLines(file));
 
                 bool valid = parser.Parse();
+                
+                Console.WriteLine($"Valid program: {parser.Verify()}");
 
-                Console.WriteLine(valid);
-                Console.WriteLine(parser.Verify());
+                Console.WriteLine(parser.Derivations.Last().Derivation);
             }
         }
     }

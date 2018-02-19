@@ -1,4 +1,5 @@
 ﻿using LexicalAnalyzer;
+using LexicalAnalyzer.Models;
 using System;
 
 namespace Compiler
