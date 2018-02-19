@@ -9,7 +9,7 @@ namespace SyntacticAnalyzer.Parser
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
-            if ("[ (".HasToken(lookahead)) {
+            if ("[ ( .".HasToken(lookahead)) {
                 if (AccessorP() && InfAccessorDot_AndID_AndVoFCPP()) {
                     return true;
                 }
