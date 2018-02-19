@@ -10,13 +10,15 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if (",".HasToken(lookahead)) {
+                this.ApplyDerivation("infIdTrail -> ',' 'id' infIdTrail");
                 if (Match(",") && Match("id") && InfIdTrail()) {
                     return true;
                 }
-            } else {
-                if ("{".HasToken(lookahead)) {
-                    return true;
-                }
+            }
+
+            if ("{".HasToken(lookahead)) {
+                this.ApplyDerivation("infIdTrail -> EPSILON");
+                return true;
             }
 
             return false;

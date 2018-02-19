@@ -16,13 +16,17 @@ namespace Assignment2
                     Console.WriteLine("File does not exist.");
                     continue;
                 }
-
-                Console.WriteLine();
                 var parser = new Parser(File.ReadAllLines(file));
 
                 bool valid = parser.Parse();
 
-                Console.WriteLine("\n" + valid);
+                Console.WriteLine(valid);
+
+                Console.WriteLine("##############################");
+                foreach (var derivation in parser.Derivations) {
+                    Console.WriteLine($"\n{derivation.Rule}\n{derivation.Derivation}\n");
+                }
+                Console.WriteLine("##############################");
             }
         }
     }

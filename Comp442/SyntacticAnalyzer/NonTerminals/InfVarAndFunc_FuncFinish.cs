@@ -4,15 +4,14 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        public bool Prog()
+        public bool InfVarAndFunc_FuncFinish()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
-            // Do we have the lookahead?
-            if ("program class id int float".HasToken(lookahead)) {
-                // Parse the rest.
-                if (InfClassDecl() && InfFuncDef() && Match("program") && FuncBody() && Match(";")) {
+            if ("(".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndFunc_FuncFinish -> '(' fParams ')' ';' infVarAndFunc_FuncStart");
+                if (Match("(") && FParams() && Match(")") && Match(";") && InfVarAndFunc_FuncStart()) {
                     return true;
                 }
             }

@@ -4,18 +4,20 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndFunc_VarStart()
+        private bool OptInheritance()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
-            if ("id int float".HasToken(lookahead)) {
-                if (Type() && Match("id") && InfVarAndFunc_VarFinish()) {
+            if (":".HasToken(lookahead)) {
+                this.ApplyDerivation("optInheritance -> ';' 'id' infIdTrail");
+                if (Match(":") && Match("id") && InfIdTrail()) {
                     return true;
                 }
             }
 
-            if ("}".HasToken(lookahead)) {
+            if ("{".HasToken(lookahead)) {
+                this.ApplyDerivation("optInheritance -> EPSILON");
                 return true;
             }
 

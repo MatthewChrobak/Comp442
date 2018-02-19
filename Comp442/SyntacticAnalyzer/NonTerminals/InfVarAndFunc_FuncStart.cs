@@ -4,18 +4,20 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfFuncDef()
+        private bool InfVarAndFunc_FuncStart()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id int float".HasToken(lookahead)) {
-                if (FuncDef() && InfFuncDef()) {
+                this.ApplyDerivation("infVarAndFunc_FuncStart -> type 'id' infVarAndFunc_FuncFinish");
+                if (Type() && Match("id") && InfVarAndFunc_FuncFinish()) {
                     return true;
                 }
             }
 
-            if ("program".HasToken(lookahead)) {
+            if ("}".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndFunc_FuncStart -> EPSILON");
                 return true;
             }
 
