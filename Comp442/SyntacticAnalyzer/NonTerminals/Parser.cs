@@ -35,7 +35,16 @@ namespace SyntacticAnalyzer.Parser
 
         public bool Match(string atocc)
         {
-            return this._tokenStream.DequeueAToCC() == atocc;
+            var tok = this._tokenStream.DequeueAToCC();
+            var res = tok == atocc;
+
+            if (!res) {
+                Console.WriteLine($"\n\nWas expecting {atocc} and instead got {tok}\n");
+            } else {
+                Console.Write(atocc);
+            }
+
+            return res;
         }
 
         public void ApplyDerivation(string action)

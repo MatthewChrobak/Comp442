@@ -15,6 +15,10 @@ namespace SyntacticAnalyzer.Parser
                 }
             }
 
+            if ("* / and + - or eq neq lt gt leq geq ] ) ; ,".HasToken(lookahead)) {
+                return true;
+            }
+
             return false;
         }
     }

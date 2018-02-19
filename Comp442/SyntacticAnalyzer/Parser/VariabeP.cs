@@ -13,10 +13,14 @@ namespace SyntacticAnalyzer.Parser
                 if (Match("(") && AParams() && Match(")") && Match(".") && Match("id") && VariableP()) {
                     return true;
                 }
-            } else if ("[".HasToken(lookahead)) {
+            } else if ("[ .".HasToken(lookahead)) {
                 if (InfIndice() && VariablePP()) {
                     return true;
                 }
+            }
+
+            if ("= )".HasToken(lookahead)) {
+                return true;
             }
 
             return false;
