@@ -4,17 +4,19 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        public bool Prog()
+        private bool OptSR_AndIDP()
         {
             var lookaheadToken = this._tokenStream.Peek();
             string lookahead = AtoCC.Convert(lookaheadToken);
 
-            // Do we have the lookahead?
-            if ("program class id int float".HasToken(lookahead)) {
-                // Parse the rest.
-                if (InfClassDecl() && InfFuncDef() && Match("program") && FuncBody() && Match(";")) {
+            if ("sr".HasToken(lookahead)) {
+                if (Match("sr") && Match("id")) {
                     return true;
                 }
+            }
+
+            if ("(".HasToken(lookahead)) {
+                return true;
             }
 
             return false;

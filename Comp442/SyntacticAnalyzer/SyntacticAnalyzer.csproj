@@ -57,6 +57,8 @@
     <Compile Include="Parser\FParams.cs" />
     <Compile Include="Parser\FParamsTail.cs" />
     <Compile Include="Parser\FuncBody.cs" />
+    <Compile Include="Parser\FuncDef.cs" />
+    <Compile Include="Parser\FuncHead.cs" />
     <Compile Include="Parser\Indice.cs" />
     <Compile Include="Parser\InfAccessorDot_AndID_AndVoFC.cs" />
     <Compile Include="Parser\InfAccessorDot_AndID_AndVoFCP.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Parser\InfAParamsTail.cs" />
     <Compile Include="Parser\InfArraySize.cs" />
     <Compile Include="Parser\InfClassDecl.cs" />
+    <Compile Include="Parser\InfFuncDef.cs" />
     <Compile Include="Parser\InfIdTrail.cs" />
     <Compile Include="Parser\Infindice.cs" />
     <Compile Include="Parser\InfParamsTail.cs" />
@@ -77,6 +80,8 @@
     <Compile Include="Parser\MultOp.cs" />
     <Compile Include="Parser\NoASS.cs" />
     <Compile Include="Parser\OptInheritance.cs" />
+    <Compile Include="Parser\OptSR_AndID.cs" />
+    <Compile Include="Parser\OptSR_AndIDP.cs" />
     <Compile Include="Parser\Prog.cs" />
     <Compile Include="NonTerminals\Parser.cs" />
     <Compile Include="Parser\RelExpr.cs" />
