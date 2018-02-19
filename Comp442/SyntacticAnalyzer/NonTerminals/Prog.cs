@@ -1,13 +1,11 @@
-﻿using LexicalAnalyzer;
-
-namespace SyntacticAnalyzer.Parser
+﻿namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
         public bool Prog()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = lookaheadToken.AToCC();
+            string lookahead = lookaheadToken.AToCCFormat();
             
             if ("program class id int float".HasToken(lookahead)) {
                 this.ApplyDerivation("prog -> infClassDecl infFuncDef 'program' funcBody ';'");

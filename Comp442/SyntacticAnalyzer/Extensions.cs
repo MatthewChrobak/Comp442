@@ -1,7 +1,4 @@
-﻿using LexicalAnalyzer;
-using LexicalAnalyzer.Models;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace SyntacticAnalyzer
 {
@@ -10,11 +7,6 @@ namespace SyntacticAnalyzer
         public static bool HasToken(this string inputString, string AToCCToken)
         {
             return (inputString.Split().Contains(AToCCToken));
-        }
-
-        public static string DequeueAToCC(this Queue<Token> queue)
-        {
-            return queue.Dequeue().AToCC();
         }
     }
 }

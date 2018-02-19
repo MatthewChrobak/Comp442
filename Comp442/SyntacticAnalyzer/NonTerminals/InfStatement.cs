@@ -1,13 +1,11 @@
-﻿using LexicalAnalyzer;
-
-namespace SyntacticAnalyzer.Parser
+﻿namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
         private bool InfStatement()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = lookaheadToken.AToCC();
+            string lookahead = lookaheadToken.AToCCFormat();
 
             if ("id if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");

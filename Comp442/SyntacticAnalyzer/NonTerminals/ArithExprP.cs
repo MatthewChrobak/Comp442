@@ -1,13 +1,11 @@
-﻿using LexicalAnalyzer;
-
-namespace SyntacticAnalyzer.Parser
+﻿namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
         private bool ArithExprP()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = lookaheadToken.AToCC();
+            string lookahead = lookaheadToken.AToCCFormat();
 
             if ("+ - or".HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> addOp term arithExprP");

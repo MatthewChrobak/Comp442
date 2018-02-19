@@ -1,13 +1,11 @@
-﻿using LexicalAnalyzer;
-
-namespace SyntacticAnalyzer.Parser
+﻿namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
         private bool InfAccessorDot_AndID_AndVoFCPP()
         {
             var lookaheadToken = this._tokenStream.Peek();
-            string lookahead = lookaheadToken.AToCC();
+            string lookahead = lookaheadToken.AToCCFormat();
 
             if (".".HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> '.' 'id' infAccessorDot_AndID_AndVoFCP");

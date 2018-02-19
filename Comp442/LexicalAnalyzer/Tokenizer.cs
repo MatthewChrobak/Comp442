@@ -6,18 +6,29 @@ using System.Linq;
 
 namespace LexicalAnalyzer
 {
-    public class Tokenizer : Scanner
+    public class Tokenizer
     {
         public List<string> Errors { private set; get; } = new List<string>();
 
-        public Tokenizer(string characterStream) : base(characterStream)
+        public TokenStream Parse(string[] characterStream, bool RealTokenStream = false)
         {
+            this.Errors.Clear();
 
+            var scanner = new Scanner(characterStream);
+            var tokenStream = new Queue<Token>();
+
+            Token token;
+            do {
+                token = RealTokenStream ? this.NextRealTokenFromScanner(scanner) : this.NextTokenFromScanner(scanner);
+                tokenStream.Enqueue(token);
+            } while (token.Type != TokenType.EndOfStream);
+
+            return new TokenStream(tokenStream);
         }
 
-        public Tokenizer(string[] characterStream) : base(characterStream)
+        public TokenStream Parse(string characterStream, bool RealTokenStream = false)
         {
-
+            return this.Parse(new string[] { characterStream }, RealTokenStream);
         }
 
         public string GetBootstrapReport()
@@ -25,33 +36,33 @@ namespace LexicalAnalyzer
             throw new NotImplementedException();
         }
 
-        public Token NextRealToken()
+        private Token NextRealTokenFromScanner(Scanner scanner)
         {
             Token token;
             do {
-                token = this.NextToken();
+                token = this.NextTokenFromScanner(scanner);
             } while (token.Type == TokenType.Comment);
             return token;
         }
 
-        public Token NextToken()
+        private Token NextTokenFromScanner(Scanner scanner)
         {
-            this.RemoveWhitespacePrefix();
+            this.RemoveWhitespacePrefixFromScanner(scanner);
 
-            if (this.HasNextChar()) {
-                char symbol = this.NextCharNoEx();
+            if (scanner.HasNextChar()) {
+                char symbol = scanner.NextCharNoEx();
                 string content = String.Empty;
-                int startPos = this.CursorPosition.characterNumber - 1;
+                int startPos = scanner.CursorPosition.characterNumber - 1;
 
                 // ID?
                 if (symbol.IsLetter()) {
                     do {
                         content += symbol;
-                        symbol = this.NextCharNoEx();
+                        symbol = scanner.NextCharNoEx();
                     } while (symbol.IsLetterOrDigitOrUnderscore());
-                    this.GoBack();
+                    scanner.GoBack();
 
-                    this.Errors.Add($"Invalid symbol in identifier sequence: '{symbol}' at {this.CursorPosition}");
+                    this.Errors.Add($"Invalid symbol in identifier sequence: '{symbol}' at {scanner.CursorPosition}");
 
                     if (Language.Keywords.Contains(content)) {
                         return new Token() { Type = TokenType.Keyword, TokenContent = content, SourceLocation = startPos };
@@ -66,27 +77,27 @@ namespace LexicalAnalyzer
 
                         do {
                             content += symbol;
-                            symbol = this.NextCharNoEx();
+                            symbol = scanner.NextCharNoEx();
                         } while (symbol.IsDigit());
 
                         if (symbol != '.') {
-                            this.GoBack();
-                            this.Errors.Add($"Invalid symbol in integer sequence: '{symbol}' at {this.CursorPosition}");
+                            scanner.GoBack();
+                            this.Errors.Add($"Invalid symbol in integer sequence: '{symbol}' at {scanner.CursorPosition}");
                             return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     } else {
                         content += symbol;
-                        symbol = this.NextCharNoEx();
+                        symbol = scanner.NextCharNoEx();
                         if (symbol != '.') {
-                            this.GoBack();
-                            this.Errors.Add($"Invalid symbol in integer sequence: '{symbol}' at {this.CursorPosition}");
+                            scanner.GoBack();
+                            this.Errors.Add($"Invalid symbol in integer sequence: '{symbol}' at {scanner.CursorPosition}");
                             return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                         }
                     }
 
                     // The only way we get here is if we saw digit(s) followed by a '.'
                     
-                    symbol = this.NextCharNoEx();
+                    symbol = scanner.NextCharNoEx();
 
                     if (symbol.IsDigit()) {
                         // We know it's a float now. But we need to know how far.
@@ -97,14 +108,14 @@ namespace LexicalAnalyzer
 
                             do {
                                 content += symbol;
-                                symbol = this.NextCharNoEx();
+                                symbol = scanner.NextCharNoEx();
                                 counter++;
                             } while (symbol == '0');
 
                             // Did we see a non-digit? 
                             if (!symbol.IsNonZero()) {
-                                this.GoBack(counter + 1); // + 1 to account for this new garbage character.
-                                this.Errors.Add($"Invalid float in float sequence: '{symbol}' at {this.CursorPosition}");
+                                scanner.GoBack(counter + 1); // + 1 to account for this new garbage character.
+                                this.Errors.Add($"Invalid float in float sequence: '{symbol}' at {scanner.CursorPosition}");
                                 content = content.Substring(0, content.Length - counter);
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
@@ -120,14 +131,14 @@ namespace LexicalAnalyzer
                             }
 
                             if (!symbol.IsDigit()) {
-                                this.GoBack();
-                                this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {this.CursorPosition}");
+                                scanner.GoBack();
+                                this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {scanner.CursorPosition}");
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
 
                             if (symbol.IsNonZero()) {
                                 content += symbol;
-                                symbol = this.NextCharNoEx();
+                                symbol = scanner.NextCharNoEx();
                                 continue;
                             }
 
@@ -136,14 +147,14 @@ namespace LexicalAnalyzer
 
                             do {
                                 content += symbol;
-                                symbol = this.NextCharNoEx();
+                                symbol = scanner.NextCharNoEx();
                                 counter++;
                             } while (symbol == '0');
 
                             // Did we see a non-digit?
                             if (!symbol.IsNonZero()) {
-                                this.GoBack(counter + 1); // + 1 to account for this new garbage character.
-                                this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {this.CursorPosition}");
+                                scanner.GoBack(counter + 1); // + 1 to account for this new garbage character.
+                                this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {scanner.CursorPosition}");
                                 content = content.Substring(0, content.Length - counter);
                                 return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                             }
@@ -151,16 +162,16 @@ namespace LexicalAnalyzer
 
                         string pad = String.Empty;
                         pad += symbol; // Add the 'e'
-                        symbol = this.NextCharNoEx();
+                        symbol = scanner.NextCharNoEx();
 
                         if (symbol.IsPlusOrMinus()) {
                             pad += symbol;
-                            symbol = this.NextCharNoEx();
+                            symbol = scanner.NextCharNoEx();
                         }
 
                         if (!symbol.IsDigit()) {
-                            this.GoBack(pad.Length + 1);
-                            this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {this.CursorPosition}");
+                            scanner.GoBack(pad.Length + 1);
+                            this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {scanner.CursorPosition}");
                             return new Token() { Type = TokenType.Float, TokenContent = content, SourceLocation = startPos };
                         }
 
@@ -170,15 +181,15 @@ namespace LexicalAnalyzer
 
                         do {
                             pad += symbol;
-                            symbol = this.NextCharNoEx();
+                            symbol = scanner.NextCharNoEx();
                         } while (symbol.IsDigit());
-                        this.GoBack();
+                        scanner.GoBack();
 
                         return new Token() { Type = TokenType.Float, TokenContent = content + pad, SourceLocation = startPos };
 
                     } else {
-                        this.GoBack(2);
-                        this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {this.CursorPosition}");
+                        scanner.GoBack(2);
+                        this.Errors.Add($"Invalid symbol in float sequence: '{symbol}' at {scanner.CursorPosition}");
                         return new Token() { Type = TokenType.Integer, TokenContent = content, SourceLocation = startPos };
                     }
                 }
@@ -207,56 +218,56 @@ namespace LexicalAnalyzer
                     case '}':
                         return new Token() { Type = TokenType.CloseCurlyBracket, TokenContent = symbol.ToString(), SourceLocation = startPos };
                     case ':':
-                        if (this.NextCharNoEx() == ':') {
+                        if (scanner.NextCharNoEx() == ':') {
                             return new Token() { Type = TokenType.ScopeOperator, TokenContent = "::" };
                         } else {
-                            this.GoBack();
-                            this.Errors.Add($"Invalid symbol in :: sequence: '{symbol}' at {this.CursorPosition}\r\n");
+                            scanner.GoBack();
+                            this.Errors.Add($"Invalid symbol in :: sequence: '{symbol}' at {scanner.CursorPosition}\r\n");
                             return new Token() { Type = TokenType.Colon, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '=':
-                        if (this.NextCharNoEx() == '=') {
+                        if (scanner.NextCharNoEx() == '=') {
                             return new Token() { Type = TokenType.Comparator, TokenContent = "==" };
                         } else {
-                            this.GoBack();
-                            this.Errors.Add($"Invalid symbol in == sequence: '{symbol}' at {this.CursorPosition}");
+                            scanner.GoBack();
+                            this.Errors.Add($"Invalid symbol in == sequence: '{symbol}' at {scanner.CursorPosition}");
                             return new Token() { Type = TokenType.AssignmentOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '>':
-                        if (this.NextCharNoEx() == '=') {
+                        if (scanner.NextCharNoEx() == '=') {
                             return new Token() { Type = TokenType.Comparator, TokenContent = ">=" };
                         } else {
-                            this.GoBack();
-                            this.Errors.Add($"Invalid symbol in >= sequence: '{symbol}' at {this.CursorPosition}");
+                            scanner.GoBack();
+                            this.Errors.Add($"Invalid symbol in >= sequence: '{symbol}' at {scanner.CursorPosition}");
                             return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     case '<': {
-                        char next = this.NextCharNoEx();
+                        char next = scanner.NextCharNoEx();
                         switch (next) {
                             case '>':
                                 return new Token() { Type = TokenType.Comparator, TokenContent = "<>", SourceLocation = startPos };
                             case '=':
                                 return new Token() { Type = TokenType.Comparator, TokenContent = "<=", SourceLocation = startPos };
                             default:
-                                this.GoBack();
-                                this.Errors.Add($"Invalid symbol in <= or <> sequence: '{symbol}' at {this.CursorPosition}");
+                                scanner.GoBack();
+                                this.Errors.Add($"Invalid symbol in <= or <> sequence: '{symbol}' at {scanner.CursorPosition}");
                                 return new Token() { Type = TokenType.Comparator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     }
                     case '/': {
-                        char next = this.NextCharNoEx();
+                        char next = scanner.NextCharNoEx();
                         switch (next) {
                             case '*':
                                 content = "/*";
                                 while (true) {
-                                    symbol = this.NextCharNoEx();
-                                    while (symbol != '*' && this.HasNextChar()) {
+                                    symbol = scanner.NextCharNoEx();
+                                    while (symbol != '*' && scanner.HasNextChar()) {
                                         content += symbol;
-                                        symbol = this.NextCharNoEx();
+                                        symbol = scanner.NextCharNoEx();
                                     }
                                     // We know the previous is a * or EOF
                                     content += symbol;
-                                    symbol = this.NextCharNoEx();
+                                    symbol = scanner.NextCharNoEx();
 
                                     // Is this a closing comment or the end of the file?
                                     if (symbol == '/') {
@@ -264,7 +275,7 @@ namespace LexicalAnalyzer
                                         return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                                     }
 
-                                    if (!this.HasNextChar()) {
+                                    if (!scanner.HasNextChar()) {
                                         return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                                     }
 
@@ -275,34 +286,34 @@ namespace LexicalAnalyzer
                                 content = "/";
                                 do {
                                     content += symbol;
-                                    symbol = this.NextCharNoEx();
-                                } while (symbol != '\n' && this.HasNextChar());
+                                    symbol = scanner.NextCharNoEx();
+                                } while (symbol != '\n' && scanner.HasNextChar());
 
-                                if (!this.HasNextChar()) {
+                                if (!scanner.HasNextChar()) {
                                     content += symbol;
                                 }
 
                                 return new Token() { Type = TokenType.Comment, TokenContent = content, SourceLocation = startPos };
                             default:
-                                this.GoBack();
+                                scanner.GoBack();
                                 return new Token() { Type = TokenType.ArithmaticOperator, TokenContent = symbol.ToString(), SourceLocation = startPos };
                         }
                     }
 
 
                 }
-                this.Errors.Add($"Invalid symbol found '{symbol}' at {this.CursorPosition}");
+                this.Errors.Add($"Invalid symbol found '{symbol}' at {scanner.CursorPosition}");
                 return new Token() { Type = TokenType.InvalidCharacter, TokenContent = symbol.ToString(), SourceLocation = startPos };
             }
 
             return new Token() { Type = TokenType.EndOfStream };
         }
 
-        private void RemoveWhitespacePrefix()
+        private void RemoveWhitespacePrefixFromScanner(Scanner scanner)
         {
-            while (this.HasNextChar()) {
-                if (!Char.IsWhiteSpace(this.NextChar())) {
-                    this.PrevChar();
+            while (scanner.HasNextChar()) {
+                if (!Char.IsWhiteSpace(scanner.NextChar())) {
+                    scanner.PrevChar();
                     break;
                 }
             }

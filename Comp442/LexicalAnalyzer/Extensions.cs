@@ -1,5 +1,6 @@
 ﻿using LexicalAnalyzer.Models;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace LexicalAnalyzer
@@ -41,10 +42,15 @@ namespace LexicalAnalyzer
             var sb = new StringBuilder();
 
             foreach (var token in tokens) {
-                sb.Append(token.AToCC());
+                sb.Append(token.AToCCFormat());
             }
 
             return sb.ToString();
+        }
+
+        public static Token NextToken(this Queue<Token> tokenStream)
+        {
+            return tokenStream.Dequeue();
         }
     }
 }

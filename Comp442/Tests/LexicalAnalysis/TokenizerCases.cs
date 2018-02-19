@@ -1,5 +1,4 @@
-﻿using System;
-using LexicalAnalyzer;
+﻿using LexicalAnalyzer;
 using LexicalAnalyzer.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,18 +13,18 @@ namespace Tests.LexicalAnalysis
 
         public void Test(string code, TokenType[] expectedTokenTypes)
         {
-            var tokenizer = new Tokenizer(code);
+            var tokenStream = new Tokenizer().Parse(code);
             string output = "\nExpected -> Given\n";
             int i = 0;
 
             foreach (var expectedTokenType in expectedTokenTypes) {
-                var resultingToken = tokenizer.NextToken();
+                var resultingToken = tokenStream.NextToken();
                 output += $"{i++}: {expectedTokenType} -> {resultingToken?.Type}:{resultingToken?.TokenContent}\n";
                 Assert.IsTrue(expectedTokenType == resultingToken?.Type, output);
             }
 
             // End of stream.
-            var eosToken = tokenizer.NextToken();
+            var eosToken = tokenStream.NextToken();
             output += $"{i++}: {eosToken} -> {eosToken?.Type}:{eosToken?.TokenContent}";
             Assert.IsTrue(eosToken.Type == TokenType.EndOfStream, output);
         }

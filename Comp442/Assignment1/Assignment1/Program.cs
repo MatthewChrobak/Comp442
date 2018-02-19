@@ -20,13 +20,13 @@ namespace Assignment1
                 }
 
                 Console.WriteLine();
-                var tokenizer = new Tokenizer(File.ReadAllLines(file));
+                var tokenStream = new Tokenizer().Parse(File.ReadAllLines(file));
 
                 var tokens = new List<Token>();
 
                 Token token;
                 do {
-                    token = tokenizer.NextToken();
+                    token = tokenStream.NextToken();
                     tokens.Add(token);
                     Console.Write($"[{token.Type}:{token.TokenContent.Replace("\n", "\\n")}:{token.SourceLocation}] ");
                 } while (token.Type != TokenType.EndOfStream);

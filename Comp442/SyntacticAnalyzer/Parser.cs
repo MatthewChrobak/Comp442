@@ -2,32 +2,18 @@
 using LexicalAnalyzer.Models;
 using SyntacticAnalyzer.Derivation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser : Deriver
     {
-        private Queue<Token> _tokenStream;
-        public string ProgramTokenStream_AToCC;
+        private TokenStream _tokenStream;
 
         public Parser(string[] code)
         {
-            var tokenizer = new Tokenizer(code);
-            this._tokenStream = new Queue<Token>();
-            var sb = new StringBuilder();
-
-            Token token;
-            do {
-                token = tokenizer.NextRealToken();
-                this._tokenStream.Enqueue(token);
-                sb.Append(token.AToCC());
-            } while (token.Type != TokenType.EndOfStream);
-
-            this.ProgramTokenStream_AToCC = sb.ToString();
+            this._tokenStream = new Tokenizer().Parse(code, true);
         }
 
         public bool Parse()
@@ -37,7 +23,7 @@ namespace SyntacticAnalyzer.Parser
 
         public bool Match(string atocc)
         {
-            string tok = this._tokenStream.DequeueAToCC();
+            string tok = this._tokenStream.NextToken().AToCCFormat();
             bool res = tok == atocc;
 
             if (!res) {
@@ -51,20 +37,26 @@ namespace SyntacticAnalyzer.Parser
         {
             var regex = new Regex(@"\s+|\'");
             string formattedDerivation = regex.Replace(this.Derivations.Last().Derivation, String.Empty);
-            
-            if (formattedDerivation.Length != this.ProgramTokenStream_AToCC.Length) {
+
+            if (formattedDerivation != this._tokenStream.FullAToCCFormat) {
+                Console.WriteLine(formattedDerivation);
+                Console.WriteLine(this._tokenStream.FullAToCCFormat);
+
+                if (formattedDerivation.Length != this._tokenStream.FullAToCCFormat.Length) {
+                    Console.WriteLine("Unequal length");
+                    return false;
+                }
+
+                for (int i = 0; i < formattedDerivation.Length; i++) {
+                    if (formattedDerivation[i] != this._tokenStream.FullAToCCFormat[i]) {
+                        Console.WriteLine("Issue found at: " + i);
+                    }
+                }
+
                 return false;
             }
 
-            for (int i = 0; i < formattedDerivation.Length; i++) {
-                if (formattedDerivation[i] != this.ProgramTokenStream_AToCC[i]) {
-                    Console.WriteLine(i);
-                }
-            }
-
-            Console.WriteLine(formattedDerivation);
-            Console.WriteLine(this.ProgramTokenStream_AToCC);
-            return formattedDerivation == this.ProgramTokenStream_AToCC;
+            return true;
         }
     }
 }

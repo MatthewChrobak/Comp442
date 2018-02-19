@@ -22,8 +22,6 @@ namespace Assignment2
                 bool valid = parser.Parse();
                 
                 Console.WriteLine($"Valid program: {parser.Verify()}");
-
-                Console.WriteLine(parser.Derivations.Last().Derivation);
             }
         }
     }

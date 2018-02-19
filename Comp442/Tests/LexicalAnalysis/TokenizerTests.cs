@@ -11,27 +11,27 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void NextToken_EmptyString_NullToken()
         {
-            var tokenizer = new Tokenizer(String.Empty);
-            Assert.IsTrue(tokenizer.NextToken()?.Type == TokenType.EndOfStream);
+            var tokenStream = new Tokenizer().Parse(String.Empty);
+            Assert.IsTrue(tokenStream.NextToken()?.Type == TokenType.EndOfStream);
         }
 
         [TestMethod]
         public void NextToken_RandomString_NotNullToken()
         {
-            var tokenizer = new Tokenizer("test");
-            Assert.IsTrue(tokenizer.NextToken()?.Type != TokenType.EndOfStream);
+            var tokenStream = new Tokenizer().Parse("test");
+            Assert.IsTrue(tokenStream.NextToken()?.Type != TokenType.EndOfStream);
         }
 
         [TestMethod]
         public void NextToken_TextIdentifier_Found()
         {
-            var tokenizer = new Tokenizer("hello world");
-            var token = tokenizer.NextToken();
+            var tokenStream = new Tokenizer().Parse("hello world");
+            var token = tokenStream.NextToken();
 
             Assert.IsTrue(token.Type == TokenType.Identifier, token.Type.ToString());
             Assert.IsTrue(token.TokenContent == "hello", token.TokenContent);
 
-            token = tokenizer.NextToken();
+            token = tokenStream.NextToken();
             Assert.IsTrue(token.Type == TokenType.Identifier, token.Type.ToString());
             Assert.IsTrue(token.TokenContent == "world", token.TokenContent);
         }
@@ -39,13 +39,13 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void NextToken_TextDigitIdentifier_Found()
         {
-            var tokenizer = new Tokenizer("hello12 world12");
-            var token = tokenizer.NextToken();
+            var tokenStream = new Tokenizer().Parse("hello12 world12");
+            var token = tokenStream.NextToken();
 
             Assert.IsTrue(token.Type == TokenType.Identifier, token.Type.ToString());
             Assert.IsTrue(token.TokenContent == "hello12", token.TokenContent);
 
-            token = tokenizer.NextToken();
+            token = tokenStream.NextToken();
             Assert.IsTrue(token.Type == TokenType.Identifier, token.Type.ToString());
             Assert.IsTrue(token.TokenContent == "world12", token.TokenContent);
         }
@@ -53,9 +53,9 @@ namespace Tests.LexicalAnalysis
         [TestMethod]
         public void NextToken_AllKeywords_Found()
         {
-            var tokenizer = new Tokenizer(String.Join(" ", Language.Keywords));
+            var tokenStream = new Tokenizer().Parse(String.Join(" ", Language.Keywords));
             for (int i = 0; i < Language.Keywords.Length; i++) {
-                var token = tokenizer.NextToken();
+                var token = tokenStream.NextToken();
 
                 Assert.IsNotNull(token, "Null token");
                 Assert.IsTrue(token.Type == TokenType.Keyword, $"{i}: {token.Type.ToString()}");
@@ -67,9 +67,9 @@ namespace Tests.LexicalAnalysis
         public void NextToken_ConsecutiveZeros_Found()
         {
             string testString = "000000000000000000000000";
-            var tokenizer = new Tokenizer(testString);
+            var tokenStream = new Tokenizer().Parse(testString);
             for (int i = 0; i < testString.Length; i++) {
-                var token = tokenizer.NextToken();
+                var token = tokenStream.NextToken();
 
                 Assert.IsNotNull(token);
                 Assert.IsTrue(token.Type == TokenType.Integer);
@@ -81,8 +81,8 @@ namespace Tests.LexicalAnalysis
         public void NextToken_Integers_Found()
         {
             string number = "1029381092840293480923";
-            var tokenizer = new Tokenizer(number);
-            var token = tokenizer.NextToken();
+            var tokenStream = new Tokenizer().Parse(number);
+            var token = tokenStream.NextToken();
 
             Assert.IsNotNull(token);
             Assert.IsTrue(token.Type == TokenType.Integer);
@@ -95,18 +95,18 @@ namespace Tests.LexicalAnalysis
             string zeros = "0000";
             string number = "1029381092840293480923";
             string testString = zeros + number;
-            var tokenizer = new Tokenizer(testString);
+            var tokenStream = new Tokenizer().Parse(testString);
             Token token;
 
             for (int i = 0; i < zeros.Length; i++) {
-                token = tokenizer.NextToken();
+                token = tokenStream.NextToken();
 
                 Assert.IsNotNull(token);
                 Assert.IsTrue(token.Type == TokenType.Integer);
                 Assert.IsTrue(token.TokenContent == "0");
             }
 
-            token = tokenizer.NextToken();
+            token = tokenStream.NextToken();
 
             Assert.IsNotNull(token);
             Assert.IsTrue(token.Type == TokenType.Integer);

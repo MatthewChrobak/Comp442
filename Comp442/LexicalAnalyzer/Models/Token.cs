@@ -8,12 +8,9 @@ namespace LexicalAnalyzer.Models
         public string TokenContent { get; set; } = String.Empty;
         public int? SourceLocation { get; set; } = null;
 
-        public string AToCC()
+        public string AToCCFormat()
         {
             switch (this.Type) {
-                case TokenType.EndOfStream:
-                    return "$";
-
                 case TokenType.ArithmaticOperator:
                     return (this.TokenContent);
 
