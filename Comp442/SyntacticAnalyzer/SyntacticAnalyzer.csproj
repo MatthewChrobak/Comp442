@@ -69,8 +69,8 @@
     <Compile Include="NonTerminals\InfClassDecl.cs" />
     <Compile Include="NonTerminals\InfFuncDef.cs" />
     <Compile Include="NonTerminals\InfIdTrail.cs" />
-    <Compile Include="NonTerminals\Infindice.cs" />
-    <Compile Include="NonTerminals\InfParamsTail.cs" />
+    <Compile Include="NonTerminals\InfIndice.cs" />
+    <Compile Include="NonTerminals\InfFParamsTail.cs" />
     <Compile Include="NonTerminals\InfStatement.cs" />
     <Compile Include="NonTerminals\InfVarAndFunc_FuncFinish.cs" />
     <Compile Include="NonTerminals\InfVarAndFunc_FuncStart.cs" />

@@ -21,12 +21,7 @@ namespace Assignment2
                 bool valid = parser.Parse();
 
                 Console.WriteLine(valid);
-
-                Console.WriteLine("##############################");
-                foreach (var derivation in parser.Derivations) {
-                    Console.WriteLine($"\n{derivation.Rule}\n{derivation.Derivation}\n");
-                }
-                Console.WriteLine("##############################");
+                Console.WriteLine(parser.Verify());
             }
         }
     }

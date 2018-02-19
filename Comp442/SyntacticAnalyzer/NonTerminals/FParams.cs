@@ -10,7 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id int float".HasToken(lookahead)) {
-                this.ApplyDerivation("fParams -> type 'id' infArraySize infParamsTail");
+                this.ApplyDerivation("fParams -> type 'id' infArraySize infFParamsTail");
                 if (Type() && Match("id") && InfArraySize() && InfFParamsTail()) {
                     return true;
                 }

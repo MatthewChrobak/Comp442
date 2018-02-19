@@ -10,18 +10,21 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("+".HasToken(lookahead)) {
+                this.ApplyDerivation("addOp -> '+'");
                 if (Match("+")) {
                     return true;
                 }
             }
 
             if ("-".HasToken(lookahead)) {
+                this.ApplyDerivation("addOp -> '-'");
                 if (Match("-")) {
                     return true;
                 }
             }
 
             if ("or".HasToken(lookahead)) {
+                this.ApplyDerivation("addOp -> 'or'");
                 if (Match("or")) {
                     return true;
                 }

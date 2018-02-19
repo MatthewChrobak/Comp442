@@ -10,12 +10,14 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id if for get put return".HasToken(lookahead)) {
+                this.ApplyDerivation("infStatement -> statement infStatement");
                 if (Statement() && InfStatement()) {
                     return true;
                 }
             }
 
             if ("}".HasToken(lookahead)) {
+                this.ApplyDerivation("infStatement -> EPSILON");
                 return true;
             }
 

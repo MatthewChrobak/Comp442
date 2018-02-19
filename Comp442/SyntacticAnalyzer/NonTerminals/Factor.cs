@@ -45,7 +45,7 @@ namespace SyntacticAnalyzer.Parser
             }
 
             if ("id".HasToken(lookahead)) {
-                this.ApplyDerivation("factor -> infAccessorDot_AndID_andVoFC");
+                this.ApplyDerivation("factor -> infAccessorDot_AndID_AndVoFC");
                 if (InfAccessorDot_AndID_AndVoFC()) {
                     return true;
                 }

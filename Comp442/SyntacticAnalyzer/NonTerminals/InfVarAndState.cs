@@ -24,7 +24,7 @@ namespace SyntacticAnalyzer.Parser
             }
 
             if ("if for get put return".HasToken(lookahead)) {
-                this.ApplyDerivation("infVarAndState -> noAss infStatement");
+                this.ApplyDerivation("infVarAndState -> noASS infStatement");
                 if (NoASS() && InfStatement()) {
                     return true;
                 }

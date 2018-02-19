@@ -10,6 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id int float".HasToken(lookahead)) {
+                this.ApplyDerivation("funcDef -> funcHead funcBody ';'");
                 if (FuncHead() && FuncBody() && Match(";")) {
                     return true;
                 }

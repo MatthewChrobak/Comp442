@@ -10,6 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id".HasToken(lookahead)) {
+                this.ApplyDerivation("assignStat -> variable '=' expr");
                 if (Variable() && Match("=") && Expr()) {
                     return true;
                 }

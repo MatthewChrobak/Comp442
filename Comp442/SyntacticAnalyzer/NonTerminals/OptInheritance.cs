@@ -10,7 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if (":".HasToken(lookahead)) {
-                this.ApplyDerivation("optInheritance -> ';' 'id' infIdTrail");
+                this.ApplyDerivation("optInheritance -> ':' 'id' infIdTrail");
                 if (Match(":") && Match("id") && InfIdTrail()) {
                     return true;
                 }

@@ -10,6 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("intNum floatNum ( not id + -".HasToken(lookahead)) {
+                this.ApplyDerivation("relExpr -> arithExpr relOp arithExpr");
                 if (ArithExpr() && RelOp() && ArithExpr()) {
                     return true;
                 }

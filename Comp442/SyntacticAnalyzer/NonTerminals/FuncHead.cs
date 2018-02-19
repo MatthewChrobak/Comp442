@@ -10,6 +10,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id int float".HasToken(lookahead)) {
+                this.ApplyDerivation("funcHead -> type optSR_AndID '(' fParams ')'");
                 if (Type() && OptSR_AndID() && Match("(") && FParams() && Match(")")) {
                     return true;
                 }
