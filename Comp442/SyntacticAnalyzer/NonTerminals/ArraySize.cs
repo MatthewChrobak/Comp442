@@ -5,6 +5,7 @@
         private bool ArraySize()
         {
             if (Match("[") && Match("intNum") && Match("]")) {
+                this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
                 return true;
             }
 

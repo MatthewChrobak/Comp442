@@ -10,21 +10,29 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState -> 'id' infVarAndState_IdHandler");
                 if (Match("id") && InfVarAndState_IdHandler()) {
                     return true;
                 }
-            } else if ("float int".HasToken(lookahead)) {
+            }
+
+            if ("float int".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState -> type_NoID 'id' infArraySize ';' infVarAndState");
                 if (Type_NoID() && Match("id") && InfArraySize() && Match(";") && InfVarAndState()) {
                     return true;
                 }
-            } else if ("if for get put return".HasToken(lookahead)) {
+            }
+
+            if ("if for get put return".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState -> noAss infStatement");
                 if (NoASS() && InfStatement()) {
                     return true;
                 }
-             } else {
-                if ("}".HasToken(lookahead)) {
-                    return true;
-                }
+            }
+
+            if ("}".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState -> EPSILON");
+                return true;
             }
 
             return false;

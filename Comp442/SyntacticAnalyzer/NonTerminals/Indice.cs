@@ -4,6 +4,8 @@
     {
         private bool Indice()
         {
+            this.ApplyDerivation("indice -> '[' arithExpr ']'");
+
             if (Match("[") && ArithExpr() && Match("]")) {
                 return true;
             }

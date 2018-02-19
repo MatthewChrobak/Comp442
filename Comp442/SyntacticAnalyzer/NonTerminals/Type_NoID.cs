@@ -10,10 +10,14 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("int".HasToken(lookahead)) {
+                this.ApplyDerivation("type_NoID -> 'int'");
                 if (Match("int")) {
                     return true;
                 }
-            } else if ("float".HasToken(lookahead)) {
+            }
+
+            if ("float".HasToken(lookahead)) {
+                this.ApplyDerivation("type_NoID -> 'float'");
                 if (Match("float")) {
                     return true;
                 }

@@ -4,6 +4,7 @@
     {
         private bool FParamsTail()
         {
+            this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
             if (Match(",") && Type() && Match("id") && InfArraySize()) {
                 return true;
             }

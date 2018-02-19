@@ -10,10 +10,14 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("id".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState_IdHandler -> 'id' infArraySize ';' infVarAndState");
                 if (Match("id") && InfArraySize() && Match(";") && InfVarAndState()) {
                     return true;
                 }
-            } else if ("( [ . =".HasToken(lookahead)) {
+            }
+
+            if ("( [ . =".HasToken(lookahead)) {
+                this.ApplyDerivation("infVarAndState_IdHandler -> variableP '=' expr ';' infStatement");
                 if (VariableP() && Match("=") && Expr() && Match(";") && InfStatement()) {
                     return true;
                 }

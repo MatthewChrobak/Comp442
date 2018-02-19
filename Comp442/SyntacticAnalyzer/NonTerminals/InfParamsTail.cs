@@ -10,13 +10,15 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if (",".HasToken(lookahead)) {
-                if (FParamsTail()) {
+                this.ApplyDerivation("infFParamsTail -> fParamsTail infFParamsTail");
+                if (FParamsTail() && InfFParamsTail()) {
                     return true;
                 }
-            } else {
-                if (")".HasToken(lookahead)) {
-                    return true;
-                }
+            }
+
+            if (")".HasToken(lookahead)) {
+                this.ApplyDerivation("infFParamsTail -> EPSILON");
+                return true;
             }
 
             return false;

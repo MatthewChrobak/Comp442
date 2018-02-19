@@ -10,12 +10,14 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("+".HasToken(lookahead)) {
+                this.ApplyDerivation("sign -> '+'");
                 if (Match("+")) {
                     return true;
                 }
             }
 
             if ("-".HasToken(lookahead)) {
+                this.ApplyDerivation("sign -> '-'");
                 if (Match("-")) {
                     return true;
                 }

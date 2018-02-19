@@ -11,6 +11,7 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("{".HasToken(lookahead)) {
+                this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");
                 if (Match("{") && InfVarAndState() && Match("}")) {
                     return true;
                 }

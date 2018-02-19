@@ -10,12 +10,14 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("* / and".HasToken(lookahead)) {
+                this.ApplyDerivation("termP -> multOp factor termP");
                 if (MultOp() && Factor() && TermP()) {
                     return true;
                 }
             }
 
             if ("+ - or eq neq lt gt leq ge ] ) ; ,".HasToken(lookahead)) {
+                this.ApplyDerivation("termP -> EPSILON");
                 return true;
             }
 

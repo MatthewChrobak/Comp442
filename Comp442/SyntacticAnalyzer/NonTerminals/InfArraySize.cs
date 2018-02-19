@@ -10,13 +10,15 @@ namespace SyntacticAnalyzer.Parser
             string lookahead = AtoCC.Convert(lookaheadToken);
 
             if ("[".HasToken(lookahead)) {
+                this.ApplyDerivation("infArraySize -> arraySize infArraySize");
                 if (ArraySize() && InfArraySize()) {
                     return true;
                 }
-            } else {
-                if (", ; )".HasToken(lookahead)) {
-                    return true;
-                }
+            }
+
+            if (", ; )".HasToken(lookahead)) {
+                this.ApplyDerivation("infArraySize -> EPSILON");
+                return true;
             }
 
             return false;
