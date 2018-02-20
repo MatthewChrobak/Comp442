@@ -50,6 +50,10 @@
       <Project>{41a5320f-c903-48fb-b6bf-9743dea38855}</Project>
       <Name>LexicalAnalyzer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ReportGenerator\ReportGenerator.csproj">
+      <Project>{89066bf3-b4d6-4f96-a9bb-a560b3ba6455}</Project>
+      <Name>ReportGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

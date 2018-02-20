@@ -42,12 +42,19 @@
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\Language.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="Scanners\Scanner.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Tokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\TokenTypes.cs" />
     <Compile Include="Models\TokenStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
+      <Project>{89066bf3-b4d6-4f96-a9bb-a560b3ba6455}</Project>
+      <Name>ReportGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

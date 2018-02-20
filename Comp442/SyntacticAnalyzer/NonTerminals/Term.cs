@@ -4,7 +4,7 @@
     {
         private bool Term()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("intNum floatNum ( not id + -".HasToken(lookahead)) {

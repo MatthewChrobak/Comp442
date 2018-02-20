@@ -7,7 +7,7 @@ namespace SyntacticAnalyzer.Derivation
 {
     public class Deriver
     {
-        public List<(string Rule, string Derivation)> Derivations;
+        public List<(string Rule, string SententialForm)> Derivations;
 
         public Deriver()
         {
@@ -16,12 +16,12 @@ namespace SyntacticAnalyzer.Derivation
             };
         }
 
-        public void ApplyDerivation(string rule)
+        protected void ApplyDerivation(string rule)
         {
             var regex = new Regex(@"\-\>");
             var chunks = regex.Split(rule).Select(val => val.Trim()).ToArray();
 
-            string lastDerivation = this.Derivations.Last().Derivation;
+            string lastDerivation = this.Derivations.Last().SententialForm;
             string nonTerminal = chunks[0];
             string production = chunks[1] == "EPSILON" ? String.Empty : chunks[1];
             regex = new Regex(nonTerminal);

@@ -4,7 +4,7 @@
     {
         private bool ArithExprOrRelExpr()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("eq neq lt gt leq geq".HasToken(lookahead)) {

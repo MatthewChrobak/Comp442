@@ -1,7 +1,8 @@
-﻿using SyntacticAnalyzer.Parser;
+﻿using ReportGenerator;
+using SyntacticAnalyzer.Parser;
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace Assignment2
 {
@@ -20,8 +21,14 @@ namespace Assignment2
                 var parser = new Parser(File.ReadAllLines(file));
 
                 bool valid = parser.Parse();
-                
-                Console.WriteLine($"Valid program: {parser.Verify()}");
+
+                var report = new Report(file + " Report");
+                Console.Write("Generating report... ");
+                report.Sections.AddRange(parser.GetReportSections());
+                File.WriteAllText(file + ".html", report.GenerateReport());
+                Console.WriteLine("Done.");
+
+                Process.Start(file + ".html");
             }
         }
     }

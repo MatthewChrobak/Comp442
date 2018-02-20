@@ -1,19 +1,25 @@
 ﻿using LexicalAnalyzer;
 using LexicalAnalyzer.Models;
+using ReportGenerator;
 using SyntacticAnalyzer.Derivation;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SyntacticAnalyzer.Parser
 {
-    public partial class Parser : Deriver
+    public partial class Parser : Deriver, IReportable
     {
-        private TokenStream _tokenStream;
+        public TokenStream TokenStream { get; set; }
+        private Tokenizer _tokenizer;
+        private List<string> Errors = new List<string>();
 
         public Parser(string[] code)
         {
-            this._tokenStream = new Tokenizer().Parse(code, true);
+            this._tokenizer = new Tokenizer();
+
+            this.TokenStream = this._tokenizer.Parse(code, true);
         }
 
         public bool Parse()
@@ -21,13 +27,19 @@ namespace SyntacticAnalyzer.Parser
             return Prog();
         }
 
-        public bool Match(string atocc)
+        private bool Match(string atocc)
         {
-            string tok = this._tokenStream.NextToken().AToCCFormat();
-            bool res = tok == atocc;
+            var token = this.TokenStream.NextToken();
+            string token_AToCC = token.AToCCFormat();
+            bool res = token_AToCC == atocc;
 
             if (!res) {
-                Console.WriteLine($"\n\nWas expecting {atocc} and instead got {tok}\n");
+
+                if (token.Type == TokenType.EndOfStream) {
+                    this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
+                } else {
+                    this.Errors.Add($"Syntax error '{token.TokenContent}' at {token.SourceLocation}. Expected {atocc}");
+                }
             }
 
             return res;
@@ -35,28 +47,9 @@ namespace SyntacticAnalyzer.Parser
 
         public bool Verify()
         {
-            var regex = new Regex(@"\s+|\'");
-            string formattedDerivation = regex.Replace(this.Derivations.Last().Derivation, String.Empty);
-
-            if (formattedDerivation != this._tokenStream.FullAToCCFormat) {
-                Console.WriteLine(formattedDerivation);
-                Console.WriteLine(this._tokenStream.FullAToCCFormat);
-
-                if (formattedDerivation.Length != this._tokenStream.FullAToCCFormat.Length) {
-                    Console.WriteLine("Unequal length");
-                    return false;
-                }
-
-                for (int i = 0; i < formattedDerivation.Length; i++) {
-                    if (formattedDerivation[i] != this._tokenStream.FullAToCCFormat[i]) {
-                        Console.WriteLine("Issue found at: " + i);
-                    }
-                }
-
-                return false;
-            }
-
-            return true;
+            string formattedDerivation = Regex.Replace(this.Derivations.Last().SententialForm, @"\s+|\'", String.Empty);
+            return formattedDerivation == this.TokenStream.FullAToCCFormat;
         }
+        
     }
 }

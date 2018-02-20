@@ -84,6 +84,7 @@
     <Compile Include="NonTerminals\OptSR_AndID.cs" />
     <Compile Include="NonTerminals\OptSR_AndIDP.cs" />
     <Compile Include="NonTerminals\Prog.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="NonTerminals\RelExpr.cs" />
     <Compile Include="NonTerminals\RelOp.cs" />
@@ -103,6 +104,10 @@
     <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj">
       <Project>{41a5320f-c903-48fb-b6bf-9743dea38855}</Project>
       <Name>LexicalAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
+      <Project>{89066BF3-B4D6-4F96-A9BB-A560B3BA6455}</Project>
+      <Name>ReportGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

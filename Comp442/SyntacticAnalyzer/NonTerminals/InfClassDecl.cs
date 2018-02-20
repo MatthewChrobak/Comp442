@@ -2,9 +2,9 @@
 {
     public partial class Parser
     {
-        public bool InfClassDecl()
+        private bool InfClassDecl()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("class".HasToken(lookahead)) {

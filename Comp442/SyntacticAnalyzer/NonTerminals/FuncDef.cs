@@ -4,7 +4,7 @@
     {
         private bool FuncDef()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("id int float".HasToken(lookahead)) {

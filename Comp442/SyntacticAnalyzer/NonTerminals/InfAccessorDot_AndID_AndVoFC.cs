@@ -4,7 +4,7 @@
     {
         private bool InfAccessorDot_AndID_AndVoFC()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("id".HasToken(lookahead)) {

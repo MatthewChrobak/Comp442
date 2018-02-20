@@ -4,7 +4,7 @@
     {
         private bool Factor()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("intNum".HasToken(lookahead)) {

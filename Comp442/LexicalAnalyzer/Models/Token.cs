@@ -6,7 +6,7 @@ namespace LexicalAnalyzer.Models
     {
         public TokenType Type { set; get; }
         public string TokenContent { get; set; } = String.Empty;
-        public int? SourceLocation { get; set; } = null;
+        public (int lineNumber, int characterNumber) SourceLocation { get; set; }
 
         public string AToCCFormat()
         {
@@ -67,8 +67,7 @@ namespace LexicalAnalyzer.Models
                     return ("intNum");
 
                 case TokenType.InvalidCharacter:
-
-                    throw new Exception("Invalid character");
+                    return "�";
 
                 case TokenType.Keyword:
                     return (this.TokenContent);

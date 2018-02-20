@@ -4,7 +4,7 @@
     {
         private bool AssignStat()
         {
-            var lookaheadToken = this._tokenStream.Peek();
+            var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("id".HasToken(lookahead)) {
