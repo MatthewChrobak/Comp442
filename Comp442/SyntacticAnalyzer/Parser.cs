@@ -24,7 +24,14 @@ namespace SyntacticAnalyzer.Parser
 
         public bool Parse()
         {
-            return Prog();
+            if (Prog()) {
+
+                if (Match("$")) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool Match(string atocc)

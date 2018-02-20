@@ -11,6 +11,9 @@ namespace LexicalAnalyzer.Models
         public string AToCCFormat()
         {
             switch (this.Type) {
+                case TokenType.EndOfStream:
+                    return "$";
+
                 case TokenType.ArithmaticOperator:
                     return (this.TokenContent);
 

@@ -12,7 +12,7 @@ namespace SyntacticAnalyzer.Derivation
         public Deriver()
         {
             this.Derivations = new List<(string Rule, string Derivation)> {
-                ("$ -> prog", "prog")
+                ("S -> prog $", "prog $")
             };
         }
 

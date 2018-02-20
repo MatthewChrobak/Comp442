@@ -40,18 +40,18 @@ namespace SyntacticAnalyzer.Parser
 
             var derivSection = new Section("Derivations", true);
             derivSection.AddRowStart();
-            derivSection.Add("<table class='table table-hover'><tr><th>Rule Applied</th><th>Sentential Form</th></tr>");
+            derivSection.Add("<table class='table table-hover' style='color:red'><tr style='color:black'><th>Rule Applied</th><th>Sentential Form</th></tr>");
 
-            string terminalRule(string str) => Regex.Replace(str, "(\\s|^)\'(\\S+)\'(\\s|$)", "<span style='color:black'>$1'$2'$3</span>");
-            string epsilonRule(string str) => Regex.Replace(str, "EPSILON", "<span style='color:blue'>EPSILON</span>");
+            string terminalRule(string str) => Regex.Replace(str, "\'(\\S+)\'", "<span style=' color:black'>'$1'</span>");
+            string epsilonRule(string str) => Regex.Replace(str, "EPSILON", "<span style=' color:blue'>EPSILON</span>");
 
             foreach (var derivation in this.Derivations) {
 
-                //string rule = terminalRule(epsilonRule(deriv.Rule));
-                //string derivation = terminalRule(epsilonRule(deriv.Derivation));
+                string rule = terminalRule(epsilonRule(derivation.Rule.Replace("->", "<span style=' color:black'>-></span>")));
+                string sententialForm = terminalRule(epsilonRule(derivation.SententialForm));
 
-                string rule = derivation.Rule;
-                string sententialForm = derivation.SententialForm;
+                //string rule = derivation.Rule;
+                //string sententialForm = derivation.SententialForm;
 
                 derivSection.Add($"<tr><td>{rule}</td><td>{sententialForm}</td></tr>");
             }
