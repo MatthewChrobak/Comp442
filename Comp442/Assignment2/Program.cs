@@ -20,11 +20,11 @@ namespace Assignment2
                 }
                 var parser = new Parser(File.ReadAllLines(file));
 
-                bool valid = parser.Parse();
+                parser.Parse();
 
-                var report = new Report(file + " Report");
+                var report = new Report();
                 Console.Write("Generating report... ");
-                report.Sections.AddRange(parser.GetReportSections());
+                report.Sections.AddRange(parser.GetReportSections(file));
                 File.WriteAllText(file + ".html", report.GenerateReport());
                 Console.WriteLine("Done.");
 

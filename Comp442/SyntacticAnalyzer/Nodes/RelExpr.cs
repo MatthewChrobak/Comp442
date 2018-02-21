@@ -1,5 +1,8 @@
-﻿namespace SyntacticAnalyzer.Nodes
+﻿using System;
+
+namespace SyntacticAnalyzer.Nodes
 {
+    [Serializable]
     public class RelExpr
     {
         public Expr LHS;

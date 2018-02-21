@@ -1,6 +1,9 @@
-﻿namespace SyntacticAnalyzer.Nodes
+﻿using System;
+
+namespace SyntacticAnalyzer.Nodes
 {
-    public abstract class MemDecl
+    [Serializable]
+    public class MemDecl
     {
         public dynamic VariableOrFuncDecl { get; set; }
     }

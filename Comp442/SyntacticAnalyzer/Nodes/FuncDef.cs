@@ -1,5 +1,8 @@
-﻿namespace SyntacticAnalyzer.Nodes
+﻿using System;
+
+namespace SyntacticAnalyzer.Nodes
 {
+    [Serializable]
     public class FuncDef
     {
         public string ReturnType { get; set; }

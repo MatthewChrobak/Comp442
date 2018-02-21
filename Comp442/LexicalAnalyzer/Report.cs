@@ -5,7 +5,7 @@ namespace LexicalAnalyzer
 {
     public partial class Tokenizer : IReportable
     {
-        public IEnumerable<Section> GetReportSections()
+        public IEnumerable<Section> GetReportSections(string inputFileName)
         {
             var section = new Section("Lexical Errors", true);
 

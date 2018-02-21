@@ -4,6 +4,6 @@ namespace ReportGenerator
 {
     public interface IReportable
     {
-        IEnumerable<Section> GetReportSections();
+        IEnumerable<Section> GetReportSections(string inputFileName);
     }
 }

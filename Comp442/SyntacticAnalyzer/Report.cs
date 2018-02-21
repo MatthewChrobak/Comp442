@@ -1,15 +1,18 @@
 ﻿using ReportGenerator;
+using SyntacticAnalyzer.Nodes;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser : IReportable
     {
-        public IEnumerable<Section> GetReportSections()
+        public IEnumerable<Section> GetReportSections(string inputFileName)
         {
-            foreach (var section in this._tokenizer.GetReportSections()) {
+            foreach (var section in this._tokenizer.GetReportSections(inputFileName)) {
                 yield return section;
             }
 
@@ -33,10 +36,28 @@ namespace SyntacticAnalyzer.Parser
             foreach (var error in this.Errors) {
                 errorList.AddRow(error);
             }
-            if (true || !validProgram) {
+            if (!validProgram) {
                 yield return errorList;
             }
-            
+
+
+
+            using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
+                var serializer = new XmlSerializer(typeof(Prog));
+                serializer.Serialize(fs, this.AST);
+            }
+
+            var astSection = new Section("Abstract Syntax Tree");
+            astSection.AddRowStart();
+            astSection.Add($"<div id='AST' class='AST' style='background-color:rgb(150, 150, 150);'><script>xml2tree('AST', '{inputFileName + ".xml"}', [], false, false);</script></div>");
+            astSection.AddRowEnd();
+
+            if (validProgram) {
+                yield return astSection;
+            }
+
+
+
 
             var derivSection = new Section("Derivations", true);
             derivSection.AddRowStart();
@@ -58,9 +79,14 @@ namespace SyntacticAnalyzer.Parser
             derivSection.Add("</table>");
             derivSection.AddRowEnd();
 
-            if (true || validProgram) {
+            if (validProgram) {
                 yield return derivSection;
             }
+
+
+
+
+            
         }
     }
 }

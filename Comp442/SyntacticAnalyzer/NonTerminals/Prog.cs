@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool Prog()
+        private Prog Prog()
         {
             string first = "program class id int float";
             this.SkipErrors(first);
@@ -12,12 +14,23 @@
             
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("prog -> infClassDecl infFuncDef 'program' funcBody ';'");
-                if (InfClassDecl() & InfFuncDef() & Match("program") & FuncBody() & Match(";")) {
-                    return true;
-                }
+
+                var ast = new Prog();
+                //ast.Classes = InfClassDecl();
+                //ast.Functions = InfFuncDef();
+
+                InfClassDecl();
+                InfFuncDef();
+                Match("program");
+                FuncBody();
+                //ast.Program = FuncBody();
+
+                Match(";");
+
+                return ast;
             }
 
-            return false;
+            return null;
         }
     }
 }
