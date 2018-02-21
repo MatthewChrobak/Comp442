@@ -2,7 +2,7 @@
 {
     public class VarElement
     {
-        public DataMember hum;
-        public FCall hey;
+        public DataMember DataMember;
+        public FCall FunctionCall;
     }
 }

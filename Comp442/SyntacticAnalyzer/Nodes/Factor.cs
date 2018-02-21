@@ -2,5 +2,6 @@
 {
     public class Factor
     {
+        public dynamic SomeFactor { get; set; }
     }
 }

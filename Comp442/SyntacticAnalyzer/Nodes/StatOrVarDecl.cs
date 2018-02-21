@@ -2,5 +2,6 @@
 {
     public class StatOrVarDecl
     {
+        public dynamic StatOrVariableDeclaration { get; set; }
     }
 }
