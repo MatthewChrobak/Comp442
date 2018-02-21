@@ -16,10 +16,10 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("prog -> infClassDecl infFuncDef 'program' funcBody ';'");
 
                 var ast = new Prog();
-                //ast.Classes = InfClassDecl();
+                ast.InfClasses = InfClassDecl();
                 //ast.Functions = InfFuncDef();
 
-                InfClassDecl();
+               
                 InfFuncDef();
                 Match("program");
                 FuncBody();

@@ -48,9 +48,7 @@ namespace SyntacticAnalyzer.Parser
             }
 
             var astSection = new Section("Abstract Syntax Tree");
-            astSection.AddRowStart();
-            astSection.Add($"<div id='AST' class='AST' style='background-color:rgb(150, 150, 150);'><script>xml2tree('AST', '{inputFileName + ".xml"}', [], false, false);</script></div>");
-            astSection.AddRowEnd();
+            astSection.AddRow($"<div id='AST' class='AST' style='background-color:rgb(150, 150, 150);'><script>xml2tree('AST', '{inputFileName + ".xml"}', [], false, false);</script></div>");
 
             if (validProgram) {
                 yield return astSection;

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ClassList
+    public class ClassListNode
     {
-        public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();
+        public List<ClassDecl> ClassList { get; set; } = new List<ClassDecl>();
     }
 }
