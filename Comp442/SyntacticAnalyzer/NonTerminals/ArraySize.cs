@@ -4,11 +4,19 @@
     {
         private bool ArraySize()
         {
-            if (Match("[") && Match("intNum") && Match("]")) {
-                this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
-                return true;
-            }
+            string first = "[";
+            this.SkipErrors(first);
 
+            var lookaheadToken = this.TokenStream.Peek();
+            string lookahead = lookaheadToken.AToCCFormat();
+
+            if (first.HasToken(lookahead)) {
+                this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
+                if (Match("[") & Match("intNum") & Match("]")) {
+                    return true;
+                }
+            }
+            
             return false;
         }
     }

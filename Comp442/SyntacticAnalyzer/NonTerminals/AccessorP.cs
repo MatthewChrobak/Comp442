@@ -4,12 +4,16 @@
     {
         private bool AccessorP()
         {
+            string first = "( [";
+            string follow = ". * / and + - or eq neq lt gt leq geq ] ) ; ,";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> '(' aParams ')'");
-                if (Match("(") && AParams() && Match(")")) {
+                if (Match("(") & AParams() & Match(")")) {
                     return true;
                 }
             }
@@ -21,7 +25,7 @@
                 }
             }
 
-            if (". * / and + - or eq neq lt gt leq ge ] ) ; ,".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> infIndice");
                 this.ApplyDerivation("infIndice -> EPSILON");
                 return true;

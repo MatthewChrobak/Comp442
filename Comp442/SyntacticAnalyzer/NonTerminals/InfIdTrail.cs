@@ -4,17 +4,21 @@
     {
         private bool InfIdTrail()
         {
+            string first = ",";
+            string follow = "{";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if (",".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infIdTrail -> ',' 'id' infIdTrail");
-                if (Match(",") && Match("id") && InfIdTrail()) {
+                if (Match(",") & Match("id") & InfIdTrail()) {
                     return true;
                 }
             }
 
-            if ("{".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infIdTrail -> EPSILON");
                 return true;
             }

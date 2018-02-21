@@ -4,17 +4,21 @@
     {
         private bool InfClassDecl()
         {
+            string first = "class";
+            string follow = "program id int float";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("class".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infClassDecl -> classDecl infClassDecl");
-                if (ClassDecl() && InfClassDecl()) {
+                if (ClassDecl() & InfClassDecl()) {
                     return true;
                 }
             }
 
-            if ("program id int float".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infClassDecl -> EPSILON");
                 return true;
             }

@@ -4,12 +4,15 @@
     {
         private bool Variable()
         {
+            string first = "id";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("id".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("variable -> 'id' variableP");
-                if (Match("id") && VariableP()) {
+                if (Match("id") & VariableP()) {
                     return true;
                 }
             }

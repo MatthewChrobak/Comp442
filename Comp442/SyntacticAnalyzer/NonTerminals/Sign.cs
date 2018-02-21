@@ -4,6 +4,9 @@
     {
         private bool Sign()
         {
+            string first = "+ -";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 

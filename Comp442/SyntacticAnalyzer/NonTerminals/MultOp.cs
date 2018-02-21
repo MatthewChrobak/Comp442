@@ -4,6 +4,9 @@
     {
         private bool MultOp()
         {
+            string first = "* / and";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 

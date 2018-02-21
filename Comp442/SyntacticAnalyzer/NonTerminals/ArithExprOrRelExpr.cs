@@ -4,17 +4,21 @@
     {
         private bool ArithExprOrRelExpr()
         {
+            string first = "eq neq lt gt leq geq";
+            string follow = ") ; ,";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("eq neq lt gt leq geq".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> relOp arithExpr");
-                if (RelOp() && ArithExpr()) {
+                if (RelOp() & ArithExpr()) {
                     return true;
                 }
             }
 
-            if (") ; ,".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> EPSILON");
                 return true;
             }

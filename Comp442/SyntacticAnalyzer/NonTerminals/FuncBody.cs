@@ -4,12 +4,15 @@
     {
         private bool FuncBody()
         {
+            string first = "{";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("{".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");
-                if (Match("{") && InfVarAndState() && Match("}")) {
+                if (Match("{") & InfVarAndState() & Match("}")) {
                     return true;
                 }
             }

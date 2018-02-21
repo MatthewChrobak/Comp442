@@ -4,6 +4,9 @@
     {
         private bool Type()
         {
+            string first = "id int float";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 

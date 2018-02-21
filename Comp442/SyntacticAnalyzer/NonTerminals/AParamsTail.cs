@@ -4,10 +4,17 @@
     {
         private bool AParamsTail()
         {
-            this.ApplyDerivation("aParamsTail -> ',' expr");
+            string first = ",";
+            this.SkipErrors(first);
 
-            if (Match(",") && Expr()) {
-                return true;
+            var lookaheadToken = this.TokenStream.Peek();
+            string lookahead = lookaheadToken.AToCCFormat();
+
+            if (first.HasToken(lookahead)) {
+                this.ApplyDerivation("aParamsTail -> ',' expr");
+                if (Match(",") & Expr()) {
+                    return true;
+                }
             }
 
             return false;

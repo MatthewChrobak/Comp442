@@ -13,9 +13,10 @@ namespace SyntacticAnalyzer.Parser
                 yield return section;
             }
 
-            var validProg = new Section("Valid Program");
-            validProg.AddRow(this.Verify() ? "Yes" : "No");
-            yield return validProg;
+            bool validProgram = this.Verify();
+            var validProgramSection = new Section("Valid Program");
+            validProgramSection.AddRow(validProgram ? "Yes" : "No");
+            yield return validProgramSection;
 
             var atoccStreamInput = new Section("AToCC Input Stream");
             atoccStreamInput.AddRow($"<code style='color:black'>{this.TokenStream.FullAToCCFormat}</code>");
@@ -26,16 +27,15 @@ namespace SyntacticAnalyzer.Parser
             atoccStreamOutput.AddRow($"<code style='color:black'>{this.Derivations.Last().SententialForm.Replace(' ', '\0').Replace('\'', '\0')}</code>");
             yield return atoccStreamOutput;
 
-            var errorList = new Section("Syntactic Error List");
-            if (this.Errors.Count == 0) {
-                errorList.AddRow("No errors");
-            } else {
-                foreach (var error in this.Errors) {
-                    errorList.AddRow(error);
-                }
-            }
-            yield return errorList;
             
+
+            var errorList = new Section("Syntactic Error List");
+            foreach (var error in this.Errors) {
+                errorList.AddRow(error);
+            }
+            if (true || !validProgram) {
+                yield return errorList;
+            }
             
 
             var derivSection = new Section("Derivations", true);
@@ -58,8 +58,9 @@ namespace SyntacticAnalyzer.Parser
             derivSection.Add("</table>");
             derivSection.AddRowEnd();
 
-            yield return derivSection;
-
+            if (true || validProgram) {
+                yield return derivSection;
+            }
         }
     }
 }

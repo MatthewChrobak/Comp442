@@ -4,17 +4,21 @@
     {
         private bool InfFuncDef()
         {
+            string first = "id int float";
+            string follow = "program";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("id int float".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFuncDef -> funcDef infFuncDef");
-                if (FuncDef() && InfFuncDef()) {
+                if (FuncDef() & InfFuncDef()) {
                     return true;
                 }
             }
 
-            if ("program".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infFuncDef -> EPSILON");
                 return true;
             }

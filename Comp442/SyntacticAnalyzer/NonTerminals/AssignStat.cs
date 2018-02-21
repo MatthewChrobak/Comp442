@@ -4,12 +4,15 @@
     {
         private bool AssignStat()
         {
+            string first = "id";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("id".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("assignStat -> variable '=' expr");
-                if (Variable() && Match("=") && Expr()) {
+                if (Variable() & Match("=") & Expr()) {
                     return true;
                 }
             }

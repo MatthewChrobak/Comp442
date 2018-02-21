@@ -4,24 +4,28 @@
     {
         private bool VariableP()
         {
+            string first = "( [ .";
+            string follow = "= )";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> '(' aParams ')' '.' 'id' variableP");
-                if (Match("(") && AParams() && Match(")") && Match(".") && Match("id") && VariableP()) {
+                if (Match("(") & AParams() & Match(")") & Match(".") & Match("id") & VariableP()) {
                     return true;
                 }
             }
 
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
-                if (InfIndice() && VariablePP()) {
+                if (InfIndice() & VariablePP()) {
                     return true;
                 }
             }
 
-            if ("= )".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
                 this.ApplyDerivation("infIndice -> EPSILON");
                 this.ApplyDerivation("variablePP -> EPSILON");

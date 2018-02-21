@@ -4,17 +4,21 @@
     {
         private bool InfArraySize()
         {
+            string first = "[";
+            string follow = ", ; )";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("[".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> arraySize infArraySize");
-                if (ArraySize() && InfArraySize()) {
+                if (ArraySize() & InfArraySize()) {
                     return true;
                 }
             }
 
-            if (", ; )".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> EPSILON");
                 return true;
             }

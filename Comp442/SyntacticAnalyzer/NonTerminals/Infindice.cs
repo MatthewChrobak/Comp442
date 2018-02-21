@@ -4,17 +4,20 @@
     {
         private bool InfIndice()
         {
+            string first = "[";
+            string follow = ". * / and + - or eq neq lt gt leq geq ] ) ; , =";
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("[".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> indice infIndice");
-                if (Indice() && InfIndice()) {
+                if (Indice() & InfIndice()) {
                     return true;
                 }
             }
 
-            if (". * / and + - or eq neq lt gt leq ge ] ) ; , =".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> EPSILON");
                 return true;
             }

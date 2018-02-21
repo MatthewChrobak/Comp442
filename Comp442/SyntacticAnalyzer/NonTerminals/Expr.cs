@@ -4,12 +4,15 @@
     {
         private bool Expr()
         {
+            string first = "intNum floatNum ( not id + -";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("intNum floatNum ( not id + -".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("expr -> arithExpr arithExprOrRelExpr");
-                if (ArithExpr() && ArithExprOrRelExpr()) {
+                if (ArithExpr() & ArithExprOrRelExpr()) {
                     return true;
                 }
             }

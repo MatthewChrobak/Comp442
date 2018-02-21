@@ -4,17 +4,21 @@
     {
         private bool InfFParamsTail()
         {
+            string first = ",";
+            string follow = ")";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if (",".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFParamsTail -> fParamsTail infFParamsTail");
-                if (FParamsTail() && InfFParamsTail()) {
+                if (FParamsTail() & InfFParamsTail()) {
                     return true;
                 }
             }
 
-            if (")".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infFParamsTail -> EPSILON");
                 return true;
             }

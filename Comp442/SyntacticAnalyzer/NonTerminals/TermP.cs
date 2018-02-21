@@ -4,17 +4,21 @@
     {
         private bool TermP()
         {
+            string first = "* / and";
+            string follow = "+ - or eq neq lt gt leq geq ] ) ; ,";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("* / and".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> multOp factor termP");
-                if (MultOp() && Factor() && TermP()) {
+                if (MultOp() & Factor() & TermP()) {
                     return true;
                 }
             }
 
-            if ("+ - or eq neq lt gt leq ge ] ) ; ,".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> EPSILON");
                 return true;
             }

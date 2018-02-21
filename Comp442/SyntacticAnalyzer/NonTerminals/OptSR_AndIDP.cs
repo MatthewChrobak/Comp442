@@ -4,17 +4,21 @@
     {
         private bool OptSR_AndIDP()
         {
+            string first = "sr";
+            string follow = "(";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("sr".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
-                if (Match("sr") && Match("id")) {
+                if (Match("sr") & Match("id")) {
                     return true;
                 }
             }
 
-            if ("(".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> EPSILON");
                 return true;
             }

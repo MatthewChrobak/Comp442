@@ -4,6 +4,9 @@
     {
         private bool AddOp()
         {
+            string first = "+ - or";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 

@@ -16,6 +16,9 @@ namespace LexicalAnalyzer.Models
 
         public Token NextToken()
         {
+            if (this._queue.Count == 1) {
+                return this.Peek();
+            }
             return this._queue.Dequeue();
         }
 

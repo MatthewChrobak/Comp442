@@ -4,9 +4,17 @@
     {
         private bool FParamsTail()
         {
-            this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
-            if (Match(",") && Type() && Match("id") && InfArraySize()) {
-                return true;
+            string first = ",";
+            this.SkipErrors(first);
+
+            var lookaheadToken = this.TokenStream.Peek();
+            string lookahead = lookaheadToken.AToCCFormat();
+
+            if (first.HasToken(lookahead)) {
+                this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
+                if (Match(",") & Type() & Match("id") & InfArraySize()) {
+                    return true;
+                }
             }
 
             return false;

@@ -4,6 +4,9 @@
     {
         private bool RelOp()
         {
+            string first = "eq neq lt gt leq geq";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 

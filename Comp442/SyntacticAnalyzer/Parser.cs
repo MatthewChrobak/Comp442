@@ -25,7 +25,6 @@ namespace SyntacticAnalyzer.Parser
         public bool Parse()
         {
             if (Prog()) {
-
                 if (Match("$")) {
                     return true;
                 }
@@ -36,7 +35,7 @@ namespace SyntacticAnalyzer.Parser
 
         private bool Match(string atocc)
         {
-            var token = this.TokenStream.NextToken();
+            var token = this.TokenStream.Peek();
             string token_AToCC = token.AToCCFormat();
             bool res = token_AToCC == atocc;
 
@@ -45,8 +44,10 @@ namespace SyntacticAnalyzer.Parser
                 if (token.Type == TokenType.EndOfStream) {
                     this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
                 } else {
-                    this.Errors.Add($"Syntax error '{token.TokenContent}' at {token.SourceLocation}. Expected {atocc}");
+                    this.Errors.Add($"Expected {atocc} - '{token.SourceLocation}'. Got '{token.TokenContent}'.");
                 }
+            } else {
+                this.TokenStream.NextToken();
             }
 
             return res;
@@ -55,8 +56,31 @@ namespace SyntacticAnalyzer.Parser
         public bool Verify()
         {
             string formattedDerivation = Regex.Replace(this.Derivations.Last().SententialForm, @"\s+|\'", String.Empty);
-            return formattedDerivation == this.TokenStream.FullAToCCFormat;
+            return this.Errors.Count == 0 && formattedDerivation == this.TokenStream.FullAToCCFormat;
         }
         
+        private void SkipErrors(string first, string follow, bool hasEpsilonProduction = true)
+        {
+            Token token;
+            string lookahead;
+
+            do {
+                token = this.TokenStream.Peek();
+                lookahead = token.AToCCFormat();
+
+                if (first.HasToken(lookahead) || (hasEpsilonProduction && follow.HasToken(lookahead))) {
+                    return;
+                }
+
+                this.Errors.Add($"Expected {(first + " " + follow).Trim().Replace(" ", ", ")} - {token.SourceLocation}. Got '{token.TokenContent}'.");
+                this.TokenStream.NextToken(); // Disregard this current token.
+
+            } while (token.Type != TokenType.EndOfStream);
+        }
+
+        private void SkipErrors(string first)
+        {
+            this.SkipErrors(first, String.Empty, false);
+        }
     }
 }

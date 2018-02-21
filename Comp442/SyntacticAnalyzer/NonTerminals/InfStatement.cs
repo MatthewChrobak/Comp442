@@ -4,17 +4,21 @@
     {
         private bool InfStatement()
         {
+            string first = "id if for get put return";
+            string follow = "}";
+            this.SkipErrors(first, follow);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("id if for get put return".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");
-                if (Statement() && InfStatement()) {
+                if (Statement() & InfStatement()) {
                     return true;
                 }
             }
 
-            if ("}".HasToken(lookahead)) {
+            if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> EPSILON");
                 return true;
             }

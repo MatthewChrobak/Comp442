@@ -4,12 +4,15 @@
     {
         private bool FuncDef()
         {
+            string first = "id int float";
+            this.SkipErrors(first);
+
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if ("id int float".HasToken(lookahead)) {
+            if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcDef -> funcHead funcBody ';'");
-                if (FuncHead() && FuncBody() && Match(";")) {
+                if (FuncHead() & FuncBody() & Match(";")) {
                     return true;
                 }
             }

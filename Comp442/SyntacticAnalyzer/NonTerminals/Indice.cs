@@ -4,11 +4,19 @@
     {
         private bool Indice()
         {
-            this.ApplyDerivation("indice -> '[' arithExpr ']'");
+            string first = "[";
+            this.SkipErrors(first);
 
-            if (Match("[") && ArithExpr() && Match("]")) {
-                return true;
+            var lookaheadToken = this.TokenStream.Peek();
+            string lookahead = lookaheadToken.AToCCFormat();
+
+            if (first.HasToken(lookahead)) {
+                this.ApplyDerivation("indice -> '[' arithExpr ']'");
+                if (Match("[") & ArithExpr() & Match("]")) {
+                    return true;
+                }
             }
+           
 
             return false;
         }
