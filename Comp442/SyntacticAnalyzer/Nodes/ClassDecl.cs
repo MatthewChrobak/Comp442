@@ -4,8 +4,6 @@ using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
-    [XmlInclude(typeof(VarDecl))]
-    [XmlInclude(typeof(FuncDecl))]
     [Serializable]
     public class ClassDecl
     {

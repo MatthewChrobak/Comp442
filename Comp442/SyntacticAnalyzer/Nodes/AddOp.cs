@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -6,7 +7,9 @@ namespace SyntacticAnalyzer.Nodes
     public class AddOp
     {
         public object LHS_Term { get; set; }
+
         public string Operator { get; set; }
+        
         public object RHS_ArithExpr { get; set; }
     }
 }

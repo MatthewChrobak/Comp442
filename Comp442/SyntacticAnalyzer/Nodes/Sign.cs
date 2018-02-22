@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -6,6 +7,6 @@ namespace SyntacticAnalyzer.Nodes
     public class Sign
     {
         public string SignSymbol { get; set; }
-        public Factor Factor { get; set; }
+        public object Factor { get; set; }
     }
 }

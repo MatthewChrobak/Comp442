@@ -43,7 +43,35 @@ namespace SyntacticAnalyzer.Parser
 
 
             using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
-                var serializer = new XmlSerializer(typeof(Program));
+                var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
+                        typeof(AddOp),
+                        typeof(AParams),
+                        typeof(AssignStat),
+                        typeof(ClassDecl),
+                        typeof(ClassList),
+                        typeof(DataMember),
+                        typeof(FCall),
+                        typeof(ForStat),
+                        typeof(FParam),
+                        typeof(FuncDecl),
+                        typeof(FuncDef),
+                        typeof(FuncDefList),
+                        typeof(GetStat),
+                        typeof(IfStat),
+                        typeof(IndexList),
+                        typeof(InherList),
+                        typeof(MultOp),
+                        typeof(Not),
+                        typeof(PutStat),
+                        typeof(RelExpr),
+                        typeof(ReturnStat),
+                        typeof(ScopeSpec),
+                        typeof(Sign),
+                        typeof(StatBlock),
+                        typeof(Var),
+                        typeof(VarDecl)
+                    });
+
                 serializer.Serialize(fs, this.AST);
             }
 
