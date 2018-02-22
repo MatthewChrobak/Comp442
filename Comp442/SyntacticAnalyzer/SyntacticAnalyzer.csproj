@@ -44,12 +44,10 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Nodes\AddOp.cs" />
     <Compile Include="Nodes\AParams.cs" />
-    <Compile Include="Nodes\ArithExpr.cs" />
     <Compile Include="Nodes\AssignStat.cs" />
     <Compile Include="Nodes\ClassDecl.cs" />
     <Compile Include="Nodes\ClassList.cs" />
     <Compile Include="Nodes\DataMember.cs" />
-    <Compile Include="Nodes\Factor.cs" />
     <Compile Include="Nodes\FCall.cs" />
     <Compile Include="Nodes\ForStat.cs" />
     <Compile Include="Nodes\FParam.cs" />
@@ -60,6 +58,7 @@
     <Compile Include="Nodes\IfStat.cs" />
     <Compile Include="Nodes\IndexList.cs" />
     <Compile Include="Nodes\InherList.cs" />
+    <Compile Include="Nodes\MultOp.cs" />
     <Compile Include="Nodes\Not.cs" />
     <Compile Include="Nodes\Program.cs" />
     <Compile Include="Nodes\PutStat.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="Nodes\ScopeSpec.cs" />
     <Compile Include="Nodes\Sign.cs" />
     <Compile Include="Nodes\StatBlock.cs" />
-    <Compile Include="Nodes\Term.cs" />
     <Compile Include="Nodes\Var.cs" />
     <Compile Include="Nodes\VarDecl.cs" />
     <Compile Include="NonTerminals\AccessorP.cs" />
