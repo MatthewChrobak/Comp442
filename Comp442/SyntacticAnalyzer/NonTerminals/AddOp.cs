@@ -12,23 +12,20 @@
 
             if ("+".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> '+'");
-                if (Match("+")) {
-                    return true;
-                }
+
+                Match("+");
             }
 
             if ("-".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> '-'");
-                if (Match("-")) {
-                    return true;
-                }
+
+                Match("-");
             }
 
             if ("or".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> 'or'");
-                if (Match("or")) {
-                    return true;
-                }
+
+                Match("or");
             }
 
             return false;

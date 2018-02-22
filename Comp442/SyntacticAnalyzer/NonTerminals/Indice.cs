@@ -12,9 +12,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("indice -> '[' arithExpr ']'");
-                if (Match("[") & ArithExpr() & Match("]")) {
-                    return true;
-                }
+
+                Match("[");
+                ArithExpr();
+                Match("]");
             }
            
 

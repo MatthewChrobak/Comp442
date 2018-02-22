@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExpr -> term arithExprP");
-                if (Term() & ArithExprP()) {
-                    return true;
-                }
+
+                Term();
+                ArithExprP();
             }
 
             return false;

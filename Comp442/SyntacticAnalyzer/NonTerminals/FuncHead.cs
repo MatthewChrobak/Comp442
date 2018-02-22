@@ -12,9 +12,12 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcHead -> type optSR_AndID '(' fParams ')'");
-                if (Type() & OptSR_AndID() & Match("(") & FParams() & Match(")")) {
-                    return true;
-                }
+
+                Type();
+                OptSR_AndID();
+                Match("(");
+                FParams();
+                Match(")");
             }
 
             return false;

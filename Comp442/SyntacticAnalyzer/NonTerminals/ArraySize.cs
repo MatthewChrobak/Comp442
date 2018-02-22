@@ -12,9 +12,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
-                if (Match("[") & Match("intNum") & Match("]")) {
-                    return true;
-                }
+
+                Match("[");
+                Match("intNum");
+                Match("]");
             }
             
             return false;

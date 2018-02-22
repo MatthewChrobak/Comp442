@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFuncDef -> funcDef infFuncDef");
-                if (FuncDef() & InfFuncDef()) {
-                    return true;
-                }
+
+                FuncDef();
+                InfFuncDef();
             }
 
             if (follow.HasToken(lookahead)) {

@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");
-                if (Statement() & InfStatement()) {
-                    return true;
-                }
+
+                Statement();
+                InfStatement();
             }
 
             if (follow.HasToken(lookahead)) {

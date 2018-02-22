@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndID -> 'id' optSR_AndIDP");
-                if (Match("id") & OptSR_AndIDP()) {
-                    return true;
-                }
+
+                Match("id");
+                OptSR_AndIDP();
             }
 
             return false;

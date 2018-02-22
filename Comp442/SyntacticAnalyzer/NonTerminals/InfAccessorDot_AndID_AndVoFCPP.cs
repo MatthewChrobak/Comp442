@@ -13,9 +13,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> '.' 'id' infAccessorDot_AndID_AndVoFCP");
-                if (Match(".") & Match("id") & InfAccessorDot_AndID_AndVoFCP()) {
-                    return true;
-                }
+
+                Match(".");
+                Match("id");
+                InfAccessorDot_AndID_AndVoFCP();
             }
 
             if (follow.HasToken(lookahead)) {

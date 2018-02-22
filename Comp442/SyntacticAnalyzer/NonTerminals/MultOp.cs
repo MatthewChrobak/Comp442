@@ -12,23 +12,20 @@
 
             if ("*".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> '*'");
-                if (Match("*")) {
-                    return true;
-                }
+
+                Match("*");
             }
 
             if ("/".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> '/'");
-                if (Match("/")) {
-                    return true;
-                }
+
+                Match("/");
             }
 
             if ("and".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> 'and'");
-                if (Match("and")) {
-                    return true;
-                }
+
+                Match("and");
             }
 
             return false;

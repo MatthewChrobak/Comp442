@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> relOp arithExpr");
-                if (RelOp() & ArithExpr()) {
-                    return true;
-                }
+
+                RelOp();
+                ArithExpr();
             }
 
             if (follow.HasToken(lookahead)) {

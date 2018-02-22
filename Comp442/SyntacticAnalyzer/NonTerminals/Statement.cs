@@ -13,16 +13,15 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("statement -> assignStat ';'");
-                if (AssignStat() & Match(";")) {
-                    return true;
-                }
+
+                AssignStat();
+                Match(";");
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("statement -> noASS");
-                if (NoASS()) {
-                    return true;
-                }
+
+                NoASS();
             }
 
             return false;

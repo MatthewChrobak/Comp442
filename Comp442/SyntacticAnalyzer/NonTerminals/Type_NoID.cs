@@ -12,16 +12,14 @@
 
             if ("int".HasToken(lookahead)) {
                 this.ApplyDerivation("type_NoID -> 'int'");
-                if (Match("int")) {
-                    return true;
-                }
+
+                Match("int");
             }
 
             if ("float".HasToken(lookahead)) {
                 this.ApplyDerivation("type_NoID -> 'float'");
-                if (Match("float")) {
-                    return true;
-                }
+
+                Match("float");
             }
 
             return false;

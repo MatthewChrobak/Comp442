@@ -12,9 +12,11 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
-                if (Match(",") & Type() & Match("id") & InfArraySize()) {
-                    return true;
-                }
+
+                Match(",");
+                Type();
+                Match("id");
+                InfArraySize();
             }
 
             return false;

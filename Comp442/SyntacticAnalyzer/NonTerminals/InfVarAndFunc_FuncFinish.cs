@@ -12,9 +12,12 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_FuncFinish -> '(' fParams ')' ';' infVarAndFunc_FuncStart");
-                if (Match("(") & FParams() & Match(")") & Match(";") & InfVarAndFunc_FuncStart()) {
-                    return true;
-                }
+
+                Match("(");
+                FParams();
+                Match(")");
+                Match(";");
+                InfVarAndFunc_FuncStart();
             }
 
             return false;

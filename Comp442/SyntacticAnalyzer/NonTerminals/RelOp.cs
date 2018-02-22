@@ -12,44 +12,38 @@
 
             if ("eq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'eq'");
-                if (Match("eq")) {
-                    return true;
-                }
+
+                Match("eq");
             }
 
             if ("neq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'neq'");
-                if (Match("neq")) {
-                    return true;
-                }
+
+                Match("neq");
             }
 
             if ("lt".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'lt'");
-                if (Match("lt")) {
-                    return true;
-                }
+
+                Match("lt");
             }
 
             if ("gt".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'gt'");
-                if (Match("gt")) {
-                    return true;
-                }
+
+                Match("gt");
             }
 
             if ("leq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'leq'");
-                if (Match("leq")) {
-                    return true;
-                }
+
+                Match("leq");
             }
 
             if ("geq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'geq'");
-                if (Match("geq")) {
-                    return true;
-                }
+
+                Match("geq");
             }
 
             return false;

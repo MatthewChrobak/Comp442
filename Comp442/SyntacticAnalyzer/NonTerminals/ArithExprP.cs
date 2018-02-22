@@ -13,9 +13,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> addOp term arithExprP");
-                if (AddOp() & Term() & ArithExprP()) {
-                    return true;
-                }
+
+                AddOp();
+                Term();
+                ArithExprP();
             }
 
             if (follow.HasToken(lookahead)) {

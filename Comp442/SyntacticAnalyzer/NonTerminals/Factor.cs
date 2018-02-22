@@ -12,44 +12,42 @@
 
             if ("intNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'intNum'");
-                if (Match("intNum")) {
-                    return true;
-                }
+
+                Match("intNum");
             }
 
             if ("floatNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'floatNum'");
-                if (Match("floatNum")) {
-                    return true;
-                }
+
+                Match("floatNum");
             }
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> '(' arithExpr ')'");
-                if (Match("(") & ArithExpr() & Match(")")) {
-                    return true;
-                }
+
+                Match("(");
+                ArithExpr();
+                Match(")");
             }
 
             if ("not".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'not' factor");
-                if (Match("not") & Factor()) {
-                    return true;
-                }
+
+                Match("not");
+                Factor();
             }
 
             if ("+ -".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> sign factor");
-                if (Sign() & Factor()) {
-                    return true;
-                }
+
+                Sign();
+                Factor();
             }
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> infAccessorDot_AndID_AndVoFC");
-                if (InfAccessorDot_AndID_AndVoFC()) {
-                    return true;
-                }
+
+                InfAccessorDot_AndID_AndVoFC();
             }
 
             return false;

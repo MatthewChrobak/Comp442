@@ -12,9 +12,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcDef -> funcHead funcBody ';'");
-                if (FuncHead() & FuncBody() & Match(";")) {
-                    return true;
-                }
+
+                FuncHead();
+                FuncBody();
+                Match(";");
             }
 
             return false;

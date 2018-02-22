@@ -13,9 +13,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> multOp factor termP");
-                if (MultOp() & Factor() & TermP()) {
-                    return true;
-                }
+
+                MultOp();
+                Factor();
+                TermP();
             }
 
             if (follow.HasToken(lookahead)) {

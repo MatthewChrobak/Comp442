@@ -12,16 +12,14 @@
 
             if ("+".HasToken(lookahead)) {
                 this.ApplyDerivation("sign -> '+'");
-                if (Match("+")) {
-                    return true;
-                }
+
+                Match("+");
             }
 
             if ("-".HasToken(lookahead)) {
                 this.ApplyDerivation("sign -> '-'");
-                if (Match("-")) {
-                    return true;
-                }
+
+                Match("-");
             }
 
             return false;

@@ -12,9 +12,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("assignStat -> variable '=' expr");
-                if (Variable() & Match("=") & Expr()) {
-                    return true;
-                }
+
+                Variable();
+                Match("=");
+                Expr();
             }
 
             return false;

@@ -13,16 +13,16 @@
 
             if ("{".HasToken(lookahead)) {
                 this.ApplyDerivation("statBlock -> '{' infStatement '}'");
-                if (Match("{") & InfStatement() & Match("}")) {
-                    return true;
-                }
+
+                Match("{");
+                InfStatement();
+                Match("}");
             }
 
             if ("id if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("statBlock -> statement");
-                if (Statement()) {
-                    return true;
-                }
+
+                Statement();
             }
 
             if (follow.HasToken(lookahead)) {

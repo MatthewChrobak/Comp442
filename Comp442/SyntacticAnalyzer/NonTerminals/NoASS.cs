@@ -12,41 +12,63 @@
 
             if ("if".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'if' '(' expr ')' 'then' statBlock 'else' statBlock ';'");
-                if (Match("if") & Match("(") & Expr() & Match(")") & Match("then") & StatBlock() & Match("else") & StatBlock() & Match(";")) {
-                    return true;
-                }
+
+                Match("if");
+                Match("(");
+                Expr();
+                Match(")");
+                Match("then");
+                StatBlock();
+                Match("else");
+                StatBlock();
+                Match(";");
             }
 
             if ("for".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'for' '(' type 'id' '=' expr ';' relExpr ';' assignStat ')' statBlock ';'");
-                if (Match("for") & Match("(") & 
-                    Type() & Match("id") & Match("=") & Expr() & Match(";") & 
-                    RelExpr() & Match(";") & 
-                    AssignStat() & Match(")") 
-                    & StatBlock() & Match(";")) {
-                    return true;
-                }
+
+                Match("for");
+                Match("(");
+                Type();
+                Match("id");
+                Match("=");
+                Expr();
+                Match(";");
+                RelExpr();
+                Match(";");
+                AssignStat();
+                Match(")");
+                StatBlock();
+                Match(";");
             }
 
             if ("get".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'get' '(' variable ')' ';'");
-                if (Match("get") & Match("(") & Variable() & Match(")") & Match(";")) {
-                    return true;
-                }
+
+                Match("get");
+                Match("(");
+                Variable();
+                Match(")");
+                Match(";");
             }
 
             if ("put".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'put' '(' expr ')' ';'");
-                if (Match("put") & Match("(") & Expr() & Match(")") & Match(";")) {
-                    return true;
-                }
+                Match("put");
+                Match("(");
+                Expr();
+                Match(")");
+                Match(";");
             }
 
             if ("return".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'return' '(' expr ')' ';'");
-                if (Match("return") & Match("(") & Expr() & Match(")") & Match(";")) {
-                    return true;
-                }
+
+                Match("return");
+                Match("(");
+                Expr();
+                Match(")");
+                Match(";");
             }
 
             return false;

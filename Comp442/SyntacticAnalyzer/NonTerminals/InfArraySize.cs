@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> arraySize infArraySize");
-                if (ArraySize() & InfArraySize()) {
-                    return true;
-                }
+
+                ArraySize();
+                InfArraySize();
             }
 
             if (follow.HasToken(lookahead)) {

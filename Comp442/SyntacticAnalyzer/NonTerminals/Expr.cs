@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("expr -> arithExpr arithExprOrRelExpr");
-                if (ArithExpr() & ArithExprOrRelExpr()) {
-                    return true;
-                }
+
+                ArithExpr();
+                ArithExprOrRelExpr();
             }
 
             return false;

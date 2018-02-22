@@ -12,16 +12,16 @@
 
             if ("; [".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infArraySize ';' infVarAndFunc_VarStart");
-                if (InfArraySize() & Match(";") & InfVarAndFunc_VarStart()) {
-                    return true;
-                }
+
+                InfArraySize();
+                Match(";");
+                InfVarAndFunc_VarStart();
             }
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infVarAndFunc_FuncFinish");
-                if (InfVarAndFunc_FuncFinish()) {
-                    return true;
-                }
+
+                InfVarAndFunc_FuncFinish();
             }
 
             return false;

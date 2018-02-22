@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("aParamsTail -> ',' expr");
-                if (Match(",") & Expr()) {
-                    return true;
-                }
+
+                Match(",");
+                Expr();
             }
 
             return false;

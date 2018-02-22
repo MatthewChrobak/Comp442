@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFParamsTail -> fParamsTail infFParamsTail");
-                if (FParamsTail() & InfFParamsTail()) {
-                    return true;
-                }
+
+                FParamsTail();
+                InfFParamsTail();
             }
 
             if (follow.HasToken(lookahead)) {

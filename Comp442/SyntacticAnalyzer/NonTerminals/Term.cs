@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("term -> factor termP");
-                if (Factor() & TermP()) {
-                    return true;
-                }
+
+                Factor();
+                TermP();
             }
 
             return false;

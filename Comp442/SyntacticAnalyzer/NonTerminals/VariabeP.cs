@@ -24,9 +24,9 @@
 
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
-                if (InfIndice() & VariablePP()) {
-                    return true;
-                }
+
+                InfIndice();
+                VariablePP();
             }
 
             if (follow.HasToken(lookahead)) {

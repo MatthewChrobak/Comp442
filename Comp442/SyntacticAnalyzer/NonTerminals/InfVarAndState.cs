@@ -13,23 +13,26 @@
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> 'id' infVarAndState_IdHandler");
-                if (Match("id") & InfVarAndState_IdHandler()) {
-                    return true;
-                }
+
+                Match("id");
+                InfVarAndState_IdHandler();
             }
 
             if ("float int".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> type_NoID 'id' infArraySize ';' infVarAndState");
-                if (Type_NoID() & Match("id") & InfArraySize() & Match(";") & InfVarAndState()) {
-                    return true;
-                }
+
+                Type_NoID();
+                Match("id");
+                InfArraySize();
+                Match(";");
+                InfVarAndState();
             }
 
             if ("if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> noASS infStatement");
-                if (NoASS() & InfStatement()) {
-                    return true;
-                }
+
+                NoASS();
+                InfStatement();
             }
 
             if (follow.HasToken(lookahead)) {

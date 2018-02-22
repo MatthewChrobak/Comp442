@@ -13,9 +13,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_FuncStart -> type 'id' infVarAndFunc_FuncFinish");
-                if (Type() & Match("id") & InfVarAndFunc_FuncFinish()) {
-                    return true;
-                }
+
+                Type();
+                Match("id");
+                InfVarAndFunc_FuncFinish();
             }
 
             if (follow.HasToken(lookahead)) {

@@ -13,9 +13,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
-                if (Match("sr") & Match("id")) {
-                    return true;
-                }
+
+                Match("sr");
+                Match("id");
             }
 
             if (follow.HasToken(lookahead)) {

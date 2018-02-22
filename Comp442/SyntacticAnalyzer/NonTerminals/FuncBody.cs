@@ -12,9 +12,10 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");
-                if (Match("{") & InfVarAndState() & Match("}")) {
-                    return true;
-                }
+
+                Match("{");
+                InfVarAndState();
+                Match("}");
             }
 
             return false;

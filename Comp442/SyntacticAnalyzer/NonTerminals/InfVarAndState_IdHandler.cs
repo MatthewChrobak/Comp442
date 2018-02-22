@@ -12,16 +12,21 @@
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState_IdHandler -> 'id' infArraySize ';' infVarAndState");
-                if (Match("id") & InfArraySize() & Match(";") & InfVarAndState()) {
-                    return true;
-                }
+
+                Match("id");
+                InfArraySize();
+                Match(";");
+                InfVarAndState();
             }
 
             if ("( [ . =".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState_IdHandler -> variableP '=' expr ';' infStatement");
-                if (VariableP() & Match("=") & Expr() & Match(";") & InfStatement()) {
-                    return true;
-                }
+
+                VariableP();
+                Match("=");
+                Expr();
+                Match(";");
+                InfStatement();
             }
 
             return false;
