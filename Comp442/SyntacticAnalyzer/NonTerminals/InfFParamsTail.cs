@@ -1,8 +1,11 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+using System.Collections.Generic;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfFParamsTail()
+        private List<FParam> InfFParamsTail()
         {
             string first = ",";
             string follow = ")";
@@ -14,16 +17,22 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFParamsTail -> fParamsTail infFParamsTail");
 
-                FParamsTail();
-                InfFParamsTail();
+                var paramList = new List<FParam>();
+
+                var parameter = FParamsTail();
+                var trailingParams = InfFParamsTail();
+
+                paramList.Add(parameter);
+                paramList.JoinListWhereNotNull(trailingParams);
+                return paramList;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infFParamsTail -> EPSILON");
-                return true;
+                return new List<FParam>();
             }
 
-            return false;
+            return null;
         }
     }
 }

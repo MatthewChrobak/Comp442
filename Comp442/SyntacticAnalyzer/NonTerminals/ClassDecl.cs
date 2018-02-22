@@ -26,7 +26,7 @@ namespace SyntacticAnalyzer.Parser
                 Match(";");
 
                 @class.InheritingClasses = inheritance;
-                @class.MemberList = variablesAndFunctions;
+                @class.Members = variablesAndFunctions;
 
                 return @class;
             }

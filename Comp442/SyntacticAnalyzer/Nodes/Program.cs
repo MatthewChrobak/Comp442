@@ -3,10 +3,10 @@
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class Prog
+    public class Program
     {
         public ClassList Classes { get; set; }
         public FuncDefList Functions { get; set; }
-        public StatBlock Program { get; set; }
+        public StatBlock MainFunction { get; set; }
     }
 }

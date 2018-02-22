@@ -1,10 +1,11 @@
 ﻿using SyntacticAnalyzer.Nodes;
+using System.Collections.Generic;
 
 namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private MembList InfVarAndFunc_VarFinish(string type, string id)
+        private List<object> InfVarAndFunc_VarFinish(string type, string id)
         {
             string first = "; [ (";
             this.SkipErrors(first);
@@ -15,26 +16,26 @@ namespace SyntacticAnalyzer.Parser
             if ("; [".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infArraySize ';' infVarAndFunc_VarStart");
 
-                var memberList = new MembList();
+                var memberList = new List<object>();
                 var variable = new VarDecl();
                 
                 var arraySizes = InfArraySize();
                 Match(";");
-                var trailingVarAndFuncList = InfVarAndFunc_VarStart();
+                var trailingMembers = InfVarAndFunc_VarStart();
 
                 variable.Type = type;
                 variable.Id = id;
-                variable.Dimentions = arraySizes;
+                variable.Dimensions = arraySizes;
 
-                memberList.Members.Add(variable);
-                memberList.Members.AddRange(trailingVarAndFuncList?.Members);
+                memberList.Add(variable);
+                memberList.AddRange(trailingMembers);
                 return memberList;
             }
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infVarAndFunc_FuncFinish");
 
-                return InfVarAndFunc_FuncFinish();
+                return InfVarAndFunc_FuncFinish(type, id);
             }
 
             return null;

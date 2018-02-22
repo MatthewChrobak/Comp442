@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -7,6 +8,6 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Type { get; set; }
         public string Id { get; set; }
-        public DimList Dimentions { get; set; }
+        public List<string> Dimensions { get; set; } = new List<string>();
     }
 }

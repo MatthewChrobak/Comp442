@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -7,6 +9,9 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Type { get; set; }
         public string Id { get; set; }
-        public FParamList Parameters { get; set; }
+
+        [XmlArray("Parameters")]
+        [XmlArrayItem("Parameter")]
+        public List<FParam> Parameters { get; set; } = new List<FParam>();
     }
 }

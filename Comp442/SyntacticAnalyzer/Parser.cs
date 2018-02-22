@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
         public TokenStream TokenStream { get; set; }
         private Tokenizer _tokenizer;
         private List<string> Errors = new List<string>();
-        private Prog AST;
+        private Program AST;
 
         public Parser(string[] code)
         {
@@ -24,7 +24,7 @@ namespace SyntacticAnalyzer.Parser
             this.TokenStream = this._tokenizer.Parse(code, true);
         }
 
-        public Prog Parse()
+        public Program Parse()
         {
             this.AST = Prog();
             return this.AST;

@@ -49,13 +49,11 @@
     <Compile Include="Nodes\ClassDecl.cs" />
     <Compile Include="Nodes\ClassList.cs" />
     <Compile Include="Nodes\DataMember.cs" />
-    <Compile Include="Nodes\DimList.cs" />
     <Compile Include="Nodes\Expr.cs" />
     <Compile Include="Nodes\Factor.cs" />
     <Compile Include="Nodes\FCall.cs" />
     <Compile Include="Nodes\ForStat.cs" />
     <Compile Include="Nodes\FParam.cs" />
-    <Compile Include="Nodes\FParamList.cs" />
     <Compile Include="Nodes\FuncDecl.cs" />
     <Compile Include="Nodes\FuncDef.cs" />
     <Compile Include="Nodes\FuncDefList.cs" />
@@ -63,7 +61,6 @@
     <Compile Include="Nodes\IfStat.cs" />
     <Compile Include="Nodes\IndexList.cs" />
     <Compile Include="Nodes\InherList.cs" />
-    <Compile Include="Nodes\MembList.cs" />
     <Compile Include="Nodes\Not.cs" />
     <Compile Include="Nodes\Prog.cs" />
     <Compile Include="Nodes\PutStat.cs" />

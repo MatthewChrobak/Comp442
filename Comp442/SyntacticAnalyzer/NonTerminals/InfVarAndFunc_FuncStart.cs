@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using System.Collections.Generic;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndFunc_FuncStart()
+        private List<object> InfVarAndFunc_FuncStart()
         {
             string first = "id int float";
             string follow = "}";
@@ -14,17 +16,17 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_FuncStart -> type 'id' infVarAndFunc_FuncFinish");
 
-                Type();
-                Match("id");
-                InfVarAndFunc_FuncFinish();
+                string type = Type();
+                string id = Match("id");
+                return InfVarAndFunc_FuncFinish(type, id);
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_FuncStart -> EPSILON");
-                return true;
+                return new List<object>();
             }
 
-            return false;
+            return null;
         }
     }
 }

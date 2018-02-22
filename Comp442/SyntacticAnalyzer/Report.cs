@@ -43,7 +43,7 @@ namespace SyntacticAnalyzer.Parser
 
 
             using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
-                var serializer = new XmlSerializer(typeof(Prog));
+                var serializer = new XmlSerializer(typeof(Program));
                 serializer.Serialize(fs, this.AST);
             }
 
