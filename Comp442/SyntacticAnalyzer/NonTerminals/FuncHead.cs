@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool FuncHead()
+        private void FuncHead(ref FuncDef function)
         {
             string first = "id int float";
             this.SkipErrors(first);
@@ -13,14 +15,14 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcHead -> type optSR_AndID '(' fParams ')'");
 
-                Type();
-                OptSR_AndID();
+                function.ReturnType = Type();
+                (ScopeSpec scopeResolution, string functionName) result = OptSR_AndID();
+                function.ScopeResolution = result.scopeResolution;
+                function.FunctionName = result.functionName;
                 Match("(");
-                FParams();
+                function.Parameters = FParams();
                 Match(")");
             }
-
-            return false;
         }
     }
 }

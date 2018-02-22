@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool FuncDef()
+        private FuncDef FuncDef()
         {
             string first = "id int float";
             this.SkipErrors(first);
@@ -13,12 +15,18 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcDef -> funcHead funcBody ';'");
 
-                FuncHead();
-                FuncBody();
+                var function = new FuncDef();
+
+                FuncHead(ref function);
+                var body = FuncBody();
                 Match(";");
+
+                //function.Implementation = body;
+
+                return function;
             }
 
-            return false;
+            return null;
         }
     }
 }

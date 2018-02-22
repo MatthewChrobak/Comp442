@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool OptSR_AndID()
+        private (ScopeSpec scopeResolution, string functionName) OptSR_AndID()
         {
             string first = "id";
             this.SkipErrors(first);
@@ -12,12 +14,12 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndID -> 'id' optSR_AndIDP");
-
-                Match("id");
-                OptSR_AndIDP();
+                
+                string id = Match("id");
+                return OptSR_AndIDP(id);
             }
 
-            return false;
+            return (null, System.String.Empty);
         }
     }
 }

@@ -17,13 +17,9 @@ namespace SyntacticAnalyzer.Parser
 
                 var ast = new Program();
                 ast.Classes = InfClassDecl();
-                //ast.Functions = InfFuncDef();
-
-               
-                InfFuncDef();
+                ast.Functions = InfFuncDef();
                 Match("program");
-                FuncBody();
-                //ast.Program = FuncBody();
+                ast.Program = FuncBody();
 
                 Match(";");
 

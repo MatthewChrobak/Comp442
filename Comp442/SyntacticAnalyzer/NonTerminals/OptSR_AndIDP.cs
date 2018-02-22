@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool OptSR_AndIDP()
+        private (ScopeSpec scopeResolution, string id) OptSR_AndIDP(string id)
         {
             string first = "sr";
             string follow = "(";
@@ -14,16 +16,22 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
 
+                var scopeResolution = new ScopeSpec() {
+                    Id = id
+                };
+
                 Match("sr");
-                Match("id");
+                string functionName = Match("id");
+
+                return (scopeResolution, functionName);
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> EPSILON");
-                return true;
+                return (null, id);
             }
 
-            return false;
+            return (null, System.String.Empty);
         }
     }
 }
