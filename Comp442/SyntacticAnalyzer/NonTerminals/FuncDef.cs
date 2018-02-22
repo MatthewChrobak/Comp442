@@ -21,7 +21,7 @@ namespace SyntacticAnalyzer.Parser
                 var body = FuncBody();
                 Match(";");
 
-                //function.Implementation = body;
+                function.Implementation = body;
 
                 return function;
             }

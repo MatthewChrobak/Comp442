@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
     public partial class Parser
     {
         // Decides whether or not it's a relExpr or arithExpr.
-        private object ArithExprOrRelExpr(ArithExpr expression)
+        private object ArithExprOrRelExpr(object givenArithExpr)
         {
             string first = "eq neq lt gt leq geq";
             string follow = ") ; ,";
@@ -22,7 +22,7 @@ namespace SyntacticAnalyzer.Parser
                 string relationalOperator = RelOp();
                 var arithExpr = ArithExpr();
 
-                relExpr.LHS = expression;
+                relExpr.LHS = givenArithExpr;
                 relExpr.RelationOperator = relationalOperator;
                 relExpr.RHS = arithExpr;
 
@@ -31,7 +31,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> EPSILON");
-                return expression;
+                return givenArithExpr;
             }
 
             return null;

@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfStatement()
+        private StatBlock InfStatement()
         {
             string first = "id if for get put return";
             string follow = "}";
@@ -14,16 +16,21 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");
 
-                Statement();
-                InfStatement();
+                var block = new StatBlock();
+
+                var statement = Statement();
+                var trailingBlock = InfStatement();
+
+                block.Statements.Add(statement);
+                block.Statements.JoinListWhereNotNull(trailingBlock?.Statements);
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> EPSILON");
-                return true;
+                return new StatBlock();
             }
 
-            return false;
+            return null;
         }
     }
 }

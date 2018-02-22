@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool Statement()
+        private object Statement()
         {
             string first = "id";
             string follow = "if for get put return";
@@ -14,17 +14,19 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("statement -> assignStat ';'");
 
-                AssignStat();
+                var stat = AssignStat();
                 Match(";");
+
+                return stat;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("statement -> noASS");
 
-                NoASS();
+                return NoASS();
             }
 
-            return false;
+            return null;
         }
     }
 }

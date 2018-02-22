@@ -14,7 +14,7 @@ namespace SyntacticAnalyzer.Parser
             var lookaheadToken = this.TokenStream.Peek();
             string lookahead = lookaheadToken.AToCCFormat();
 
-            if (first.HasToken(lookahead)) {
+            if ("[ (".HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
 
                 var variable = new Var();
@@ -23,6 +23,21 @@ namespace SyntacticAnalyzer.Parser
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
 
                 variable.Elements.Add(funcOrDataMemeber);
+                variable.Elements.JoinListWhereNotNull(trailingFuncOrDataMembers?.Elements);
+
+                return variable;
+            }
+
+            if (".".HasToken(lookahead)) {
+                this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
+                this.ApplyDerivation("accessorP -> EPSILON");
+
+                var variable = new Var();
+                var dataMember = new DataMember();
+
+                var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
+
+                variable.Elements.Add(dataMember);
                 variable.Elements.JoinListWhereNotNull(trailingFuncOrDataMembers?.Elements);
 
                 return variable;

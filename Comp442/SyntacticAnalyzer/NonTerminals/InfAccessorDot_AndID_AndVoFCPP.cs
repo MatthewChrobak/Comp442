@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfAccessorDot_AndID_AndVoFCPP()
+        private Var InfAccessorDot_AndID_AndVoFCPP()
         {
             string first = ".";
             string follow = "* / and + - or eq neq lt gt leq geq ] ) ; ,";
@@ -15,16 +17,16 @@
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> '.' 'id' infAccessorDot_AndID_AndVoFCP");
 
                 Match(".");
-                Match("id");
-                InfAccessorDot_AndID_AndVoFCP();
+                string id = Match("id");
+                return InfAccessorDot_AndID_AndVoFCP(id);
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return true;
+                return new Var();
             }
 
-            return false;
+            return null;
         }
     }
 }

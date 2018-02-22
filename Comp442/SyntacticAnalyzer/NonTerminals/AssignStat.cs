@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool AssignStat()
+        private AssignStat AssignStat()
         {
             string first = "id";
             this.SkipErrors(first);
@@ -13,12 +15,19 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("assignStat -> variable '=' expr");
 
-                Variable();
+                var assignStatement = new AssignStat();
+
+                var variable = Variable();
                 Match("=");
-                Expr();
+                var expr = Expr();
+
+                assignStatement.Variable = variable;
+                assignStatement.ExpressionValue = expr;
+
+                return assignStatement;
             }
 
-            return false;
+            return null;
         }
     }
 }
