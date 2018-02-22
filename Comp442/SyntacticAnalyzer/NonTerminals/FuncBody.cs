@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool FuncBody()
+        private StatBlock FuncBody()
         {
             string first = "{";
             this.SkipErrors(first);
@@ -14,11 +16,13 @@
                 this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");
 
                 Match("{");
-                InfVarAndState();
+                var block = InfVarAndState();
                 Match("}");
+
+                return block;
             }
 
-            return false;
+            return null;
         }
     }
 }

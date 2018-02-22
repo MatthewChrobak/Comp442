@@ -16,9 +16,9 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("funcHead -> type optSR_AndID '(' fParams ')'");
 
                 function.ReturnType = Type();
-                (ScopeSpec scopeResolution, string functionName) result = OptSR_AndID();
-                function.ScopeResolution = result.scopeResolution;
-                function.FunctionName = result.functionName;
+                var (scopeResolution, functionName) = OptSR_AndID();
+                function.ScopeResolution = scopeResolution;
+                function.FunctionName = functionName;
                 Match("(");
                 function.Parameters = FParams();
                 Match(")");

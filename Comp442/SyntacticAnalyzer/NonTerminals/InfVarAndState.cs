@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndState()
+        private StatBlock InfVarAndState()
         {
             string first = "id float int if for get put return";
             string follow = "}";
@@ -14,33 +16,57 @@
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> 'id' infVarAndState_IdHandler");
 
-                Match("id");
-                InfVarAndState_IdHandler();
+                var block = new StatBlock();
+
+                string id = Match("id");
+                var trailingBlock = InfVarAndState_IdHandler(id);
+
+                block.Statements.Add(trailingBlock);
+                return block;
             }
 
             if ("float int".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> type_NoID 'id' infArraySize ';' infVarAndState");
 
-                Type_NoID();
-                Match("id");
-                InfArraySize();
+                var block = new StatBlock();
+                var variableDeclaration = new VarDecl();
+
+                string type = Type_NoID();
+                string id = Match("id");
+                var dimensions = InfArraySize();
                 Match(";");
-                InfVarAndState();
+                var trailingBlock = InfVarAndState();
+
+                variableDeclaration.Type = type;
+                variableDeclaration.Id = id;
+                variableDeclaration.Dimensions = dimensions;
+
+                block.Statements.Add(variableDeclaration);
+                block.Statements.JoinListWhereNotNull(trailingBlock?.Statements);
+
+                return block;
             }
 
             if ("if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> noASS infStatement");
 
-                NoASS();
-                InfStatement();
+                var block = new StatBlock();
+
+                var statement = NoASS();
+                var trailingStatements = InfStatement();
+
+                block.Statements.Add(statement);
+                block.Statements.JoinListWhereNotNull(trailingStatements?.Statements);
+
+                return block;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> EPSILON");
-                return true;
+                return new StatBlock();
             }
 
-            return false;
+            return null;
         }
     }
 }

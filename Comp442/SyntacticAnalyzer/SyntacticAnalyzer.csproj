@@ -49,7 +49,6 @@
     <Compile Include="Nodes\ClassDecl.cs" />
     <Compile Include="Nodes\ClassList.cs" />
     <Compile Include="Nodes\DataMember.cs" />
-    <Compile Include="Nodes\Expr.cs" />
     <Compile Include="Nodes\Factor.cs" />
     <Compile Include="Nodes\FCall.cs" />
     <Compile Include="Nodes\ForStat.cs" />
@@ -68,13 +67,10 @@
     <Compile Include="Nodes\ReturnStat.cs" />
     <Compile Include="Nodes\ScopeSpec.cs" />
     <Compile Include="Nodes\Sign.cs" />
-    <Compile Include="Nodes\Stat.cs" />
     <Compile Include="Nodes\StatBlock.cs" />
-    <Compile Include="Nodes\StatOrVarDecl.cs" />
     <Compile Include="Nodes\Term.cs" />
     <Compile Include="Nodes\Var.cs" />
     <Compile Include="Nodes\VarDecl.cs" />
-    <Compile Include="Nodes\VarElement.cs" />
     <Compile Include="NonTerminals\AccessorP.cs" />
     <Compile Include="NonTerminals\AddOp.cs" />
     <Compile Include="NonTerminals\AParams.cs" />

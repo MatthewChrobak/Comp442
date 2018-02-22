@@ -19,7 +19,7 @@ namespace SyntacticAnalyzer.Parser
                 ast.Classes = InfClassDecl();
                 ast.Functions = InfFuncDef();
                 Match("program");
-                ast.Program = FuncBody();
+                ast.MainFunction = FuncBody();
 
                 Match(";");
 

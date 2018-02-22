@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
+    [XmlInclude(typeof(DataMember))]
+    [XmlInclude(typeof(FCall))]
     [Serializable]
     public class Var
     {
-        public List<VarElement> Elements { get; set; } = new List<VarElement>();
+        [XmlArray("Variable Elements")]
+        [XmlArrayItem("Data Member", type: typeof(DataMember))]
+        [XmlArrayItem("Function Call", type: typeof(FCall))]
+        public List<object> Elements { get; set; } = new List<object>();
     }
 }

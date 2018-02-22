@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool VariableP()
+        private Var VariableP(string id)
         {
             string first = "( [ .";
             string follow = "= )";
@@ -14,29 +16,43 @@
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> '(' aParams ')' '.' 'id' variableP");
 
+                var variable = new Var();
+                var functionCall = new FCall();
+
                 Match("(");
-                AParams();
+                var parameters = AParams();
                 Match(")");
                 Match(".");
-                Match("id");
-                VariableP();
+                string nextId = Match("id");
+                var trailingVariableElements = VariableP(nextId);
+
+                functionCall.Id = id;
+                functionCall.Parameters = parameters;
+
+                variable.Elements.Add(parameters);
+                variable.Elements.JoinListWhereNotNull(trailingVariableElements?.Elements);
+
+                return variable;
             }
 
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
 
                 InfIndice();
-                VariablePP();
+                VariablePP();g
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
                 this.ApplyDerivation("infIndice -> EPSILON");
                 this.ApplyDerivation("variablePP -> EPSILON");
-                return true;
+
+                var variable = new Var();
+                variable.Elements.Add(new DataMember() { Id = id });
+                return variable;
             }
 
-            return false;
+            return null;
         }
     }
 }
