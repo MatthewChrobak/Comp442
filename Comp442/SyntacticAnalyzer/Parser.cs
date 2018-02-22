@@ -30,14 +30,12 @@ namespace SyntacticAnalyzer.Parser
             return this.AST;
         }
 
-        private bool Match(string atocc)
+        private string Match(string atocc)
         {
             var token = this.TokenStream.Peek();
             string token_AToCC = token.AToCCFormat();
-            bool res = token_AToCC == atocc;
 
-            if (!res) {
-
+            if (token_AToCC != atocc) {
                 if (token.Type == TokenType.EndOfStream) {
                     this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
                 } else {
@@ -47,7 +45,7 @@ namespace SyntacticAnalyzer.Parser
                 this.TokenStream.NextToken();
             }
 
-            return res;
+            return token.TokenContent;
         }
 
         public bool Verify()

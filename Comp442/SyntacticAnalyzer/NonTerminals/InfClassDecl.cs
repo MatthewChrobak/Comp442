@@ -26,8 +26,8 @@ namespace SyntacticAnalyzer.Parser
                 var trailingClasses = InfClassDecl();
 
                 // 3) Add them all to the classlist if they exist.
-                astNode.ClassList.Add(new ClassDecl());
-                astNode.ClassList.AddRange(trailingClasses?.ClassList.Where(obj => obj != null));
+                astNode.ClassList.Add(declaredClass);
+                astNode.ClassList.AddRange(trailingClasses?.ClassList.Where(val => val != null));
 
                 return astNode;
             }

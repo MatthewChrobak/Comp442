@@ -1,12 +1,14 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+using System.Linq;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool OptInheritance()
+        private InherList OptInheritance()
         {
             string first = ":";
             string follow = "{";
-
             this.SkipErrors(first, follow);
 
             var lookaheadToken = this.TokenStream.Peek();
@@ -14,17 +16,25 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optInheritance -> ':' 'id' infIdTrail");
-                if (Match(":") & Match("id") & InfIdTrail()) {
-                    return true;
-                }
+
+                var astNode = new InherList();
+                
+                Match(":");
+                string id = Match("id").ToString();
+                var trailingInheritance = InfIdTrail();
+
+                astNode.IDs.Add(id);
+                astNode.IDs.AddRange(trailingInheritance?.Where(obj => obj != null));
+
+                return astNode;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("optInheritance -> EPSILON");
-                return true;
+                return new InherList();
             }
 
-            return false;
+            return null;
         }
     }
 }

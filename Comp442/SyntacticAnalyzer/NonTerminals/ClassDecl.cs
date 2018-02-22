@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool ClassDecl()
+        private ClassDecl ClassDecl()
         {
             string first = "class";
             this.SkipErrors(first);
@@ -12,12 +14,24 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("classDecl -> 'class' 'id' optInheritance '{' infVarAndFunc_VarStart '}' ';'");
-                if (Match("class") & Match("id") & OptInheritance() & Match("{") & InfVarAndFunc_VarStart() & Match("}") & Match(";")) {
-                    return true;
-                }
+
+                var astNode = new ClassDecl();
+
+                Match("class");
+                Match("id");
+                var inheritance = OptInheritance();
+                Match("{");
+                var variablesAndFunctions = InfVarAndFunc_VarStart();
+                Match("}");
+                Match(";");
+
+                astNode.InheritingClasses = inheritance;
+                //astNode.Members = variablesAndFunctions;
+
+                return astNode;
             }
             
-            return false;
+            return null;
         }
     }
 }
