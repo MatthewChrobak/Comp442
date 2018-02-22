@@ -62,7 +62,7 @@
     <Compile Include="Nodes\IndexList.cs" />
     <Compile Include="Nodes\InherList.cs" />
     <Compile Include="Nodes\Not.cs" />
-    <Compile Include="Nodes\Prog.cs" />
+    <Compile Include="Nodes\Program.cs" />
     <Compile Include="Nodes\PutStat.cs" />
     <Compile Include="Nodes\RelExpr.cs" />
     <Compile Include="Nodes\ReturnStat.cs" />
