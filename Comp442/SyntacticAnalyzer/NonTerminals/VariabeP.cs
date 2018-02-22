@@ -13,9 +13,13 @@
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> '(' aParams ')' '.' 'id' variableP");
-                if (Match("(") & AParams() & Match(")") & Match(".") & Match("id") & VariableP()) {
-                    return true;
-                }
+
+                Match("(");
+                AParams();
+                Match(")");
+                Match(".");
+                Match("id");
+                VariableP();
             }
 
             if ("[ .".HasToken(lookahead)) {

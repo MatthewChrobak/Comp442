@@ -12,9 +12,9 @@
 
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("variable -> 'id' variableP");
-                if (Match("id") & VariableP()) {
-                    return true;
-                }
+
+                Match("id");
+                VariableP();
             }
 
             return false;

@@ -13,9 +13,10 @@
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> '(' aParams ')'");
-                if (Match("(") & AParams() & Match(")")) {
-                    return true;
-                }
+
+                Match("(");
+                AParams();
+                Match(")");
             }
 
             if ("[".HasToken(lookahead)) {
