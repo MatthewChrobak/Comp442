@@ -8,7 +8,6 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Type;
         public string Id;
-        [XmlElement(type: typeof(RelExpr), DataType = "Real Expression")]
         public object Initialization;
         public RelExpr Condition;
         public AssignStat Update;
