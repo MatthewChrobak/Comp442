@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfArraySize()
+        private DimList InfArraySize()
         {
             string first = "[";
             string follow = ", ; )";
@@ -14,16 +16,23 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> arraySize infArraySize");
 
-                ArraySize();
-                InfArraySize();
+                var dimentionList = new DimList();
+
+                var dimention = ArraySize();
+                var trailingDimentions = InfArraySize();
+
+                dimentionList.Numbers.Add(dimention);
+                dimentionList.Numbers.JoinListWhereNotNull(trailingDimentions?.Numbers);
+
+                return dimentionList;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> EPSILON");
-                return true;
+                return new DimList();
             }
 
-            return false;
+            return null;
         }
     }
 }

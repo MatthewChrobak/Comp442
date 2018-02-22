@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("classDecl -> 'class' 'id' optInheritance '{' infVarAndFunc_VarStart '}' ';'");
 
-                var astNode = new ClassDecl();
+                var @class = new ClassDecl();
 
                 Match("class");
                 Match("id");
@@ -25,10 +25,10 @@ namespace SyntacticAnalyzer.Parser
                 Match("}");
                 Match(";");
 
-                astNode.InheritingClasses = inheritance;
-                //astNode.Members = variablesAndFunctions;
+                @class.InheritingClasses = inheritance;
+                @class.MemberList = variablesAndFunctions;
 
-                return astNode;
+                return @class;
             }
             
             return null;

@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool ArraySize()
+        private string ArraySize()
         {
             string first = "[";
             this.SkipErrors(first);
@@ -14,11 +14,13 @@
                 this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
 
                 Match("[");
-                Match("intNum");
+                string num = Match("intNum");
                 Match("]");
+
+                return num;
             }
             
-            return false;
+            return System.String.Empty;
         }
     }
 }

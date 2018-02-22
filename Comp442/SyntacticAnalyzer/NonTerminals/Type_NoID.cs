@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool Type_NoID()
+        private string Type_NoID()
         {
             string first = "int float";
             this.SkipErrors(first);
@@ -13,16 +13,16 @@
             if ("int".HasToken(lookahead)) {
                 this.ApplyDerivation("type_NoID -> 'int'");
 
-                Match("int");
+                return Match("int");
             }
 
             if ("float".HasToken(lookahead)) {
                 this.ApplyDerivation("type_NoID -> 'float'");
 
-                Match("float");
+                return Match("float");
             }
 
-            return false;
+            return System.String.Empty;
         }
     }
 }

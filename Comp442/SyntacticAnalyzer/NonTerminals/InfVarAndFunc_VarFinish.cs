@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndFunc_VarFinish()
+        private MembList InfVarAndFunc_VarFinish(string type, string id)
         {
             string first = "; [ (";
             this.SkipErrors(first);
@@ -13,18 +15,29 @@
             if ("; [".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infArraySize ';' infVarAndFunc_VarStart");
 
-                InfArraySize();
+                var memberList = new MembList();
+                var variable = new VarDecl();
+                
+                var arraySizes = InfArraySize();
                 Match(";");
-                InfVarAndFunc_VarStart();
+                var trailingVarAndFuncList = InfVarAndFunc_VarStart();
+
+                variable.Type = type;
+                variable.Id = id;
+                variable.Dimentions = arraySizes;
+
+                memberList.Members.Add(variable);
+                memberList.Members.AddRange(trailingVarAndFuncList?.Members);
+                return memberList;
             }
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infVarAndFunc_FuncFinish");
 
-                InfVarAndFunc_FuncFinish();
+                return InfVarAndFunc_FuncFinish();
             }
 
-            return false;
+            return null;
         }
     }
 }

@@ -64,7 +64,6 @@
     <Compile Include="Nodes\IndexList.cs" />
     <Compile Include="Nodes\InherList.cs" />
     <Compile Include="Nodes\MembList.cs" />
-    <Compile Include="Nodes\MemDecl.cs" />
     <Compile Include="Nodes\Not.cs" />
     <Compile Include="Nodes\Prog.cs" />
     <Compile Include="Nodes\PutStat.cs" />

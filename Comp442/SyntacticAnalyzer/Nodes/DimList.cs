@@ -6,6 +6,6 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class DimList
     {
-        public List<string> Numbers;
+        public List<string> Numbers { get; set; } = new List<string>();
     }
 }

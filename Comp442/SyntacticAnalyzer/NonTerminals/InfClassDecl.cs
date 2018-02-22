@@ -1,11 +1,10 @@
 ﻿using SyntacticAnalyzer.Nodes;
-using System.Linq;
 
 namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private ClassListNode InfClassDecl()
+        private ClassList InfClassDecl()
         {
             string first = "class";
             string follow = "program id int float";
@@ -19,24 +18,24 @@ namespace SyntacticAnalyzer.Parser
 
                 // This will recursively get all the classes into ONE classlist.
                 // 1) Create a new classlist node to store our classes in.
-                var astNode = new ClassListNode();
+                var classList = new ClassList();
 
                 // 2) Parse the current class, and retrieve the trailing classes.
                 var declaredClass = ClassDecl();
                 var trailingClasses = InfClassDecl();
 
                 // 3) Add them all to the classlist if they exist.
-                astNode.ClassList.Add(declaredClass);
-                astNode.ClassList.AddRange(trailingClasses?.ClassList.Where(val => val != null));
+                classList.Classes.Add(declaredClass);
+                classList.Classes.JoinListWhereNotNull(trailingClasses?.Classes);
 
-                return astNode;
+                return classList;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infClassDecl -> EPSILON");
                 
                 // Return an empty classlist to signify that it WAS parsed correctly.
-                return new ClassListNode();
+                return new ClassList();
             }
 
             return null;

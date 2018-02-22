@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfVarAndFunc_VarStart()
+        private MembList InfVarAndFunc_VarStart()
         {
             string first = "id int float";
             string follow = "}";
@@ -14,17 +16,23 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarStart -> type 'id' infVarAndFunc_VarFinish");
 
-                Type();
-                Match("id");
-                InfVarAndFunc_VarFinish();
+                var memberList = new MembList();
+
+                string type = Type();
+                string id = Match("id");
+                var fullVarAndFuncList = InfVarAndFunc_VarFinish(type, id);
+                
+                memberList.Members.JoinListWhereNotNull(fullVarAndFuncList?.Members);
+
+                return memberList;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarStart -> EPSILON");
-                return true;
+                return new MembList();
             }
 
-            return false;
+            return null;
         }
     }
 }

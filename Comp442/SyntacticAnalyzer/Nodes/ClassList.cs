@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ClassListNode
+    public class ClassList
     {
-        public List<ClassDecl> ClassList { get; set; } = new List<ClassDecl>();
+        [XmlElement("Class")]
+        public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();
     }
 }
