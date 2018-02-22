@@ -1,8 +1,11 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool ArithExprOrRelExpr()
+        // Decides whether or not it's a relExpr or arithExpr.
+        private object ArithExprOrRelExpr(ArithExpr expression)
         {
             string first = "eq neq lt gt leq geq";
             string follow = ") ; ,";
@@ -14,16 +17,24 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> relOp arithExpr");
 
-                RelOp();
-                ArithExpr();
+                var relExpr = new RelExpr();
+
+                string relationalOperator = RelOp();
+                var arithExpr = ArithExpr();
+
+                relExpr.LHS = expression;
+                relExpr.RelationOperator = relationalOperator;
+                relExpr.RHS = arithExpr;
+
+                return relExpr;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> EPSILON");
-                return true;
+                return expression;
             }
 
-            return false;
+            return null;
         }
     }
 }

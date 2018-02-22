@@ -1,8 +1,12 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool TermP()
+        // This should make a decision between
+        // MultOp or Factor
+        private object TermP(object factor)
         {
             string first = "* / and";
             string follow = "+ - or eq neq lt gt leq geq ] ) ; ,";
@@ -14,17 +18,25 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> multOp factor termP");
 
-                MultOp();
-                Factor();
-                TermP();
+                var term = new MultOp();
+                
+                string op = MultOp();
+                object nextTerm = Factor();
+                object trailingTerm = TermP(nextTerm);
+
+                term.LHS_Factor = factor;
+                term.Operator = op;
+                term.RHS_Term = trailingTerm;
+
+                return term;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> EPSILON");
-                return true;
+                return factor;
             }
 
-            return false;
+            return null;
         }
     }
 }

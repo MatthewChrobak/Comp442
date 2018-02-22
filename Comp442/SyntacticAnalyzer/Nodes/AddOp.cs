@@ -5,8 +5,8 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class AddOp
     {
-        public ArithExpr LHS { get; set; }
+        public object LHS_Term { get; set; }
         public string Operator { get; set; }
-        public Term RHS { get; set; }
+        public object RHS_ArithExpr { get; set; }
     }
 }

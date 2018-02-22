@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool RelOp()
+        private string RelOp()
         {
             string first = "eq neq lt gt leq geq";
             this.SkipErrors(first);
@@ -13,40 +13,40 @@
             if ("eq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'eq'");
 
-                Match("eq");
+                return Match("eq");
             }
 
             if ("neq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'neq'");
 
-                Match("neq");
+                return Match("neq");
             }
 
             if ("lt".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'lt'");
 
-                Match("lt");
+                return Match("lt");
             }
 
             if ("gt".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'gt'");
 
-                Match("gt");
+                return Match("gt");
             }
 
             if ("leq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'leq'");
 
-                Match("leq");
+                return Match("leq");
             }
 
             if ("geq".HasToken(lookahead)) {
                 this.ApplyDerivation("relOp -> 'geq'");
 
-                Match("geq");
+                return Match("geq");
             }
 
-            return false;
+            return System.String.Empty;
         }
     }
 }

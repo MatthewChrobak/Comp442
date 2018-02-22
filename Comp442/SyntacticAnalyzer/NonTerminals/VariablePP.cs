@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool VariablePP()
+        private Var VariablePP()
         {
             string first = ".";
             string follow = "= )";
@@ -15,16 +17,16 @@
                 this.ApplyDerivation("variablePP -> '.' 'id' variableP");
 
                 Match(".");
-                Match("id");
-                VariableP();
+                string id = Match("id");
+                return VariableP(id);
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("variablePP -> EPSILON");
-                return true;
+                return new Var();
             }
 
-            return false;
+            return null;
         }
     }
 }

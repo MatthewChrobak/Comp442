@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool Factor()
+        private object Factor()
         {
             string first = "intNum floatNum ( not + - id";
             this.SkipErrors(first);
@@ -13,44 +15,54 @@
             if ("intNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'intNum'");
 
-                Match("intNum");
+                return Match("intNum");
             }
 
             if ("floatNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'floatNum'");
 
-                Match("floatNum");
+                return Match("floatNum");
             }
 
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> '(' arithExpr ')'");
 
                 Match("(");
-                ArithExpr();
+                var expression = ArithExpr();
                 Match(")");
+
+                return expression;
             }
 
             if ("not".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'not' factor");
 
+                var not = new Not();
+
                 Match("not");
-                Factor();
+                not.Factor = Factor();
+
+                return not;
             }
 
             if ("+ -".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> sign factor");
 
-                Sign();
-                Factor();
+                var sign = new Sign();
+
+                sign.SignSymbol = Sign();
+                sign.Factor = Factor();
+
+                return sign;
             }
 
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> infAccessorDot_AndID_AndVoFC");
 
-                InfAccessorDot_AndID_AndVoFC();
+                return InfAccessorDot_AndID_AndVoFC();
             }
 
-            return false;
+            return null;
         }
     }
 }

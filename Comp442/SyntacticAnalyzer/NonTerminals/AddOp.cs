@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool AddOp()
+        private string AddOp()
         {
             string first = "+ - or";
             this.SkipErrors(first);
@@ -13,22 +13,22 @@
             if ("+".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> '+'");
 
-                Match("+");
+                return Match("+");
             }
 
             if ("-".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> '-'");
 
-                Match("-");
+                return Match("-");
             }
 
             if ("or".HasToken(lookahead)) {
                 this.ApplyDerivation("addOp -> 'or'");
 
-                Match("or");
+                return Match("or");
             }
 
-            return false;
+            return System.String.Empty;
         }
     }
 }

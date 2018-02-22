@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfIndice()
+        private IndexList InfIndice()
         {
             string first = "[";
             string follow = ". * / and + - or eq neq lt gt leq geq ] ) ; , =";
@@ -13,16 +15,23 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> indice infIndice");
 
-                Indice();
-                InfIndice();
+                var indexList = new IndexList();
+
+                object expr = Indice();
+                var trailingExpr = InfIndice();
+
+                indexList.Expressions.Add(expr);
+                indexList.Expressions.JoinListWhereNotNull(trailingExpr?.Expressions);
+
+                return indexList;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> EPSILON");
-                return true;
+                return new IndexList();
             }
 
-            return false;
+            return null;
         }
     }
 }

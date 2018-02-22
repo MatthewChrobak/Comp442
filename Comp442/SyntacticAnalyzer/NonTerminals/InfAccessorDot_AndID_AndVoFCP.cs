@@ -1,8 +1,11 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool InfAccessorDot_AndID_AndVoFCP()
+        // This can be either a function call or a variable.
+        private Var InfAccessorDot_AndID_AndVoFCP(string id)
         {
             string first = "[ ( .";
             string follow = "* / and + - or eq neq lt gt leq geq ] ) ; ,";
@@ -14,18 +17,25 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
 
-                AccessorP();
-                InfAccessorDot_AndID_AndVoFCPP();
+                var variable = new Var();
+
+                var funcOrDataMemeber = AccessorP(id);
+                var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
+
+                variable.Elements.Add(funcOrDataMemeber);
+                variable.Elements.JoinListWhereNotNull(trailingFuncOrDataMembers?.Elements);
+
+                return variable;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return true;
+                return new Var() { Elements = { new DataMember() { Id = id } } };
             }
 
-            return false;
+            return null;
         }
     }
 }

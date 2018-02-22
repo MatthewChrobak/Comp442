@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool Sign()
+        private string Sign()
         {
             string first = "+ -";
             this.SkipErrors(first);
@@ -13,16 +13,16 @@
             if ("+".HasToken(lookahead)) {
                 this.ApplyDerivation("sign -> '+'");
 
-                Match("+");
+                return Match("+");
             }
 
             if ("-".HasToken(lookahead)) {
                 this.ApplyDerivation("sign -> '-'");
 
-                Match("-");
+                return Match("-");
             }
 
-            return false;
+            return System.String.Empty;
         }
     }
 }

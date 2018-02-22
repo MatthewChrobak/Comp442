@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
 
                 var aparams = new AParams();
 
-                var expr = Expr();
+                object expr = Expr();
                 var trailingExpr = InfAParamsTail();
 
                 aparams.Expressions.Add(expr);

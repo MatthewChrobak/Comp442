@@ -38,8 +38,19 @@ namespace SyntacticAnalyzer.Parser
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
 
-                InfIndice();
-                VariablePP();g
+                var variable = new Var();
+                var member = new DataMember();
+
+                var indice = InfIndice();
+                var trailingElements = VariablePP();
+
+                member.Id = id;
+                member.Indexes = indice;
+
+                variable.Elements.Add(member);
+                variable.Elements.JoinListWhereNotNull(trailingElements?.Elements);
+
+                return variable;
             }
 
             if (follow.HasToken(lookahead)) {

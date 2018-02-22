@@ -2,7 +2,8 @@
 {
     public partial class Parser
     {
-        private bool Term()
+        // Decides between a MultOp or Factor.
+        private object Term()
         {
             string first = "intNum floatNum ( not id + -";
             this.SkipErrors(first);
@@ -13,11 +14,11 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("term -> factor termP");
 
-                Factor();
-                TermP();
+                object factor = Factor();
+                return TermP(factor);
             }
 
-            return false;
+            return null;
         }
     }
 }

@@ -20,8 +20,9 @@ namespace SyntacticAnalyzer.Parser
 
                 string id = Match("id");
                 var trailingBlock = InfVarAndState_IdHandler(id);
+                
+                block.Statements.JoinListWhereNotNull(trailingBlock?.Statements);
 
-                block.Statements.Add(trailingBlock);
                 return block;
             }
 

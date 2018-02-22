@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool AParamsTail()
+        private object AParamsTail()
         {
             string first = ",";
             this.SkipErrors(first);
@@ -14,10 +14,10 @@
                 this.ApplyDerivation("aParamsTail -> ',' expr");
 
                 Match(",");
-                Expr();
+                return Expr();
             }
 
-            return false;
+            return null;
         }
     }
 }

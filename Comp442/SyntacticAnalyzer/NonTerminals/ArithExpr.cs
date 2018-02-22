@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool ArithExpr()
+        private object ArithExpr()
         {
             string first = "intNum floatNum ( not id + -";
             this.SkipErrors(first);
@@ -13,11 +13,11 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExpr -> term arithExprP");
 
-                Term();
-                ArithExprP();
+                object term = Term();
+                return ArithExprP(term);
             }
 
-            return false;
+            return null;
         }
     }
 }

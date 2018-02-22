@@ -6,6 +6,6 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class IndexList
     {
-        public List<ArithExpr> Expressions { get; set; } = new List<ArithExpr>();
+        public List<object> Expressions { get; set; } = new List<object>();
     }
 }

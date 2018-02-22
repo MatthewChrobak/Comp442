@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool MultOp()
+        private string MultOp()
         {
             string first = "* / and";
             this.SkipErrors(first);
@@ -13,22 +13,22 @@
             if ("*".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> '*'");
 
-                Match("*");
+                return Match("*");
             }
 
             if ("/".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> '/'");
 
-                Match("/");
+                return Match("/");
             }
 
             if ("and".HasToken(lookahead)) {
                 this.ApplyDerivation("multOp -> 'and'");
 
-                Match("and");
+                return Match("and");
             }
 
-            return false;
+            return System.String.Empty;
         }
     }
 }

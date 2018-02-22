@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool ArithExprP()
+        private object ArithExprP(object term)
         {
             string first = "+ - or";
             string follow = "eq neq lt gt leq geq ] ) ; ,";
@@ -14,17 +16,25 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> addOp term arithExprP");
 
-                AddOp();
-                Term();
-                ArithExprP();
+                var arithExpr = new AddOp();
+
+                string op = AddOp();
+                object nextTerm = Term();
+                object trailingExpr = ArithExprP(nextTerm);
+
+                arithExpr.LHS_Term = term;
+                arithExpr.Operator = op;
+                arithExpr.RHS_ArithExpr = trailingExpr;
+
+                return arithExpr;
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> EPSILON");
-                return true;
+                return term;
             }
 
-            return false;
+            return null;
         }
     }
 }

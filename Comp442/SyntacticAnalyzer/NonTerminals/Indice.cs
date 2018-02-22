@@ -2,7 +2,7 @@
 {
     public partial class Parser
     {
-        private bool Indice()
+        private object Indice()
         {
             string first = "[";
             this.SkipErrors(first);
@@ -14,12 +14,14 @@
                 this.ApplyDerivation("indice -> '[' arithExpr ']'");
 
                 Match("[");
-                ArithExpr();
+                object expr = ArithExpr();
                 Match("]");
+
+                return expr;
             }
            
 
-            return false;
+            return null;
         }
     }
 }
