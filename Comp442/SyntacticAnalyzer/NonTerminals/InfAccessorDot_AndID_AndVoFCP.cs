@@ -37,6 +37,8 @@ namespace SyntacticAnalyzer.Parser
 
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
 
+                dataMember.Id = id;
+
                 variable.Elements.Add(dataMember);
                 variable.Elements.JoinListWhereNotNull(trailingFuncOrDataMembers?.Elements);
 
