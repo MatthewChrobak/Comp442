@@ -22,9 +22,9 @@ namespace SyntacticAnalyzer.Parser
                 object nextTerm = Term();
                 object trailingExpr = ArithExprP(nextTerm);
 
-                arithExpr.LHS_Term = term;
+                arithExpr.LHS = term;
                 arithExpr.Operator = op;
-                arithExpr.RHS_ArithExpr = trailingExpr;
+                arithExpr.RHS = trailingExpr;
 
                 return arithExpr;
             }

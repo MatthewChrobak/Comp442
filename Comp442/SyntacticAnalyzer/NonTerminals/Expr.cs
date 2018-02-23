@@ -17,7 +17,7 @@
                 return ArithExprOrRelExpr(arithExpr);
             }
 
-            return false;
+            return null;
         }
     }
 }

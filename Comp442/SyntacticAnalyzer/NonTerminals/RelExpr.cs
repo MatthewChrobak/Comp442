@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool RelExpr()
+        private RelExpr RelExpr()
         {
             string first = "intNum floatNum ( not id + -";
             this.SkipErrors(first);
@@ -13,12 +15,20 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("relExpr -> arithExpr relOp arithExpr");
 
-                ArithExpr();
-                RelOp();
-                ArithExpr();
+                var expr = new RelExpr();
+
+                var lhs = ArithExpr();
+                string op = RelOp();
+                var rhs = ArithExpr();
+
+                expr.LHS = lhs;
+                expr.RelationOperator = op;
+                expr.RHS = rhs;
+
+                return expr;
             }
 
-            return false;
+            return null;
         }
     }
 }

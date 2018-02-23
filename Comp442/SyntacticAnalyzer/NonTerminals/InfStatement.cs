@@ -23,6 +23,8 @@ namespace SyntacticAnalyzer.Parser
 
                 block.Statements.Add(statement);
                 block.Statements.JoinListWhereNotNull(trailingBlock?.Statements);
+
+                return block;
             }
 
             if (follow.HasToken(lookahead)) {

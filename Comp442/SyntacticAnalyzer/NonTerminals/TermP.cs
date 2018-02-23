@@ -24,9 +24,9 @@ namespace SyntacticAnalyzer.Parser
                 object nextTerm = Factor();
                 object trailingTerm = TermP(nextTerm);
 
-                term.LHS_Factor = factor;
+                term.LHS = factor;
                 term.Operator = op;
-                term.RHS_Term = trailingTerm;
+                term.RHS = trailingTerm;
 
                 return term;
             }

@@ -71,11 +71,27 @@ namespace SyntacticAnalyzer.Parser
                         typeof(Var),
                         typeof(VarDecl)
                     });
-
+                
                 serializer.Serialize(fs, this.AST);
             }
 
             var astSection = new Section("Abstract Syntax Tree");
+            astSection.AddRow("<button onclick=\"" +
+                @"
+var clickEvent = new MouseEvent('click', {
+'view': window,
+'bubbles': true,
+'cancelable': false
+});
+var elements = document.getElementsByTagName('circle');
+for (var i = 0; i < elements.length; i++) {
+    var element = elements[i];
+    if (element.style.fill != 'rgb(255, 255, 255)') {
+        elements[i].dispatchEvent(clickEvent);
+    }
+}
+" +
+                "\">Expand</button>");
             astSection.AddRow($"<div id='AST' class='AST' style='background-color:rgb(150, 150, 150);'><script>xml2tree('AST', '{inputFileName + ".xml"}', [], false, false);</script></div>");
 
             if (validProgram) {

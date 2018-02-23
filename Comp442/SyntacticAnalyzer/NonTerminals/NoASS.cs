@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private bool NoASS()
+        private object NoASS()
         {
             string first = "if for get put return";
             this.SkipErrors(first);
@@ -13,65 +15,101 @@
             if ("if".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'if' '(' expr ')' 'then' statBlock 'else' statBlock ';'");
 
+                var ifStatement = new IfStat();
+
                 Match("if");
                 Match("(");
-                Expr();
+                var expr = Expr();
                 Match(")");
                 Match("then");
-                StatBlock();
+                var trueBlock = StatBlock();
                 Match("else");
-                StatBlock();
+                var elseBlock = StatBlock();
                 Match(";");
+
+                ifStatement.Condition = expr;
+                ifStatement.TrueBlock = trueBlock;
+                ifStatement.ElseBlock = elseBlock;
+
+                return ifStatement;
             }
 
             if ("for".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'for' '(' type 'id' '=' expr ';' relExpr ';' assignStat ')' statBlock ';'");
 
+                var forStat = new ForStat();
+
                 Match("for");
                 Match("(");
-                Type();
+                string type = Type();
                 Match("id");
                 Match("=");
-                Expr();
+                var initExpr = Expr();
                 Match(";");
-                RelExpr();
+                var condition = RelExpr();
                 Match(";");
-                AssignStat();
+                var assignStat = AssignStat();
                 Match(")");
-                StatBlock();
+                var statBlock = StatBlock();
                 Match(";");
+
+                forStat.Type = type;
+                forStat.Initialization = initExpr;
+                forStat.Condition = condition;
+                forStat.Update = assignStat;
+                forStat.LoopBlock = statBlock;
+
+                return forStat;
             }
 
             if ("get".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'get' '(' variable ')' ';'");
 
+                var getStatement = new GetStat();
+
                 Match("get");
                 Match("(");
-                Variable();
+                var variable = Variable();
                 Match(")");
                 Match(";");
+
+                getStatement.Variable = variable;
+
+                return getStatement;
             }
 
             if ("put".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'put' '(' expr ')' ';'");
+
+                var putStatement = new PutStat();
+
                 Match("put");
                 Match("(");
-                Expr();
+                var expr = Expr();
                 Match(")");
                 Match(";");
+
+                putStatement.Expression = expr;
+
+                return putStatement;
             }
 
             if ("return".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'return' '(' expr ')' ';'");
 
+                var returnStatement = new ReturnStat();
+
                 Match("return");
                 Match("(");
-                Expr();
+                var expr = Expr();
                 Match(")");
                 Match(";");
+
+                returnStatement.ReturnValueExpression = expr;
+                return returnStatement;
             }
 
-            return false;
+            return null;
         }
     }
 }

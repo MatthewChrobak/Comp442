@@ -7,7 +7,15 @@ namespace SyntacticAnalyzer.Nodes
     public class AssignStat
     {
         public Var Variable { get; set; }
-        
-        public object ExpressionValue { get; set; }
+
+        [XmlElement(type: typeof(AddOp), elementName: "AddOp")] // arithExpr
+        [XmlElement(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
+        [XmlElement(type: typeof(MultOp), elementName: "MultOp")] // term
+        [XmlElement(type: typeof(Var), elementName: "OtherVariable")] // factor
+        [XmlElement(type: typeof(string), elementName: "Number")] // factor
+        [XmlElement(type: typeof(FCall), elementName: "FunctionCall")] // factor
+        [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
+        [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
+        public object ExpressionValue { get; set; } // resolves to expr
     }
 }

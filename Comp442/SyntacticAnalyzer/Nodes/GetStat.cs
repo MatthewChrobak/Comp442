@@ -5,6 +5,6 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class GetStat
     {
-        public Var Var { get; set; }
+        public Var Variable { get; set; }
     }
 }
