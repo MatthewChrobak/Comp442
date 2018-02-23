@@ -25,5 +25,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public object RHS { get; set; } // arithExpr
+
+        public override string ToString()
+        {
+            return "(" + LHS + RelationOperator + RHS + ")";
+        }
     }
 }

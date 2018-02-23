@@ -9,5 +9,10 @@ namespace SyntacticAnalyzer.Nodes
     {
         [XmlElement("Class")]
         public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();
+
+        public override string ToString()
+        {
+            return String.Join(",", Classes);
+        }
     }
 }

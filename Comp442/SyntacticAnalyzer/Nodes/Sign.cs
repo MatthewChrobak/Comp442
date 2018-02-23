@@ -17,5 +17,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object Factor { get; set; }
+
+        public override string ToString()
+        {
+            return SignSymbol + Factor;
+        }
     }
 }

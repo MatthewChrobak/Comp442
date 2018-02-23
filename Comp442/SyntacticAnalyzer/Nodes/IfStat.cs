@@ -17,5 +17,10 @@ namespace SyntacticAnalyzer.Nodes
         public object Condition { get; set; }
         public StatBlock TrueBlock { get; set; }
         public StatBlock ElseBlock { get; set; }
+
+        public override string ToString()
+        {
+            return $"if ({Condition}) then {TrueBlock} else {ElseBlock};";
+        }
     }
 }

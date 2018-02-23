@@ -15,5 +15,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object Expression; // resolves to expr
+
+        public override string ToString()
+        {
+            return $"Put {Expression};";
+        }
     }
 }

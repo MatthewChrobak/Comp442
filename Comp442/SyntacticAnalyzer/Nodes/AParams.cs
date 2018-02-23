@@ -16,5 +16,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
         public List<object> Expressions { get; set; } = new List<object>();
+
+        public override string ToString()
+        {
+            return String.Join(",", Expressions);
+        }
     }
 }

@@ -7,5 +7,10 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Id { get; set; }
         public AParams Parameters { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Id}({Parameters})";
+        }
     }
 }

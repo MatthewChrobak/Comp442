@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
@@ -16,5 +17,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
         public List<object> Expressions { get; set; } = new List<object>();
+
+        public override string ToString()
+        {
+            return String.Join(string.Empty, Expressions.Select(val => $"[{val}]"));
+        }
     }
 }

@@ -28,5 +28,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public object RHS { get; set; } // factor
+
+        public override string ToString()
+        {
+            return "(" + LHS + Operator + RHS + ")";
+        }
     }
 }

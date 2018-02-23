@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
@@ -15,5 +16,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(PutStat), elementName: "Put")]
         [XmlArrayItem(type: typeof(ReturnStat), elementName: "Return")]
         public List<object> Statements { get; set; } = new List<object>();
+
+        public override string ToString()
+        {
+            return "{\n" + String.Join(string.Empty, Statements.Select(val => val + "\n")) + "\n}";
+        }
     }
 }

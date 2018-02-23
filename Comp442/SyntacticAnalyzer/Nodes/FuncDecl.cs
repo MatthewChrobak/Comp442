@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
@@ -13,5 +14,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArray("Parameters")]
         [XmlArrayItem("Parameter")]
         public List<FParam> Parameters { get; set; } = new List<FParam>();
+
+        public override string ToString()
+        {
+            return $"({Parameters.Select(val => val.ToString()).Aggregate((sentence, next) => "," + next)})";
+        }
     }
 }

@@ -10,5 +10,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type:typeof(DataMember), elementName:"DataMember")]
         [XmlArrayItem(type:typeof(FCall), elementName:"FunctionCall")]
         public List<object> Elements { get; set; } = new List<object>();
+
+        public override string ToString()
+        {
+            return String.Join(".", Elements);
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace SyntacticAnalyzer.Parser
             atoccStreamOutput.AddRow($"<code style='color:black'>{this.Derivations.Last().SententialForm.Replace(' ', '\0').Replace('\'', '\0')}</code>");
             yield return atoccStreamOutput;
 
-            
+
 
             var errorList = new Section("Syntactic Error List");
             foreach (var error in this.Errors) {
@@ -40,6 +40,11 @@ namespace SyntacticAnalyzer.Parser
                 yield return errorList;
             }
 
+            var absStream = new Section("Abstract Syntax Tree Traversal", true);
+            absStream.AddRow($"<code style='color:black'>{this.AST.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>")}</code>");
+            if (validProgram) {
+                yield return absStream;
+            }
 
 
             using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
@@ -76,7 +81,7 @@ namespace SyntacticAnalyzer.Parser
             }
 
             var astSection = new Section("Abstract Syntax Tree");
-            astSection.AddRow("<button onclick=\"" +
+            astSection.AddRow("<button class='btn btn-danger' onclick=\"" +
                 @"
 var clickEvent = new MouseEvent('click', {
 'view': window,
@@ -91,7 +96,7 @@ for (var i = 0; i < elements.length; i++) {
     }
 }
 " +
-                "\">Expand</button>");
+                "\">Expand - MAY TAKE A LONG TIME</button>");
             astSection.AddRow($"<div id='AST' class='AST' style='background-color:rgb(150, 150, 150);'><script>xml2tree('AST', '{inputFileName + ".xml"}', [], false, false);</script></div>");
 
             if (validProgram) {

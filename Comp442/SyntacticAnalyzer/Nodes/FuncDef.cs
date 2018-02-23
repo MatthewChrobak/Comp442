@@ -15,5 +15,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem("Parameter")]
         public List<FParam> Parameters { get; set; } = new List<FParam>();
         public StatBlock Implementation { get; set; }
+
+        public override string ToString()
+        {
+            return $"{ReturnType} {ScopeResolution}{FunctionName}({string.Join(",", Parameters)}){Implementation};";
+        }
     }
 }

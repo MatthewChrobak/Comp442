@@ -22,5 +22,10 @@ namespace SyntacticAnalyzer.Nodes
         public RelExpr Condition;
         public AssignStat Update;
         public StatBlock LoopBlock;
+
+        public override string ToString()
+        {
+            return $"for ({Type} {Id} ={Initialization};{Condition};{Update}) {LoopBlock};";
+        }
     }
 }
