@@ -42,7 +42,7 @@ namespace SyntacticAnalyzer.Parser
                 Match("for");
                 Match("(");
                 string type = Type();
-                Match("id");
+                string id = Match("id");
                 Match("=");
                 var initExpr = Expr();
                 Match(";");
@@ -54,6 +54,7 @@ namespace SyntacticAnalyzer.Parser
                 Match(";");
 
                 forStat.Type = type;
+                forStat.Id = id;
                 forStat.Initialization = initExpr;
                 forStat.Condition = condition;
                 forStat.Update = assignStat;
