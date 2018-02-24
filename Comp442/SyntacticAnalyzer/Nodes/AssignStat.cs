@@ -20,7 +20,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"{Variable}={ExpressionValue};";
+            return $"{Variable}={ExpressionValue}";
         }
     }
 }

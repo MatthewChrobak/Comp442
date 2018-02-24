@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"return {ReturnValueExpression.ToString()};";
+            return $"return {ReturnValueExpression.ToString()}";
         }
     }
 }

@@ -41,7 +41,7 @@ namespace SyntacticAnalyzer.Parser
             }
 
             var absStream = new Section("Abstract Syntax Tree Traversal", true);
-            absStream.AddRow($"<code style='color:black'>{this.AST.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>")}</code>");
+            absStream.AddRow($"<code style='color:black'>{this.AST.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;")}</code>");
             if (validProgram) {
                 yield return absStream;
             }

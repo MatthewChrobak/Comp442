@@ -11,7 +11,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return Classes.ToString() + Functions.ToString() + "program" + MainFunction.ToString() + ";";
+            return Classes.ToString() + Functions.ToString() + "\nprogram" + MainFunction.ToString() + ";";
         }
     }
 }

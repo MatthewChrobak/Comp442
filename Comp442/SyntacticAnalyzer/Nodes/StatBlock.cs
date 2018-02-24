@@ -19,7 +19,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return "{\n" + String.Join(string.Empty, Statements.Select(val => val + "\n")) + "\n}";
+            return "{\n" + String.Join(string.Empty, Statements.Select(val => val + ";\n")) + "\n}";
         }
     }
 }

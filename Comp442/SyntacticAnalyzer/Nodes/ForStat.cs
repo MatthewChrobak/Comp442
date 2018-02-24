@@ -25,7 +25,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"for ({Type} {Id} ={Initialization};{Condition};{Update}) {LoopBlock};";
+            return $"for ({Type} {Id} ={Initialization};{Condition};{Update}) {LoopBlock}";
         }
     }
 }

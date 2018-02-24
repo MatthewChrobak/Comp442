@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"Put {Expression};";
+            return $"Put {Expression}";
         }
     }
 }

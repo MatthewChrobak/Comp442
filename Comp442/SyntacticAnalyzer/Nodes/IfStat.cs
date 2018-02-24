@@ -20,7 +20,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"if ({Condition}) then {TrueBlock} else {ElseBlock};";
+            return $"if ({Condition}) then {TrueBlock} else {ElseBlock}";
         }
     }
 }
