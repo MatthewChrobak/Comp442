@@ -18,13 +18,14 @@ namespace SyntacticAnalyzer.Parser
                 var @class = new ClassDecl();
 
                 Match("class");
-                Match("id");
+                string className = Match("id");
                 var inheritance = OptInheritance();
                 Match("{");
                 var variablesAndFunctions = InfVarAndFunc_VarStart();
                 Match("}");
                 Match(";");
 
+                @class.ClassName = className;
                 @class.InheritingClasses = inheritance;
                 @class.Members = variablesAndFunctions;
 

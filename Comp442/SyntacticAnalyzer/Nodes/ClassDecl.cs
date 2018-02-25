@@ -7,7 +7,9 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class ClassDecl
     {
-        public InherList InheritingClasses;
+        public InherList InheritingClasses { get; set; }
+
+        public string ClassName { get; set; }
 
         [XmlArray("MemberList")]
         [XmlArrayItem("Variable", type: typeof(VarDecl))]
@@ -16,7 +18,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return "class someclass" + InheritingClasses.ToString() + "{" + string.Join(";\n", Members) + "};";
+            if (Members?.Count > 0) {
+                return "class " + ClassName + InheritingClasses + "{\n" + string.Join(";\n", Members) + ";\n};\n";
+            }
+            return "class " + ClassName + InheritingClasses + "{\n};\n";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ReportGenerator;
 using SyntacticAnalyzer.Nodes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,21 +19,28 @@ namespace SyntacticAnalyzer.Parser
 
             bool validProgram = this.Verify();
             var validProgramSection = new Section("Valid Program");
-            validProgramSection.AddRow(validProgram ? "Yes" : "No");
+            validProgramSection.AddRow("<p style='font-weight:lighter;'>This section displays whether or not the given program is lexically and syntactically correct.</p><hr style='margin-top:0'>");
+            validProgramSection.AddRow(validProgram ? "Program is valid." : "Program is invalid: " + this.Errors.Count + " errors were found.");
             yield return validProgramSection;
 
             var atoccStreamInput = new Section("AToCC Input Stream");
+            atoccStreamInput.AddRow("<p style='font-weight:lighter;'>This section contains the original token stream converted into AToCC format.</p><hr style='margin-top:0'>");
             atoccStreamInput.AddRow($"<code style='color:black'>{this.TokenStream.FullAToCCFormat}</code>");
             yield return atoccStreamInput;
 
 
             var atoccStreamOutput = new Section("Last Derivation in AToCC Format");
+            atoccStreamOutput.AddRow("<p style='font-weight:lighter;'>This section contains the last derivation done in the syntactic analysis converted into AToCC format.</p><hr style='margin-top:0'>");
             atoccStreamOutput.AddRow($"<code style='color:black'>{this.Derivations.Last().SententialForm.Replace(' ', '\0').Replace('\'', '\0')}</code>");
-            yield return atoccStreamOutput;
+            if (validProgram) {
+                yield return atoccStreamOutput;
+            }
+            
 
 
 
             var errorList = new Section("Syntactic Error List");
+            errorList.AddRow("<p style='font-weight:lighter;'>Contains all the syntactic errors found in the parsing process.</p><hr style='margin-top:0'>");
             foreach (var error in this.Errors) {
                 errorList.AddRow(error);
             }
@@ -41,14 +49,17 @@ namespace SyntacticAnalyzer.Parser
             }
 
             var absStream = new Section("Abstract Syntax Tree Traversal", true);
-            absStream.AddRow($"<code style='color:black'>{this.AST.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;")}</code>");
+            absStream.AddRow("<p style='font-weight:lighter;'>Displays the reconstruction of the original program through the traversal of the Abstract Syntax Tree data structure." +
+                " Note that minor non-errors may occur in the reconstruction such as: missing or additional semi-colons, and missing or additional whitespace.</p><hr style='margin-top:0'>");
+            absStream.AddRow($"<code style='color:black'>{this.AST?.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;")}</code>");
             if (validProgram) {
                 yield return absStream;
             }
 
 
             using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
-                var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
+                try {
+                    var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
                         typeof(AddOp),
                         typeof(AParams),
                         typeof(AssignStat),
@@ -76,11 +87,14 @@ namespace SyntacticAnalyzer.Parser
                         typeof(Var),
                         typeof(VarDecl)
                     });
-                
-                serializer.Serialize(fs, this.AST);
+                    serializer.Serialize(fs, this.AST);
+                } catch (Exception e) {
+
+                }
             }
 
             var astSection = new Section("Abstract Syntax Tree");
+            astSection.AddRow("<p style='font-weight:lighter;'>Displays the Abstract Syntax Tree data structure in a tree format. You can click on nodes to expand or collapse their children.</p><hr style='margin-top:0'>");
             astSection.AddRow("<button class='btn btn-danger' onclick=\"" +
                 @"
 var clickEvent = new MouseEvent('click', {
@@ -107,6 +121,7 @@ for (var i = 0; i < elements.length; i++) {
 
 
             var derivSection = new Section("Derivations", true);
+            derivSection.AddRow("<p style='font-weight:lighter;'>Contains the full derivation of the program that was parsed, and details each rule that was applied and the resulting sentential form as a result of its application.</p><hr style='margin-top:0'>");
             derivSection.AddRowStart();
             derivSection.Add("<table class='table table-hover' style='color:red'><tr style='color:black'><th>Rule Applied</th><th>Sentential Form</th></tr>");
 
@@ -128,12 +143,7 @@ for (var i = 0; i < elements.length; i++) {
 
             if (validProgram) {
                 yield return derivSection;
-            }
-
-
-
-
-            
+            } 
         }
     }
 }

@@ -13,7 +13,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return string.Join("\n", Functions.Select(val => val.ToString()));
+            if (Functions?.Count > 0) {
+                return string.Join("\n", Functions.Select(val => val.ToString()));
+            }
+            return string.Empty;
         }
     }
 }

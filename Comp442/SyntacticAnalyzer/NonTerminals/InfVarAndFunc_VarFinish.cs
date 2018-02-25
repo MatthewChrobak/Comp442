@@ -28,7 +28,7 @@ namespace SyntacticAnalyzer.Parser
                 variable.Dimensions = arraySizes;
 
                 memberList.Add(variable);
-                memberList.AddRange(trailingMembers);
+                memberList.JoinListWhereNotNull(trailingMembers);
                 return memberList;
             }
 

@@ -11,7 +11,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            if (IDs.Count > 0) {
+            if (IDs?.Count > 0) {
                 return ":" + IDs.Aggregate((sentence, value) => sentence + "," + value);
             }
             return string.Empty;

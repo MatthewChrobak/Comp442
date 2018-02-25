@@ -9,7 +9,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"Get {Variable.ToString()}";
+            return $"Get {Variable}";
         }
     }
 }

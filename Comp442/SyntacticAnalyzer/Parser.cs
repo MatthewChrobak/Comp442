@@ -15,6 +15,7 @@ namespace SyntacticAnalyzer.Parser
         public TokenStream TokenStream { get; set; }
         private Tokenizer _tokenizer;
         private List<string> Errors = new List<string>();
+        private bool _hitEndOfFile = false;
         private Program AST;
 
         public Parser(string[] code)
@@ -35,14 +36,17 @@ namespace SyntacticAnalyzer.Parser
             var token = this.TokenStream.Peek();
             string token_AToCC = token.AToCCFormat();
 
-            if (token_AToCC != atocc) {
-                if (token.Type == TokenType.EndOfStream) {
-                    this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
+            if (!this._hitEndOfFile) {
+                if (token_AToCC != atocc) {
+                    if (token.Type == TokenType.EndOfStream) {
+                        this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
+                        this._hitEndOfFile = true;
+                    } else {
+                        this.Errors.Add($"Expected {atocc} - '{token.SourceLocation}'. Got '{token.TokenContent}'.");
+                    }
                 } else {
-                    this.Errors.Add($"Expected {atocc} - '{token.SourceLocation}'. Got '{token.TokenContent}'.");
+                    this.TokenStream.NextToken();
                 }
-            } else {
-                this.TokenStream.NextToken();
             }
 
             return token.TokenContent;
@@ -58,16 +62,25 @@ namespace SyntacticAnalyzer.Parser
         {
             Token token;
             string lookahead;
+            bool errorReported = false;
 
             do {
                 token = this.TokenStream.Peek();
                 lookahead = token.AToCCFormat();
 
+                if (token.Type == TokenType.EndOfStream) {
+                    break;
+                }
+
                 if (first.HasToken(lookahead) || (hasEpsilonProduction && follow.HasToken(lookahead))) {
                     return;
                 }
 
-                this.Errors.Add($"Expected {(first + " " + follow).Trim().Replace(" ", ", ")} - {token.SourceLocation}. Got '{token.TokenContent}'.");
+                if (!errorReported) {
+                    this.Errors.Add($"Expected {(first + " " + follow).Trim().Replace(" ", ", ")} - {token.SourceLocation}. Got '{token.TokenContent}'.");
+                    errorReported = true;
+                }
+
                 this.TokenStream.NextToken(); // Disregard this current token.
 
             } while (token.Type != TokenType.EndOfStream);

@@ -13,7 +13,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"{Type} {Id}{String.Join(string.Empty, Dimensions.Select(val => $"[{val}]"))}";
+            if (Dimensions?.Count > 0) {
+                return $"{Type} {Id}{String.Join(string.Empty, Dimensions.Select(val => $"[{val}]"))}";
+            }
+            return $"{Type} {Id}";
         }
     }
 }

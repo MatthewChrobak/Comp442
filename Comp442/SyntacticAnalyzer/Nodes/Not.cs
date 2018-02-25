@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return "not " + Factor;
+            return $"(not {Factor})";
         }
     }
 }

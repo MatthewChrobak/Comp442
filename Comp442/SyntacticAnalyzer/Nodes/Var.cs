@@ -13,7 +13,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return String.Join(".", Elements);
+            if (Elements?.Count > 0) {
+                return String.Join(".", Elements);
+            }
+            return string.Empty;
         }
     }
 }

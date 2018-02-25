@@ -20,7 +20,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return SignSymbol + Factor;
+            return $"({SignSymbol}{Factor})";
         }
     }
 }

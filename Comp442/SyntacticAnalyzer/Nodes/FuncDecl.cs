@@ -17,7 +17,11 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"({Parameters.Select(val => val.ToString()).Aggregate((sentence, next) => "," + next)})";
+            if (Parameters?.Count > 0) {
+                return $"{Type} {Id}({Parameters.Select(val => val.ToString()).Aggregate((sentence, next) => "," + next)})";
+            } else {
+                return $"{Type} {Id}()";
+            }
         }
     }
 }

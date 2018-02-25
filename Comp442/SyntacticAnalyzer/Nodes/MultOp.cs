@@ -31,7 +31,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return "(" + LHS + Operator + RHS + ")";
+            return $"({LHS} {Operator} {RHS})";
         }
     }
 }

@@ -20,7 +20,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return String.Join(string.Empty, Expressions.Select(val => $"[{val}]"));
+            if (Expressions?.Count > 0) {
+                return String.Join(string.Empty, Expressions.Select(val => $"[{val}]"));
+            }
+            return string.Empty;
         }
     }
 }

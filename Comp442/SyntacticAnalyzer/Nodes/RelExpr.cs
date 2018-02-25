@@ -28,7 +28,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return "(" + LHS + RelationOperator + RHS + ")";
+            return $"({LHS} {RelationOperator} {RHS})";
         }
     }
 }

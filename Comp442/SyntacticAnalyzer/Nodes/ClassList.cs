@@ -12,7 +12,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return String.Join(",", Classes);
+            if (Classes?.Count > 0) {
+                return String.Join("\n", Classes) + "\n";
+            }
+            return "\n";
         }
     }
 }

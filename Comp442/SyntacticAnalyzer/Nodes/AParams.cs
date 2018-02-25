@@ -19,7 +19,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return String.Join(",", Expressions);
+            if (Expressions?.Count > 0) {
+                return String.Join(",", Expressions);
+            }
+            return string.Empty;
         }
     }
 }
