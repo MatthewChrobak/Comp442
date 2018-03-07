@@ -19,9 +19,9 @@ namespace SyntacticAnalyzer.Nodes
         public override string ToString()
         {
             if (Parameters?.Count > 0) {
-                return $"{ReturnType} {ScopeResolution}{FunctionName}(){Implementation};\n";
+                return $"{ReturnType} {ScopeResolution}{FunctionName}({string.Join(",", Parameters)}){Implementation};\n";
             }
-            return $"{ReturnType} {ScopeResolution}{FunctionName}({string.Join(",", Parameters)}){Implementation};\n";
+            return $"{ReturnType} {ScopeResolution}{FunctionName}(){Implementation};\n";
         }
     }
 }

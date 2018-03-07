@@ -14,9 +14,9 @@ namespace SyntacticAnalyzer.Nodes
         public override string ToString()
         {
             if (Dimensions?.Count > 0) {
-                return $"{Type} {Id}";
+                return $"{Type} {Id}{String.Join(string.Empty, Dimensions?.Select(val => $"[{val}]"))}";
             }
-            return $"{Type} {Id}{String.Join(string.Empty, Dimensions?.Select(val => $"[{val}]"))}";
+            return $"{Type} {Id}";
         }
     }
 }

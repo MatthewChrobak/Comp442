@@ -61,7 +61,7 @@ namespace SyntacticAnalyzer.Parser
                 try {
                     var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
                         typeof(AddOp),
-                        typeof(AParams),
+                        typeof(Nodes.AParams),
                         typeof(AssignStat),
                         typeof(ClassDecl),
                         typeof(ClassList),
@@ -93,7 +93,7 @@ namespace SyntacticAnalyzer.Parser
                 }
             }
 
-            var astSection = new Section("Abstract Syntax Tree");
+        var astSection = new Section("Abstract Syntax Tree");
             astSection.AddRow("<p style='font-weight:lighter;'>Displays the Abstract Syntax Tree data structure in a tree format. You can click on nodes to expand or collapse their children.</p><hr style='margin-top:0'>");
             astSection.AddRow("<button class='btn btn-danger' onclick=\"" +
                 @"
