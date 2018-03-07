@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class Sign
+    public class Sign : IVisitable
     {
         public string SignSymbol { get; set; }
 
@@ -17,6 +18,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object Factor { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

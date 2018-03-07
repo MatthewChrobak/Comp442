@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
@@ -6,7 +7,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class StatBlock
+    public class StatBlock : IVisitable
     {
         [XmlArrayItem(type:typeof(VarDecl), elementName:"VarDecl")]
         [XmlArrayItem(type:typeof(AssignStat), elementName:"Assignment")]
@@ -16,6 +17,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(PutStat), elementName: "Put")]
         [XmlArrayItem(type: typeof(ReturnStat), elementName: "Return")]
         public List<object> Statements { get; set; } = new List<object>();
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

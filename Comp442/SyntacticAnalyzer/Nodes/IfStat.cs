@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class IfStat
+    public class IfStat : IVisitable
     {
         [XmlElement(type: typeof(AddOp), elementName: "AddOp")] // arithExpr
         [XmlElement(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
@@ -17,6 +18,11 @@ namespace SyntacticAnalyzer.Nodes
         public object Condition { get; set; }
         public StatBlock TrueBlock { get; set; }
         public StatBlock ElseBlock { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

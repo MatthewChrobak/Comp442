@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
@@ -6,10 +7,15 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class FuncDefList
+    public class FuncDefList : IVisitable
     {
         [XmlElement("Function")]
         public List<FuncDef> Functions { get; set; } = new List<FuncDef>();
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

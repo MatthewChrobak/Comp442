@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class AParams
+    public class AParams : IVisitable
     {
         [XmlArrayItem(type: typeof(AddOp), elementName: "AddOp")] // arithExpr
         [XmlArrayItem(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
@@ -16,6 +17,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
         public List<object> Expressions { get; set; } = new List<object>();
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

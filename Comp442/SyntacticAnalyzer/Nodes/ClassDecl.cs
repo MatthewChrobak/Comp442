@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ClassDecl
+    public class ClassDecl : IVisitable
     {
         public InherList InheritingClasses { get; set; }
 
@@ -15,6 +16,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem("Variable", type: typeof(VarDecl))]
         [XmlArrayItem("Function", type: typeof(FuncDecl))]
         public List<object> Members { get; set; } = new List<object>();
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

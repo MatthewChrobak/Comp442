@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ForStat
+    public class ForStat : IVisitable
     {
         public string Type;
         public string Id;
@@ -22,6 +23,11 @@ namespace SyntacticAnalyzer.Nodes
         public RelExpr Condition { get; set; }
         public AssignStat Update { get; set; }
         public StatBlock LoopBlock { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

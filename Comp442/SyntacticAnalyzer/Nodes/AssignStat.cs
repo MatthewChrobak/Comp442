@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class AssignStat
+    public class AssignStat : IVisitable
     {
         public Var Variable { get; set; }
 
@@ -17,6 +18,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object ExpressionValue { get; set; } // resolves to expr
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

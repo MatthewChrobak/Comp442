@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class FuncDef
+    public class FuncDef : IVisitable
     {
         public string ReturnType { get; set; }
         public ScopeSpec ScopeResolution { get; set; }
@@ -15,6 +16,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem("Parameter")]
         public List<FParam> Parameters { get; set; } = new List<FParam>();
         public StatBlock Implementation { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

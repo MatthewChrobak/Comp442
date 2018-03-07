@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class AddOp
+    public class AddOp : IVisitable
     {
         [XmlElement(type: typeof(AddOp), elementName: "LeftAddOp")] // arithExpr
         [XmlElement(type: typeof(RelExpr), elementName: "LeftRelationalExpression")] // expr
@@ -27,6 +28,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public object RHS { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {

@@ -1,11 +1,17 @@
-﻿using System;
+﻿using SyntacticAnalyzer.Pattern;
+using System;
 
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ScopeSpec
+    public class ScopeSpec : IVisitable
     {
         public string Id { get; set; }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public override string ToString()
         {
