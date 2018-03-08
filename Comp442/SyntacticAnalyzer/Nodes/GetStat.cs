@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 
 namespace SyntacticAnalyzer.Nodes

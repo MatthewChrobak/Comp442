@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
         private Tokenizer _tokenizer;
         private List<string> Errors = new List<string>();
         private bool _hitEndOfFile = false;
-        private Program AST;
+        public Program AbstractSyntaxTree { get; private set; }
 
         public Parser(string[] code)
         {
@@ -27,8 +27,8 @@ namespace SyntacticAnalyzer.Parser
 
         public Program Parse()
         {
-            this.AST = Prog();
-            return this.AST;
+            this.AbstractSyntaxTree = Prog();
+            return this.AbstractSyntaxTree;
         }
 
         private string Match(string atocc)

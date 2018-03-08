@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -17,8 +17,15 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem("Function", type: typeof(FuncDecl))]
         public List<object> Members { get; set; } = new List<object>();
 
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
+
         public void Accept(Visitor visitor)
         {
+            foreach (var entry in this.Members) {
+                ((IVisitable)entry).Accept(visitor);
+            }
+
             visitor.Visit(this);
         }
 

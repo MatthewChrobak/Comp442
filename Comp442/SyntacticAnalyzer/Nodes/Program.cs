@@ -1,5 +1,6 @@
 ﻿using System;
-using SyntacticAnalyzer.Pattern;
+using System.Xml.Serialization;
+using SyntacticAnalyzer.Semantics;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -10,8 +11,15 @@ namespace SyntacticAnalyzer.Nodes
         public FuncDefList Functions { get; set; }
         public StatBlock MainFunction { get; set; }
 
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
+
         public void Accept(Visitor visitor)
         {
+            this.Classes.Accept(visitor);
+            this.Functions.Accept(visitor);
+            this.MainFunction.Accept(visitor);
+
             visitor.Visit(this);
         }
 

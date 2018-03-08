@@ -1,4 +1,4 @@
-﻿namespace SyntacticAnalyzer.Pattern
+﻿namespace SyntacticAnalyzer.Semantics
 {
     public interface IVisitable
     {

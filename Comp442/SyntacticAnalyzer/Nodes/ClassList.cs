@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -13,6 +13,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            foreach (var @class in this.Classes) {
+                @class.Accept(visitor);
+            }
+
             visitor.Visit(this);
         }
 

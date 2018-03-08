@@ -1,7 +1,8 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -11,6 +12,9 @@ namespace SyntacticAnalyzer.Nodes
         public string Type { get; set; }
         public string Id { get; set; }
         public List<string> Dimensions { get; set; } = new List<string>();
+
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
 
         public void Accept(Visitor visitor)
         {

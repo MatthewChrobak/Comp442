@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Xml.Serialization;
 

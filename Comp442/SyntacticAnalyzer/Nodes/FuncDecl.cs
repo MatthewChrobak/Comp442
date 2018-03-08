@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,9 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArray("Parameters")]
         [XmlArrayItem("Parameter")]
         public List<FParam> Parameters { get; set; } = new List<FParam>();
+
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
 
         public void Accept(Visitor visitor)
         {

@@ -51,7 +51,7 @@ namespace SyntacticAnalyzer.Parser
             var absStream = new Section("Abstract Syntax Tree Traversal", true);
             absStream.AddRow("<p style='font-weight:lighter;'>Displays the reconstruction of the original program through the traversal of the Abstract Syntax Tree data structure." +
                 " Note that minor non-errors may occur in the reconstruction such as: missing or additional semi-colons, and missing or additional whitespace.</p><hr style='margin-top:0'>");
-            absStream.AddRow($"<code style='color:black'>{this.AST?.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;")}</code>");
+            absStream.AddRow($"<code style='color:black'>{this.AbstractSyntaxTree?.ToString().Replace(">", "&gt;").Replace("<", "&lt;").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;")}</code>");
             if (validProgram) {
                 yield return absStream;
             }
@@ -87,7 +87,7 @@ namespace SyntacticAnalyzer.Parser
                         typeof(Var),
                         typeof(VarDecl)
                     });
-                    serializer.Serialize(fs, this.AST);
+                    serializer.Serialize(fs, this.AbstractSyntaxTree);
                 } catch (Exception e) {
 
                 }

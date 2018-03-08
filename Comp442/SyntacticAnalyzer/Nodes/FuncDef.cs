@@ -1,4 +1,4 @@
-﻿using SyntacticAnalyzer.Pattern;
+﻿using SyntacticAnalyzer.Semantics;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -16,6 +16,9 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem("Parameter")]
         public List<FParam> Parameters { get; set; } = new List<FParam>();
         public StatBlock Implementation { get; set; }
+
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
 
         public void Accept(Visitor visitor)
         {

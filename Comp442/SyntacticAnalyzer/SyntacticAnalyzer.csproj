@@ -125,6 +125,11 @@
     <Compile Include="NonTerminals\Variable.cs" />
     <Compile Include="NonTerminals\VariablePP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Semantics\IVisitable.cs" />
+    <Compile Include="Semantics\SymbolTable.cs" />
+    <Compile Include="Semantics\TableEntry.cs" />
+    <Compile Include="Semantics\TableEntryTypes.cs" />
+    <Compile Include="Semantics\Visitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj">
@@ -136,8 +141,6 @@
       <Name>ReportGenerator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Semantics\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
