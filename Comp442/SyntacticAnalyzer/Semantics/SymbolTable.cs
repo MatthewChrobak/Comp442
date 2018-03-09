@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SyntacticAnalyzer.Semantics
@@ -14,6 +15,10 @@ namespace SyntacticAnalyzer.Semantics
 
         public void Add(TableEntry value)
         {
+            if (value == null) {
+                return;
+            }
+
             string key = value.ToString();
 
             if (this._entries.ContainsKey(key)) {
@@ -23,12 +28,21 @@ namespace SyntacticAnalyzer.Semantics
             this._entries.Add(key, value);
         }
 
-        public IEnumerable<TableEntry> GetAll(TableEntryType? type = null)
+        public TableEntry Get(string key)
+        {
+            if (this._entries.ContainsKey(key)) {
+                return this._entries[key];
+            }
+            Console.WriteLine("Could not find " + key);
+            return null;
+        }
+
+        public IEnumerable<TableEntry> GetAll(Classification? type = null)
         {
             if (type == null) {
                 return this._entries.Values;
             }
-            return this._entries.Where(val => val.Value.EntryType == type).Select(val => val.Value);
+            return this._entries.Where(val => val.Value.Classification == type).Select(val => val.Value);
         }
     }
 }

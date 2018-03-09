@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
 
                 var scopeResolution = new ScopeSpec() {
-                    Id = id
+                    ID = id
                 };
 
                 Match("sr");

@@ -1,30 +1,35 @@
 ﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
+using System.Linq;
 
 namespace SemanticalAnalyzer.Visitors
 {
     public class SymbolTableVisitor : Visitor
     {
+        private SymbolTable GlobalScope;
+
         public override void Visit(Program node)
         {
-            var globalTable = new SymbolTable();
+            this.GlobalScope = new SymbolTable();
 
             foreach (var @class in node.Classes?.Classes) {
-                globalTable.Add(new TableEntry(@class.ClassName, TableEntryType.Class) {
+                this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class) {
                     Link = @class.Table
                 });
             }
 
             foreach (var func in node.Functions?.Functions) {
-                globalTable.Add(new TableEntry(func.FunctionName, TableEntryType.Function) {
-                    Link = func.Table
-                });
+                this.GlobalScope.Add(func.Entry);
             }
 
-            node.Table = globalTable;
-        }
+            this.GlobalScope.Add(new TableEntry("main", Classification.Function) {
+                Link = node.MainFunction.Table
+            });
 
-        #region Class
+            node.Table = this.GlobalScope;
+        }
+        
+
         public override void Visit(ClassDecl classDecl)
         {
             var classTable = new SymbolTable();
@@ -32,15 +37,17 @@ namespace SemanticalAnalyzer.Visitors
             foreach (var entry in classDecl.Members) {
                 if (entry as VarDecl != null) {
                     var variable = entry as VarDecl;
-                    classTable.Add(new TableEntry(variable.Id, TableEntryType.Variable) {
-                        Link = variable.Table
+                    classTable.Add(new TableEntry(variable.Id, Classification.Variable) {
+                        Link = variable.Table,
+                        Type = variable.Type
                     });
                     continue;
                 }
                 if (entry as FuncDecl != null) {
                     var func = entry as FuncDecl;
-                    classTable.Add(new TableEntry(func.Id, TableEntryType.Function) {
-                        Link = func.Table
+                    classTable.Add(new TableEntry(func.Id, Classification.Function) {
+                        Link = func.Table,
+                        Type = func.Type + "-" + string.Join(",", func.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))))
                     });
                     continue;
                 }
@@ -49,15 +56,6 @@ namespace SemanticalAnalyzer.Visitors
 
             classDecl.Table = classTable;
         }
-        #endregion
-
-        #region Members
-        public override void Visit(FuncDecl funcDecl)
-        {
-            var functionTabl = new SymbolTable();
-
-            funcDecl.Table = functionTabl;
-        }
 
         public override void Visit(VarDecl var)
         {
@@ -65,13 +63,53 @@ namespace SemanticalAnalyzer.Visitors
 
             var.Table = variableEntry;
         }
-        #endregion
 
-        #region Functions
+
         public override void Visit(FuncDef funcDef)
         {
-            
+            string funcName = funcDef.FunctionName;
+
+            if (funcDef.ScopeResolution != null) {
+                funcName = $"{funcDef.ScopeResolution.ID}::{funcName}";
+            }
+
+            var entry = new TableEntry(funcName, Classification.Function);
+            entry.Link = new SymbolTable();
+
+            foreach (var param in funcDef.Parameters) {
+                entry.Link.Add(param.Entry);
+            }
+
+            foreach (var varEntry in funcDef.Implementation.Table.GetAll()) {
+                entry.Link.Add(varEntry);
+            }
+
+            entry.Type = funcDef.ReturnType + "-" + string.Join(",", funcDef.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))));
+
+            funcDef.Entry = entry;
         }
-        #endregion
+
+        public override void Visit(StatBlock statBlock)
+        {
+            var table = new SymbolTable();
+
+            var varDecl = statBlock.Statements.Where(stat => stat.GetType() == typeof(VarDecl)).Select(val => (VarDecl)val);
+
+            foreach (var stat in varDecl) {
+                table.Add(new TableEntry(stat.Id, Classification.Variable) {
+                    Type = stat.Type
+                });
+            }
+
+            statBlock.Table = table;
+        }
+
+        public override void Visit(FParam fParam)
+        {
+            var entry = new TableEntry(fParam.Id, Classification.Parameter) {
+                Type = fParam.Type
+            };
+            fParam.Entry = entry;
+        }
     }
 }

@@ -1,10 +1,11 @@
 ﻿namespace SyntacticAnalyzer.Semantics
 {
-    public enum TableEntryType
+    public enum Classification
     {
         Scope,
         Function,
         Variable,
-        Class
+        Class,
+        Parameter
     }
 }

@@ -18,10 +18,15 @@ namespace SyntacticAnalyzer.Nodes
         public StatBlock Implementation { get; set; }
 
         [XmlIgnore]
-        public SymbolTable Table { get; set; }
+        public TableEntry Entry { get; set; }
 
         public void Accept(Visitor visitor)
         {
+            foreach (var parameter in Parameters) {
+                parameter.Accept(visitor);
+            }
+            Implementation.Accept(visitor);
+
             visitor.Visit(this);
         }
 

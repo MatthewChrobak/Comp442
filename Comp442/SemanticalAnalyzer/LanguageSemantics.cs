@@ -14,6 +14,9 @@ namespace SemanticalAnalyzer
             // Generate the symbol tables.
             var symbolTableVisitor = new SymbolTableVisitor();
             this.AST.Accept(symbolTableVisitor);
+
+            var functionLinker = new FunctionLinkerVisitor(AST.Table);
+            this.AST.Accept(functionLinker);
         }
     }
 }

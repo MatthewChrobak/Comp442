@@ -18,6 +18,9 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(ReturnStat), elementName: "Return")]
         public List<object> Statements { get; set; } = new List<object>();
 
+        [XmlIgnore]
+        public SymbolTable Table { get; set; }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

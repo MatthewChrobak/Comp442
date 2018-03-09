@@ -6,7 +6,7 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class ScopeSpec : IVisitable
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
 
         public void Accept(Visitor visitor)
         {
@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"{Id}::";
+            return $"{ID}::";
         }
     }
 }

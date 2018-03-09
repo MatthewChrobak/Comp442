@@ -128,7 +128,7 @@
     <Compile Include="Semantics\IVisitable.cs" />
     <Compile Include="Semantics\SymbolTable.cs" />
     <Compile Include="Semantics\TableEntry.cs" />
-    <Compile Include="Semantics\TableEntryTypes.cs" />
+    <Compile Include="Semantics\Classifications.cs" />
     <Compile Include="Semantics\Visitor.cs" />
   </ItemGroup>
   <ItemGroup>
