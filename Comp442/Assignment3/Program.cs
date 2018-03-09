@@ -1,4 +1,5 @@
-﻿using ReportGenerator;
+﻿using Errors;
+using ReportGenerator;
 using SemanticalAnalyzer;
 using SyntacticAnalyzer.Parser;
 using System;
@@ -30,6 +31,7 @@ namespace Assignment3
 
                 var report = new Report();
                 Console.Write("Generating report... ");
+                report.Sections.AddRange(ErrorManager.GetReportSection());
                 report.Sections.AddRange(parser.GetReportSections(file));
                 report.Sections.AddRange(semantics.GetReportSections(file));
                 File.WriteAllText(file + ".html", report.GenerateReport());

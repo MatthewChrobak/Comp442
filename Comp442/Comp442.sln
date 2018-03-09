@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticalAnalyzer", "Seman
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment3", "Assignment3\Assignment3.csproj", "{5E23DA12-3968-4A19-A9F6-0E94944C62E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Errors", "Errors\Errors.csproj", "{030675D8-4048-46D5-8250-930979DBE4BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,18 @@ Global
 		{5E23DA12-3968-4A19-A9F6-0E94944C62E6}.Release|x64.Build.0 = Release|Any CPU
 		{5E23DA12-3968-4A19-A9F6-0E94944C62E6}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E23DA12-3968-4A19-A9F6-0E94944C62E6}.Release|x86.Build.0 = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|x64.Build.0 = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|x64.Build.0 = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{030675D8-4048-46D5-8250-930979DBE4BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -51,6 +51,10 @@
     <Compile Include="Models\TokenStream.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Errors\Errors.csproj">
+      <Project>{030675d8-4048-46d5-8250-930979dbe4ba}</Project>
+      <Name>Errors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
       <Project>{89066bf3-b4d6-4f96-a9bb-a560b3ba6455}</Project>
       <Name>ReportGenerator</Name>

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5E23DA12-3968-4A19-A9F6-0E94944C62E6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Assignment3</RootNamespace>
-    <AssemblyName>Assignment3</AssemblyName>
+    <ProjectGuid>{030675D8-4048-46D5-8250-930979DBE4BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Errors</RootNamespace>
+    <AssemblyName>Errors</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,25 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="ErrorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Errors\Errors.csproj">
-      <Project>{030675D8-4048-46D5-8250-930979DBE4BA}</Project>
-      <Name>Errors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
       <Project>{89066BF3-B4D6-4F96-A9BB-A560B3BA6455}</Project>
       <Name>ReportGenerator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SemanticalAnalyzer\SemanticalAnalyzer.csproj">
-      <Project>{58CB6CE0-4075-4752-8EAE-EF88DDC82649}</Project>
-      <Name>SemanticalAnalyzer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SyntacticAnalyzer\SyntacticAnalyzer.csproj">
-      <Project>{6CB7D582-9865-4635-95E6-D04B86391E08}</Project>
-      <Name>SyntacticAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

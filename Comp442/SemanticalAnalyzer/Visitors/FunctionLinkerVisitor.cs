@@ -64,23 +64,5 @@ namespace SemanticalAnalyzer.Visitors
                 }
             }
         }
-
-        public override void Visit(ClassDecl classDecl)
-        {
-            return;
-            var functions = GlobalScope.GetAll(Classification.Function);
-
-            foreach (var memberFunction in classDecl.Members.Where(classMember => classMember as FuncDecl != null).Select(classMember => (FuncDecl)classMember)) {
-                string key = $"{memberFunction.Id}-{Classification.Function}";
-                var candidateFunctions = functions.Where(function => function.ID == key);
-
-                if (candidateFunctions.Count() > 1) {
-                    // We have a problem LOL
-                    throw new System.Exception();
-                }
-
-                classDecl.Table.Get(key).Link = memberFunction.Table;
-            }
-        }
     }
 }

@@ -1,10 +1,10 @@
-﻿using LexicalAnalyzer;
+﻿using Errors;
+using LexicalAnalyzer;
 using LexicalAnalyzer.Models;
 using ReportGenerator;
 using SyntacticAnalyzer.Derivation;
 using SyntacticAnalyzer.Nodes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -14,7 +14,6 @@ namespace SyntacticAnalyzer.Parser
     {
         public TokenStream TokenStream { get; set; }
         private Tokenizer _tokenizer;
-        private List<string> Errors = new List<string>();
         private bool _hitEndOfFile = false;
         public Program AbstractSyntaxTree { get; private set; }
 
@@ -39,10 +38,10 @@ namespace SyntacticAnalyzer.Parser
             if (!this._hitEndOfFile) {
                 if (token_AToCC != atocc) {
                     if (token.Type == TokenType.EndOfStream) {
-                        this.Errors.Add($"Unexpected end of file at {token.SourceLocation}. Expected {atocc}");
+                        ErrorManager.Add($"Unexpected end of file. Expected {atocc}", token.SourceLocation);
                         this._hitEndOfFile = true;
                     } else {
-                        this.Errors.Add($"Expected {atocc} - '{token.SourceLocation}'. Got '{token.TokenContent}'.");
+                        ErrorManager.Add($"Expected {atocc}. Got '{token.TokenContent}'.", token.SourceLocation);
                     }
                 } else {
                     this.TokenStream.NextToken();
@@ -55,7 +54,7 @@ namespace SyntacticAnalyzer.Parser
         public bool Verify()
         {
             string formattedDerivation = Regex.Replace(this.Derivations.Last().SententialForm, @"\s+|\'", String.Empty);
-            return this.Errors.Count == 0 && formattedDerivation == this.TokenStream.FullAToCCFormat;
+            return ErrorManager.Count() == 0 && formattedDerivation == this.TokenStream.FullAToCCFormat;
         }
         
         private void SkipErrors(string first, string follow, bool hasEpsilonProduction = true)
@@ -77,7 +76,7 @@ namespace SyntacticAnalyzer.Parser
                 }
 
                 if (!errorReported) {
-                    this.Errors.Add($"Expected {(first + " " + follow).Trim().Replace(" ", ", ")} - {token.SourceLocation}. Got '{token.TokenContent}'.");
+                    ErrorManager.Add($"Expected {(first + " " + follow).Trim().Replace(" ", ", ")}. Got '{token.TokenContent}'.", token.SourceLocation);
                     errorReported = true;
                 }
 

@@ -132,6 +132,10 @@
     <Compile Include="Semantics\Visitor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Errors\Errors.csproj">
+      <Project>{030675D8-4048-46D5-8250-930979DBE4BA}</Project>
+      <Name>Errors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj">
       <Project>{41a5320f-c903-48fb-b6bf-9743dea38855}</Project>
       <Name>LexicalAnalyzer</Name>

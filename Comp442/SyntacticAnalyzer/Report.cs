@@ -1,4 +1,5 @@
-﻿using ReportGenerator;
+﻿using Errors;
+using ReportGenerator;
 using SyntacticAnalyzer.Nodes;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace SyntacticAnalyzer.Parser
             bool validProgram = this.Verify();
             var validProgramSection = new Section("Valid Program");
             validProgramSection.AddRow("<p style='font-weight:lighter;'>This section displays whether or not the given program is lexically and syntactically correct.</p><hr style='margin-top:0'>");
-            validProgramSection.AddRow(validProgram ? "Program is valid." : "Program is invalid: " + this.Errors.Count + " errors were found.");
+            validProgramSection.AddRow(validProgram ? "Program is valid." : "Program is invalid: " + ErrorManager.Count() + " errors were found.");
             yield return validProgramSection;
 
             var atoccStreamInput = new Section("AToCC Input Stream");
@@ -36,17 +37,6 @@ namespace SyntacticAnalyzer.Parser
                 yield return atoccStreamOutput;
             }
             
-
-
-
-            var errorList = new Section("Syntactic Error List");
-            errorList.AddRow("<p style='font-weight:lighter;'>Contains all the syntactic errors found in the parsing process.</p><hr style='margin-top:0'>");
-            foreach (var error in this.Errors) {
-                errorList.AddRow(error);
-            }
-            if (!validProgram) {
-                yield return errorList;
-            }
 
             var absStream = new Section("Abstract Syntax Tree Traversal", true);
             absStream.AddRow("<p style='font-weight:lighter;'>Displays the reconstruction of the original program through the traversal of the Abstract Syntax Tree data structure." +
@@ -132,9 +122,6 @@ for (var i = 0; i < elements.length; i++) {
 
                 string rule = terminalRule(epsilonRule(derivation.Rule.Replace("->", "<span style=' color:black'>-></span>")));
                 string sententialForm = terminalRule(epsilonRule(derivation.SententialForm));
-
-                //string rule = derivation.Rule;
-                //string sententialForm = derivation.SententialForm;
 
                 derivSection.Add($"<tr><td>{rule}</td><td>{sententialForm}</td></tr>");
             }
