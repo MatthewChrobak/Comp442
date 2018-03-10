@@ -28,6 +28,16 @@ namespace SyntacticAnalyzer.Semantics
             this._entries.Add(key, value);
         }
 
+        public void AddRange(IEnumerable<TableEntry> entries)
+        {
+            if (entries == null) {
+                return;
+            }
+            foreach (var entry in entries) {
+                this.Add(entry);
+            }
+        }
+
         public TableEntry Get(string key)
         {
             if (this._entries.ContainsKey(key)) {

@@ -17,6 +17,9 @@ namespace SemanticalAnalyzer
 
             var functionLinker = new FunctionLinkerVisitor(AST.Table);
             this.AST.Accept(functionLinker);
+
+            var classInheriter = new InheritanceVisitor(AST.Table);
+            this.AST.Accept(classInheriter);
         }
     }
 }

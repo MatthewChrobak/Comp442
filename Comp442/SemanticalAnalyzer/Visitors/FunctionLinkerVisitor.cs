@@ -1,4 +1,5 @@
-﻿using SyntacticAnalyzer.Nodes;
+﻿using Errors;
+using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Linq;
 
@@ -42,8 +43,12 @@ namespace SemanticalAnalyzer.Visitors
                             // Make sure each parameter matches.
                             for (int i = 0; i < funcDef.Parameters.Count; i++) {
 
+                                string expectedType = funcDef.Parameters[i].Type;
+                                string receivedType = parameters[i].Replace("[]", string.Empty);
+
                                 // Apply pseudo type checking.
-                                if (funcDef.Parameters[i].Type != parameters[i].Replace("[]", string.Empty)) {
+                                if (expectedType != receivedType) {
+                                    //ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {receivedType}");
                                     valid = false;
                                     break;
                                 }
