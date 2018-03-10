@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
 
                 // This will recursively get all the classes into ONE classlist.
                 // 1) Create a new classlist node to store our classes in.
-                var classList = new ClassList();
+                var classList = new ClassList(lookaheadToken.SourceLocation);
 
                 // 2) Parse the current class, and retrieve the trailing classes.
                 var declaredClass = ClassDecl();
@@ -35,7 +35,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infClassDecl -> EPSILON");
                 
                 // Return an empty classlist to signify that it WAS parsed correctly.
-                return new ClassList();
+                return new ClassList(lookaheadToken.SourceLocation);
             }
 
             return null;

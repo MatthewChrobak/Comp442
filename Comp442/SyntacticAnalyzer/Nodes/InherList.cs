@@ -10,6 +10,10 @@ namespace SyntacticAnalyzer.Nodes
     {
         public List<string> IDs { get; set; } = new List<string>();
 
+        public InherList((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

@@ -39,7 +39,7 @@ namespace SemanticalAnalyzer.Visitors
                         } else {
                             if (visited.ContainsKey(parent)) {
 
-                                ErrorManager.Add($"Circular dependancy deteced between {focus.ClassName} and {parent}.", (0, 0));
+                                ErrorManager.Add($"Circular dependancy deteced between {focus.ClassName} and {parent}.", focus.Location);
                                 visiting.Clear();
                                 break;
                             } else {
@@ -47,7 +47,7 @@ namespace SemanticalAnalyzer.Visitors
                                     implementation.AddRange(classes[parent].Table.GetAll());
                                     visiting.Push(classes[parent]);
                                 } else {
-                                    ErrorManager.Add($"The class {parent} cannot be found or is not defined.", (0, 0));
+                                    ErrorManager.Add($"The class {parent} cannot be found or is not defined.", focus.Location);
                                 }
                             }
                         }

@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
 
-                var parameter = new FParam();
+                var parameter = new FParam(lookaheadToken.SourceLocation);
 
                 Match(",");
                 string type = Type();

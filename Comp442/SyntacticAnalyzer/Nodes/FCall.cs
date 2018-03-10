@@ -9,6 +9,10 @@ namespace SyntacticAnalyzer.Nodes
         public string Id { get; set; }
         public AParams Parameters { get; set; }
 
+        public FCall((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

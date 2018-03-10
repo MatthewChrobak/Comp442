@@ -20,22 +20,26 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public TableEntry Entry { get; set; }
 
+        public FuncDef((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
-            foreach (var parameter in Parameters) {
+            foreach (var parameter in this.Parameters) {
                 parameter.Accept(visitor);
             }
-            Implementation.Accept(visitor);
+            this.Implementation.Accept(visitor);
 
             visitor.Visit(this);
         }
 
         public override string ToString()
         {
-            if (Parameters?.Count > 0) {
-                return $"{ReturnType} {ScopeResolution}{FunctionName}({string.Join(",", Parameters)}){Implementation};\n";
+            if (this.Parameters?.Count > 0) {
+                return $"{this.ReturnType} {this.ScopeResolution}{this.FunctionName}({string.Join(",", this.Parameters)}){this.Implementation};\n";
             }
-            return $"{ReturnType} {ScopeResolution}{FunctionName}(){Implementation};\n";
+            return $"{this.ReturnType} {this.ScopeResolution}{this.FunctionName}(){this.Implementation};\n";
         }
     }
 }

@@ -8,6 +8,10 @@ namespace SyntacticAnalyzer.Nodes
     {
         public Var Variable { get; set; }
 
+        public GetStat((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

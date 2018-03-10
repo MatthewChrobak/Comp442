@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprP -> addOp term arithExprP");
 
-                var arithExpr = new AddOp();
+                var arithExpr = new AddOp(lookaheadToken.SourceLocation);
 
                 string op = AddOp();
                 object nextTerm = Term();

@@ -12,6 +12,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement("Function")]
         public List<FuncDef> Functions { get; set; } = new List<FuncDef>();
 
+        public FuncDefList((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             foreach (var func in this.Functions) {
@@ -23,8 +27,8 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            if (Functions?.Count > 0) {
-                return string.Join("\n", Functions.Select(val => val.ToString()));
+            if (this.Functions?.Count > 0) {
+                return String.Join("\n", this.Functions.Select(val => val.ToString()));
             }
             return string.Empty;
         }

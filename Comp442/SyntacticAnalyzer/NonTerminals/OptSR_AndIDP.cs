@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
 
-                var scopeResolution = new ScopeSpec() {
+                var scopeResolution = new ScopeSpec(lookaheadToken.SourceLocation) {
                     ID = id
                 };
 

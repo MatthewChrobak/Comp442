@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> 'id' infVarAndState_IdHandler");
 
-                var block = new StatBlock();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
 
                 string id = Match("id");
                 var trailingBlock = InfVarAndState_IdHandler(id);
@@ -29,8 +29,8 @@ namespace SyntacticAnalyzer.Parser
             if ("float int".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> type_NoID 'id' infArraySize ';' infVarAndState");
 
-                var block = new StatBlock();
-                var variableDeclaration = new VarDecl();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var variableDeclaration = new VarDecl(lookaheadToken.SourceLocation);
 
                 string type = Type_NoID();
                 string id = Match("id");
@@ -51,7 +51,7 @@ namespace SyntacticAnalyzer.Parser
             if ("if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> noASS infStatement");
 
-                var block = new StatBlock();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
 
                 var statement = NoASS();
                 var trailingStatements = InfStatement();
@@ -64,7 +64,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> EPSILON");
-                return new StatBlock();
+                return new StatBlock(lookaheadToken.SourceLocation);
             }
 
             return null;

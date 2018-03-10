@@ -14,6 +14,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public SymbolTable Table { get; set; }
 
+        public Program((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             this.Classes.Accept(visitor);

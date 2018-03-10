@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infAParamsTail -> aParamsTail infAParamsTail");
 
-                var aparams = new AParams();
+                var aparams = new AParams(lookaheadToken.SourceLocation);
 
                 var expr = AParamsTail();
                 var trailingAParams = InfAParamsTail();
@@ -29,7 +29,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infAParamsTail -> EPSILON");
-                return new AParams();
+                return new AParams(lookaheadToken.SourceLocation);
             }
 
             return null;

@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> statement infStatement");
 
-                var block = new StatBlock();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
 
                 var statement = Statement();
                 var trailingBlock = InfStatement();
@@ -29,7 +29,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infStatement -> EPSILON");
-                return new StatBlock();
+                return new StatBlock(lookaheadToken.SourceLocation);
             }
 
             return null;

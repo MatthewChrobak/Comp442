@@ -16,6 +16,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public TableEntry Entry { get; set; }
 
+        public FParam((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

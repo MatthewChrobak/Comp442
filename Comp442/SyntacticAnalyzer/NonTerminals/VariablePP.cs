@@ -23,7 +23,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("variablePP -> EPSILON");
-                return new Var();
+                return new Var(lookaheadToken.SourceLocation);
             }
 
             return null;

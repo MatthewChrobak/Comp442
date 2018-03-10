@@ -42,20 +42,19 @@ namespace SemanticalAnalyzer.Visitors
 
                             // Make sure each parameter matches.
                             for (int i = 0; i < funcDef.Parameters.Count; i++) {
+                                string expectedType = types[1];
+                                string receivedType = funcDef.Parameters[i].Type + "[]".Repeat(funcDef.Parameters[i].Dimensions.Count);
 
-                                string expectedType = funcDef.Parameters[i].Type;
-                                string receivedType = parameters[i].Replace("[]", string.Empty);
+                                if (expectedType == string.Empty) {
+                                    expectedType = "no parameters";
+                                }
+                                if (receivedType == string.Empty) {
+                                    receivedType = "no parameters";
+                                }
 
                                 // Apply pseudo type checking.
                                 if (expectedType != receivedType) {
-                                    //ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {receivedType}");
-                                    valid = false;
-                                    break;
-                                }
-
-                                if (funcDef.Parameters[i].Dimensions.Count != parameters[i].Count(val => val == '[')) {
-
-                                    // Invalid parameter.
+                                    ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {receivedType}", funcDef.Parameters[i].Location);
                                     valid = false;
                                     break;
                                 }

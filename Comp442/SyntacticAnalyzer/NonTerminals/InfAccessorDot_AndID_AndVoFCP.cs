@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if ("[ (".HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
 
-                var variable = new Var();
+                var variable = new Var(lookaheadToken.SourceLocation);
 
                 var funcOrDataMemeber = AccessorP(id);
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
@@ -32,8 +32,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
 
-                var variable = new Var();
-                var dataMember = new DataMember();
+                var variable = new Var(lookaheadToken.SourceLocation);
+                var dataMember = new DataMember(lookaheadToken.SourceLocation);
 
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
 
@@ -49,7 +49,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return new Var() { Elements = { new DataMember() { Id = id } } };
+                return new Var(lookaheadToken.SourceLocation) { Elements = { new DataMember(lookaheadToken.SourceLocation) { Id = id } } };
             }
 
             return null;

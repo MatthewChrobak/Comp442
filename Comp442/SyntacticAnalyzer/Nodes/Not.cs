@@ -17,6 +17,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object Factor { get; set; } // factor
 
+        public Not((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

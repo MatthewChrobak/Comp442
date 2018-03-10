@@ -19,6 +19,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public object ExpressionValue { get; set; } // resolves to expr
 
+        public AssignStat((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

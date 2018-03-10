@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> indice infIndice");
 
-                var indexList = new IndexList();
+                var indexList = new IndexList(lookaheadToken.SourceLocation);
 
                 object expr = Indice();
                 var trailingExpr = InfIndice();
@@ -28,7 +28,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infIndice -> EPSILON");
-                return new IndexList();
+                return new IndexList(lookaheadToken.SourceLocation);
             }
 
             return null;

@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("assignStat -> variable '=' expr");
 
-                var assignStatement = new AssignStat();
+                var assignStatement = new AssignStat(lookaheadToken.SourceLocation);
 
                 var variable = Variable();
                 Match("=");

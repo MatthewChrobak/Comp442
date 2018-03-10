@@ -11,6 +11,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement("Class")]
         public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();
 
+        public ClassList((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             foreach (var @class in this.Classes) {

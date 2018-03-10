@@ -20,6 +20,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public SymbolTable Table { get; set; }
 
+        public ClassDecl((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             foreach (var entry in this.Members) {

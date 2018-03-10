@@ -16,6 +16,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public SymbolTable Table { get; set; }
 
+        public VarDecl((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

@@ -16,8 +16,8 @@ namespace SyntacticAnalyzer.Parser
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> '(' aParams ')' '.' 'id' variableP");
 
-                var variable = new Var();
-                var functionCall = new FCall();
+                var variable = new Var(lookaheadToken.SourceLocation);
+                var functionCall = new FCall(lookaheadToken.SourceLocation);
 
                 Match("(");
                 var parameters = AParams();
@@ -38,8 +38,8 @@ namespace SyntacticAnalyzer.Parser
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
 
-                var variable = new Var();
-                var member = new DataMember();
+                var variable = new Var(lookaheadToken.SourceLocation);
+                var member = new DataMember(lookaheadToken.SourceLocation);
 
                 var indice = InfIndice();
                 var trailingElements = VariablePP();
@@ -58,8 +58,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infIndice -> EPSILON");
                 this.ApplyDerivation("variablePP -> EPSILON");
 
-                var variable = new Var();
-                variable.Elements.Add(new DataMember() { Id = id });
+                var variable = new Var(lookaheadToken.SourceLocation);
+                variable.Elements.Add(new DataMember(lookaheadToken.SourceLocation) { Id = id });
                 return variable;
             }
 

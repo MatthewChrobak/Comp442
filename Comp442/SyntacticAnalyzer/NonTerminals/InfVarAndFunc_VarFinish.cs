@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infArraySize ';' infVarAndFunc_VarStart");
 
                 var memberList = new List<object>();
-                var variable = new VarDecl();
+                var variable = new VarDecl(lookaheadToken.SourceLocation);
                 
                 var arraySizes = InfArraySize();
                 Match(";");

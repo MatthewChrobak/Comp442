@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("arithExprOrRelExpr -> relOp arithExpr");
 
-                var relExpr = new RelExpr();
+                var relExpr = new RelExpr(lookaheadToken.SourceLocation);
 
                 string relationalOperator = RelOp();
                 var arithExpr = ArithExpr();

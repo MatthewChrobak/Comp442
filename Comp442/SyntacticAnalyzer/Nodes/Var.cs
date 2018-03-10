@@ -13,6 +13,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type:typeof(FCall), elementName:"FunctionCall")]
         public List<object> Elements { get; set; } = new List<object>();
 
+        public Var((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

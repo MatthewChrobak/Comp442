@@ -24,6 +24,10 @@ namespace SyntacticAnalyzer.Nodes
         public AssignStat Update { get; set; }
         public StatBlock LoopBlock { get; set; }
 
+        public ForStat((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);
@@ -31,7 +35,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"for ({Type} {Id} ={Initialization};{Condition};{Update}) {LoopBlock}";
+            return $"for ({this.Type} {this.Id} ={this.Initialization};{this.Condition};{this.Update}) {this.LoopBlock}";
         }
     }
 }

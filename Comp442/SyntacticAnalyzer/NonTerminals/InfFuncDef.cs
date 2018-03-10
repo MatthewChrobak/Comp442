@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infFuncDef -> funcDef infFuncDef");
 
-                var functionList = new FuncDefList();
+                var functionList = new FuncDefList(lookaheadToken.SourceLocation);
 
                 var function = FuncDef();
                 var trailingFunctions = InfFuncDef();
@@ -28,7 +28,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infFuncDef -> EPSILON");
-                return new FuncDefList();
+                return new FuncDefList(lookaheadToken.SourceLocation);
             }
 
             return null;

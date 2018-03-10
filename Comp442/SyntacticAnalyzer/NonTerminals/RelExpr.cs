@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("relExpr -> arithExpr relOp arithExpr");
 
-                var expr = new RelExpr();
+                var expr = new RelExpr(lookaheadToken.SourceLocation);
 
                 var lhs = ArithExpr();
                 string op = RelOp();

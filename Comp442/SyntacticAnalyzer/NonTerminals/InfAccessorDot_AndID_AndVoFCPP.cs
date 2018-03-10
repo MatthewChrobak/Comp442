@@ -23,7 +23,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return new Var();
+                return new Var(lookaheadToken.SourceLocation);
             }
 
             return null;

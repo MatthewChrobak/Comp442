@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("termP -> multOp factor termP");
 
-                var term = new MultOp();
+                var term = new MultOp(lookaheadToken.SourceLocation);
                 
                 string op = MultOp();
                 object nextTerm = Factor();

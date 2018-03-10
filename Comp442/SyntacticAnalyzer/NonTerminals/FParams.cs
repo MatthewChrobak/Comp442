@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("fParams -> type 'id' infArraySize infFParamsTail");
 
                 var paramList = new List<FParam>();
-                var parameter = new FParam();
+                var parameter = new FParam(lookaheadToken.SourceLocation);
 
                 string type = Type();
                 string id = Match("id");

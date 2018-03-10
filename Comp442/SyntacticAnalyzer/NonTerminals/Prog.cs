@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("prog -> infClassDecl infFuncDef 'program' funcBody ';'");
 
-                var ast = new Program();
+                var ast = new Program(lookaheadToken.SourceLocation);
                 ast.Classes = InfClassDecl();
                 ast.Functions = InfFuncDef();
                 Match("program");

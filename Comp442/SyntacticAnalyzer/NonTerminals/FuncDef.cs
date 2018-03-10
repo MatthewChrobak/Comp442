@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("funcDef -> funcHead funcBody ';'");
 
-                var function = new FuncDef();
+                var function = new FuncDef(lookaheadToken.SourceLocation);
 
                 FuncHead(ref function);
                 var body = FuncBody();

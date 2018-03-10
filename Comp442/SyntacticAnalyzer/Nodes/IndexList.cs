@@ -19,6 +19,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
         public List<object> Expressions { get; set; } = new List<object>();
 
+        public IndexList((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

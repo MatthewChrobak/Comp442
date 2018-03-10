@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optInheritance -> ':' 'id' infIdTrail");
 
-                var astNode = new InherList();
+                var astNode = new InherList(lookaheadToken.SourceLocation);
                 
                 Match(":");
                 string id = Match("id").ToString();
@@ -31,7 +31,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("optInheritance -> EPSILON");
-                return new InherList();
+                return new InherList(lookaheadToken.SourceLocation);
             }
 
             return null;

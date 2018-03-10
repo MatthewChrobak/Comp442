@@ -28,12 +28,12 @@ namespace SyntacticAnalyzer.Parser
 
                 var statement = Statement();
 
-                return new StatBlock() { Statements = { statement } };
+                return new StatBlock(lookaheadToken.SourceLocation) { Statements = { statement } };
             }
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("statBlock -> EPSILON");
-                return new StatBlock();
+                return new StatBlock(lookaheadToken.SourceLocation);
             }
 
             return null;

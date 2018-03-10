@@ -19,6 +19,10 @@ namespace SyntacticAnalyzer.Nodes
         public StatBlock TrueBlock { get; set; }
         public StatBlock ElseBlock { get; set; }
 
+        public IfStat((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> '(' aParams ')'");
 
-                var functionCall = new FCall();
+                var functionCall = new FCall(lookaheadToken.SourceLocation);
                 functionCall.Id = id;
 
                 Match("(");
@@ -30,7 +30,7 @@ namespace SyntacticAnalyzer.Parser
             if ("[".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> infIndice");
 
-                var dataMember = new DataMember();
+                var dataMember = new DataMember(lookaheadToken.SourceLocation);
                 dataMember.Id = id;
                 dataMember.Indexes = InfIndice();
                 return dataMember;
@@ -39,7 +39,7 @@ namespace SyntacticAnalyzer.Parser
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> infIndice");
                 this.ApplyDerivation("infIndice -> EPSILON");
-                return new DataMember() { Id = id };
+                return new DataMember(lookaheadToken.SourceLocation) { Id = id };
             }
 
             return null;

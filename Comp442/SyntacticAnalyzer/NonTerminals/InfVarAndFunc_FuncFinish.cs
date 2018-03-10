@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infVarAndFunc_FuncFinish -> '(' fParams ')' ';' infVarAndFunc_FuncStart");
 
                 var memberList = new List<object>();
-                var funcDecl = new FuncDecl();
+                var funcDecl = new FuncDecl(lookaheadToken.SourceLocation);
 
                 Match("(");
                 var parameters = FParams();

@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if ("if".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'if' '(' expr ')' 'then' statBlock 'else' statBlock ';'");
 
-                var ifStatement = new IfStat();
+                var ifStatement = new IfStat(lookaheadToken.SourceLocation);
 
                 Match("if");
                 Match("(");
@@ -37,7 +37,7 @@ namespace SyntacticAnalyzer.Parser
             if ("for".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'for' '(' type 'id' '=' expr ';' relExpr ';' assignStat ')' statBlock ';'");
 
-                var forStat = new ForStat();
+                var forStat = new ForStat(lookaheadToken.SourceLocation);
 
                 Match("for");
                 Match("(");
@@ -66,7 +66,7 @@ namespace SyntacticAnalyzer.Parser
             if ("get".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'get' '(' variable ')' ';'");
 
-                var getStatement = new GetStat();
+                var getStatement = new GetStat(lookaheadToken.SourceLocation);
 
                 Match("get");
                 Match("(");
@@ -82,7 +82,7 @@ namespace SyntacticAnalyzer.Parser
             if ("put".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'put' '(' expr ')' ';'");
 
-                var putStatement = new PutStat();
+                var putStatement = new PutStat(lookaheadToken.SourceLocation);
 
                 Match("put");
                 Match("(");
@@ -98,7 +98,7 @@ namespace SyntacticAnalyzer.Parser
             if ("return".HasToken(lookahead)) {
                 this.ApplyDerivation("noASS -> 'return' '(' expr ')' ';'");
 
-                var returnStatement = new ReturnStat();
+                var returnStatement = new ReturnStat(lookaheadToken.SourceLocation);
 
                 Match("return");
                 Match("(");

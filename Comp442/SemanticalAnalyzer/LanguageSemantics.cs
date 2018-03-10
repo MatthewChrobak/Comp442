@@ -15,10 +15,10 @@ namespace SemanticalAnalyzer
             var symbolTableVisitor = new SymbolTableVisitor();
             this.AST.Accept(symbolTableVisitor);
 
-            var functionLinker = new FunctionLinkerVisitor(AST.Table);
+            var functionLinker = new FunctionLinkerVisitor(this.AST.Table);
             this.AST.Accept(functionLinker);
 
-            var classInheriter = new InheritanceVisitor(AST.Table);
+            var classInheriter = new InheritanceVisitor(this.AST.Table);
             this.AST.Accept(classInheriter);
         }
     }

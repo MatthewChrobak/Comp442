@@ -37,7 +37,7 @@ namespace SyntacticAnalyzer.Parser
             if ("not".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'not' factor");
 
-                var not = new Not();
+                var not = new Not(lookaheadToken.SourceLocation);
 
                 Match("not");
                 not.Factor = Factor();
@@ -48,7 +48,7 @@ namespace SyntacticAnalyzer.Parser
             if ("+ -".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> sign factor");
 
-                var sign = new Sign();
+                var sign = new Sign(lookaheadToken.SourceLocation);
 
                 sign.SignSymbol = Sign();
                 sign.Factor = Factor();

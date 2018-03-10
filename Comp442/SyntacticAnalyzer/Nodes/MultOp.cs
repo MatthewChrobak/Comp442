@@ -30,6 +30,10 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public object RHS { get; set; } // factor
 
+        public MultOp((int, int) location) : base(location)
+        {
+        }
+
         public void Accept(Visitor visitor)
         {
             visitor.Visit(this);

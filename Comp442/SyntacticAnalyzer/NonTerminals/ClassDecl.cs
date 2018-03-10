@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("classDecl -> 'class' 'id' optInheritance '{' infVarAndFunc_VarStart '}' ';'");
 
-                var @class = new ClassDecl();
+                var @class = new ClassDecl(lookaheadToken.SourceLocation);
 
                 Match("class");
                 string className = Match("id");

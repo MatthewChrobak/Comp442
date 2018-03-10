@@ -16,8 +16,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infVarAndState_IdHandler -> 'id' infArraySize ';' infVarAndState");
 
                 // This is variable declaration.
-                var block = new StatBlock();
-                var variable = new VarDecl();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var variable = new VarDecl(lookaheadToken.SourceLocation);
 
                 string variableId = Match("id");
                 var dimensions = InfArraySize();
@@ -38,8 +38,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infVarAndState_IdHandler -> variableP '=' expr ';' infStatement");
 
                 // NoASS would have caught the other statements.
-                var block = new StatBlock();
-                var statement = new AssignStat();
+                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var statement = new AssignStat(lookaheadToken.SourceLocation);
 
                 var variable = VariableP(id);
                 Match("=");
