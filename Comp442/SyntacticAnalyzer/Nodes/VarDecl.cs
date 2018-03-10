@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class VarDecl : IVisitable
+    public class VarDecl : Node, IVisitable
     {
         public string Type { get; set; }
         public string Id { get; set; }

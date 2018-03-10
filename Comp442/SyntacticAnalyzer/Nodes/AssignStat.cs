@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class AssignStat : IVisitable
+    public class AssignStat : Node, IVisitable
     {
         public Var Variable { get; set; }
 

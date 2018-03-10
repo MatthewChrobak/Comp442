@@ -4,7 +4,7 @@ using System;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ScopeSpec : IVisitable
+    public class ScopeSpec : Node, IVisitable
     {
         public string ID { get; set; }
 

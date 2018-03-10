@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ForStat : IVisitable
+    public class ForStat : Node, IVisitable
     {
         public string Type;
         public string Id;

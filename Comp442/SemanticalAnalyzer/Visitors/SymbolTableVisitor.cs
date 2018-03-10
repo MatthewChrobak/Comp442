@@ -59,9 +59,6 @@ namespace SemanticalAnalyzer.Visitors
 
         public override void Visit(VarDecl var)
         {
-            var variableEntry = new SymbolTable();
-
-            var.Table = variableEntry;
         }
 
 

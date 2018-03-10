@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ClassList : IVisitable
+    public class ClassList : Node, IVisitable
     {
         [XmlElement("Class")]
         public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();

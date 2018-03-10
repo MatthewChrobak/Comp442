@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class ClassDecl : IVisitable
+    public class ClassDecl : Node, IVisitable
     {
         public InherList InheritingClasses { get; set; }
 

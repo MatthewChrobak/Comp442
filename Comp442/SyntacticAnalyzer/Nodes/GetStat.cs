@@ -4,7 +4,7 @@ using System;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class GetStat : IVisitable
+    public class GetStat : Node, IVisitable
     {
         public Var Variable { get; set; }
 

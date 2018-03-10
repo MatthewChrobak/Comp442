@@ -5,7 +5,7 @@ using SyntacticAnalyzer.Semantics;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class Program : IVisitable
+    public class Program : Node, IVisitable
     {
         public ClassList Classes { get; set; }
         public FuncDefList Functions { get; set; }

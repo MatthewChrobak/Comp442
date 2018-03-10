@@ -35,7 +35,7 @@ namespace SemanticalAnalyzer.Visitors
                     visited.Add(focus.ClassName, null);
                     foreach (var parent in focus.InheritingClasses.IDs) {
                         if (Done.ContainsKey(parent)) {
-                            implementation.AddRange(classes[parent].Table.GetAll());
+                            implementation.AddRange(classes[parent].Table.GetAll(), true);
                         } else {
                             if (visited.ContainsKey(parent)) {
 
@@ -47,7 +47,7 @@ namespace SemanticalAnalyzer.Visitors
                                     implementation.AddRange(classes[parent].Table.GetAll());
                                     visiting.Push(classes[parent]);
                                 } else {
-                                    // error class not found.
+                                    ErrorManager.Add($"The class {parent} cannot be found or is not defined.", (0, 0));
                                 }
                             }
                         }

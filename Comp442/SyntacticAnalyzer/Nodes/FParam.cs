@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class FParam : IVisitable
+    public class FParam : Node, IVisitable
     {
         public string Type { get; set; }
         public string Id { get; set; }

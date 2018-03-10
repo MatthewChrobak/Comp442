@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class FuncDef : IVisitable
+    public class FuncDef : Node, IVisitable
     {
         public string ReturnType { get; set; }
         public ScopeSpec ScopeResolution { get; set; }

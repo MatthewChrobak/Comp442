@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class RelExpr : IVisitable
+    public class RelExpr : Node, IVisitable
     {
         [XmlElement(type:typeof(AddOp), elementName: "LeftAdLeftdOp")] // arithExpr
         [XmlElement(type: typeof(MultOp), elementName: "LeftMultOp")] // term

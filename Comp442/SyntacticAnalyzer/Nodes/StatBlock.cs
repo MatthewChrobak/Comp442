@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class StatBlock : IVisitable
+    public class StatBlock : Node, IVisitable
     {
         [XmlArrayItem(type:typeof(VarDecl), elementName:"VarDecl")]
         [XmlArrayItem(type:typeof(AssignStat), elementName:"Assignment")]

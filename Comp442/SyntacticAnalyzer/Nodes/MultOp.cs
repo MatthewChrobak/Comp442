@@ -6,7 +6,7 @@ namespace SyntacticAnalyzer.Nodes
 {
     // TODO: XmlInclude all of that in Factor
     [Serializable]
-    public class MultOp : IVisitable
+    public class MultOp : Node, IVisitable
     {
         [XmlElement(type: typeof(AddOp), elementName: "LeftAddOp")] // arithExpr
         [XmlElement(type: typeof(RelExpr), elementName: "LeftRelationalExpression")] // expr

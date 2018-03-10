@@ -6,7 +6,7 @@ using System.Linq;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class InherList : IVisitable
+    public class InherList : Node, IVisitable
     {
         public List<string> IDs { get; set; } = new List<string>();
 

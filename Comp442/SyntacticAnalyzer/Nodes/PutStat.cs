@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class PutStat : IVisitable
+    public class PutStat : Node, IVisitable
     {
         [XmlElement(type: typeof(AddOp), elementName: "AddOp")] // arithExpr
         [XmlElement(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr

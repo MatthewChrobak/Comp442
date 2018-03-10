@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class Sign : IVisitable
+    public class Sign : Node, IVisitable
     {
         public string SignSymbol { get; set; }
 

@@ -4,7 +4,7 @@ using System;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class DataMember : IVisitable
+    public class DataMember : Node, IVisitable
     {
         public string Id { get; set; }
         public IndexList Indexes { get; set; }

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class Var : IVisitable
+    public class Var : Node, IVisitable
     {
         [XmlArrayItem(type:typeof(AParams), elementName:"Params")]
         [XmlArrayItem(type:typeof(DataMember), elementName:"DataMember")]
