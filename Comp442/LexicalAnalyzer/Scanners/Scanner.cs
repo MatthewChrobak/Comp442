@@ -17,6 +17,10 @@ namespace LexicalAnalyzer.Scanners
 
         public Scanner(string[] lines)
         {
+            for (int i = 0; i < lines.Length; i++) {
+                lines[i] = lines[i].Replace("\t", "    ");
+            }
+
             if (lines.Length != 0) {
                 lines = lines.Select(line => line + "\n").ToArray();
                 lines[lines.Length - 1] += " ";

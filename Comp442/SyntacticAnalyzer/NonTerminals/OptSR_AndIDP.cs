@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private (ScopeSpec scopeResolution, string id) OptSR_AndIDP(string id)
+        private (ScopeSpec scopeResolution, string id) OptSR_AndIDP(string id, (int, int) startLocation)
         {
             string first = "sr";
             string follow = "(";
@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("optSR_AndIDP -> 'sr' 'id'");
 
-                var scopeResolution = new ScopeSpec(lookaheadToken.SourceLocation) {
+                var scopeResolution = new ScopeSpec(startLocation) {
                     ID = id
                 };
 

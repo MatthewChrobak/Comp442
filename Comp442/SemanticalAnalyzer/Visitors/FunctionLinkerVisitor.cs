@@ -64,8 +64,14 @@ namespace SemanticalAnalyzer.Visitors
                                 function.Link = funcDef.Entry.Link;
                             }
                         }
+                    } else {
+                        ErrorManager.Add($"Invalid return type: Expected {returnType}, got {funcDef.ReturnType}", funcDef.Location);
                     }
+                } else {
+                    ErrorManager.Add($"The class {funcDef.ScopeResolution.ID} does not define a function {funcDef.FunctionName}.", funcDef.Location);
                 }
+            } else {
+                 ErrorManager.Add($"The class {funcDef.ScopeResolution.ID} could not be resolved to a type.", funcDef.ScopeResolution.Location);
             }
         }
     }

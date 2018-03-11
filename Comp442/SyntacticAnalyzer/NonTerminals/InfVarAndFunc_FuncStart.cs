@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
 
                 string type = Type();
                 string id = Match("id");
-                return InfVarAndFunc_FuncFinish(type, id);
+                return InfVarAndFunc_FuncFinish(type, id, lookaheadToken.SourceLocation);
             }
 
             if (follow.HasToken(lookahead)) {

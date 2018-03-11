@@ -21,7 +21,7 @@ namespace SyntacticAnalyzer.Parser
 
                 string type = Type();
                 string id = Match("id");
-                var fullVarAndFuncList = InfVarAndFunc_VarFinish(type, id);
+                var fullVarAndFuncList = InfVarAndFunc_VarFinish(type, id, lookaheadToken.SourceLocation);
                 
                 memberList.JoinListWhereNotNull(fullVarAndFuncList);
 

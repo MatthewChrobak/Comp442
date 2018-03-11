@@ -15,16 +15,16 @@ namespace SemanticalAnalyzer.Visitors
             foreach (var @class in node.Classes?.Classes) {
                 this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class) {
                     Link = @class.Table
-                });
+                }, @class.Location);
             }
 
             foreach (var func in node.Functions?.Functions) {
-                this.GlobalScope.Add(func.Entry);
+                this.GlobalScope.Add(func.Entry, func.Location);
             }
 
             this.GlobalScope.Add(new TableEntry("main", Classification.Function) {
                 Link = node.MainFunction.Table
-            });
+            }, node.MainFunction.Location);
 
             node.Table = this.GlobalScope;
         }
@@ -40,7 +40,7 @@ namespace SemanticalAnalyzer.Visitors
                     classTable.Add(new TableEntry(variable.Id, Classification.Variable) {
                         Link = variable.Table,
                         Type = variable.Type
-                    });
+                    }, variable.Location);
                     continue;
                 }
                 if (entry as FuncDecl != null) {
@@ -48,7 +48,7 @@ namespace SemanticalAnalyzer.Visitors
                     classTable.Add(new TableEntry(func.Id, Classification.Function) {
                         Link = func.Table,
                         Type = func.Type + "-" + string.Join(",", func.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))))
-                    });
+                    }, func.Location);
                     continue;
                 }
                 throw new System.Exception();
@@ -74,11 +74,11 @@ namespace SemanticalAnalyzer.Visitors
             entry.Link = new SymbolTable();
 
             foreach (var param in funcDef.Parameters) {
-                entry.Link.Add(param.Entry);
+                entry.Link.Add(param.Entry, param.Location);
             }
 
             foreach (var varEntry in funcDef.Implementation.Table.GetAll()) {
-                entry.Link.Add(varEntry);
+                entry.Link.Add(varEntry, funcDef.Implementation.Location);
             }
 
             entry.Type = funcDef.ReturnType + "-" + string.Join(",", funcDef.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))));
@@ -95,7 +95,7 @@ namespace SemanticalAnalyzer.Visitors
             foreach (var stat in varDecl) {
                 table.Add(new TableEntry(stat.Id, Classification.Variable) {
                     Type = stat.Type
-                });
+                }, stat.Location);
             }
 
             statBlock.Table = table;

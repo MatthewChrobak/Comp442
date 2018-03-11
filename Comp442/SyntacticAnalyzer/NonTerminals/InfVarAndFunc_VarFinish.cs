@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private List<object> InfVarAndFunc_VarFinish(string type, string id)
+        private List<object> InfVarAndFunc_VarFinish(string type, string id, (int, int) startLocation)
         {
             string first = "; [ (";
             this.SkipErrors(first);
@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infArraySize ';' infVarAndFunc_VarStart");
 
                 var memberList = new List<object>();
-                var variable = new VarDecl(lookaheadToken.SourceLocation);
+                var variable = new VarDecl(startLocation);
                 
                 var arraySizes = InfArraySize();
                 Match(";");
@@ -35,7 +35,7 @@ namespace SyntacticAnalyzer.Parser
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndFunc_VarFinish -> infVarAndFunc_FuncFinish");
 
-                return InfVarAndFunc_FuncFinish(type, id);
+                return InfVarAndFunc_FuncFinish(type, id, startLocation);
             }
 
             return null;

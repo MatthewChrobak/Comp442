@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("optSR_AndID -> 'id' optSR_AndIDP");
                 
                 string id = Match("id");
-                return OptSR_AndIDP(id);
+                return OptSR_AndIDP(id, lookaheadToken.SourceLocation);
             }
 
             return (null, System.String.Empty);

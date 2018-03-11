@@ -14,7 +14,7 @@ namespace SyntacticAnalyzer.Semantics
             this._entries = new Dictionary<string, TableEntry>();
         }
 
-        public void Add(TableEntry value, bool overrideEntry = false)
+        public void Add(TableEntry value, (int, int) location, bool overrideEntry = false)
         {
             if (value == null) {
                 return;
@@ -26,7 +26,7 @@ namespace SyntacticAnalyzer.Semantics
                 if (overrideEntry) {
                     return;
                 }
-                ErrorManager.Add($"The {value.Classification} {value.ID} is already defined in this scope.", (0, 0));
+                ErrorManager.Add($"The {value.Classification} {value.ID} is already defined in this scope.", location);
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace SyntacticAnalyzer.Semantics
                 return;
             }
             foreach (var entry in entries) {
-                this.Add(entry, overrideEntries);
+                this.Add(entry, (-1, -1), overrideEntries);
             }
         }
 
@@ -48,7 +48,6 @@ namespace SyntacticAnalyzer.Semantics
             if (this._entries.ContainsKey(key)) {
                 return this._entries[key];
             }
-            Console.WriteLine("Could not find " + key);
             return null;
         }
 
