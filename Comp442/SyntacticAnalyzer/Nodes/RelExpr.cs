@@ -10,7 +10,8 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type:typeof(AddOp), elementName: "LeftAdLeftdOp")] // arithExpr
         [XmlElement(type: typeof(MultOp), elementName: "LeftMultOp")] // term
         [XmlElement(type: typeof(Var), elementName: "LeftVariable")] // factor
-        [XmlElement(type: typeof(string), elementName: "LeftNumber")] // factor
+        [XmlElement(type: typeof(Integer), elementName: "LeftInteger")] // factor
+        [XmlElement(type: typeof(Float), elementName: "LeftFloat")] // factor
         [XmlElement(type: typeof(FCall), elementName: "LeftFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "LeftNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "LeftSignFactor")] // factor
@@ -21,7 +22,8 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(AddOp), elementName: "RightAddOp")] // arithExpr
         [XmlElement(type: typeof(MultOp), elementName: "RightMultOp")] // term
         [XmlElement(type: typeof(Var), elementName: "RightVariable")] // factor
-        [XmlElement(type: typeof(string), elementName: "RightNumber")] // factor
+        [XmlElement(type: typeof(Integer), elementName: "RightInteger")] // factor
+        [XmlElement(type: typeof(Float), elementName: "RightFloat")] // factor
         [XmlElement(type: typeof(FCall), elementName: "RightFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor

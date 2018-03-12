@@ -5,24 +5,23 @@ using System.Xml.Serialization;
 namespace SyntacticAnalyzer.Nodes
 {
     [Serializable]
-    public class FCall : Node, IVisitable
+    public class Integer : Node, IVisitable
     {
-        public string Id { get; set; }
-        public AParams Parameters { get; set; }
+        public string Value { set; get; }
 
-        public FCall((int, int) location) : base(location)
+        public Integer((int, int) location) : base(location)
         {
+            this.SemanticalType = "int";
         }
 
         public void Accept(Visitor visitor)
         {
-            this.Parameters.Accept(visitor);
             visitor.Visit(this);
         }
 
         public override string ToString()
         {
-            return $"{Id}({Parameters})";
+            return this.Value;
         }
     }
 }

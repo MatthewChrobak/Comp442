@@ -1,5 +1,6 @@
 ﻿using SyntacticAnalyzer.Semantics;
 using System;
+using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {
@@ -15,7 +16,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
-            this.Indexes.Accept(visitor);
+            this.Indexes?.Accept(visitor);
             visitor.Visit(this);
         }
 

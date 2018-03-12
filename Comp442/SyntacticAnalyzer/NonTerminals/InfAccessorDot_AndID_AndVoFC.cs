@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFC -> 'id' infAccessorDot_AndID_AndVoFCP");
 
                 string id = Match("id");
-                return InfAccessorDot_AndID_AndVoFCP(id);
+                return InfAccessorDot_AndID_AndVoFCP(id, lookaheadToken.SourceLocation);
             }
 
             return null;

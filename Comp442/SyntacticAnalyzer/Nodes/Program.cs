@@ -9,7 +9,7 @@ namespace SyntacticAnalyzer.Nodes
     {
         public ClassList Classes { get; set; }
         public FuncDefList Functions { get; set; }
-        public StatBlock MainFunction { get; set; }
+        public MainStatBlock MainFunction { get; set; }
 
         [XmlIgnore]
         public SymbolTable Table { get; set; }

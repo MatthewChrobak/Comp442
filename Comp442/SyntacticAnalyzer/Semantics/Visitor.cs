@@ -15,12 +15,27 @@ namespace SyntacticAnalyzer.Semantics
             
         }
 
+        public virtual void Visit(Float @float)
+        {
+
+        }
+
+        public virtual void Visit(Integer integer)
+        {
+
+        }
+
         public virtual void Visit(DataMember dataMember)
         {
             
         }
 
         public virtual void Visit(VarDecl varDecl)
+        {
+            
+        }
+
+        public virtual void PreVisit(MainStatBlock mainStatBlock)
         {
             
         }
@@ -41,6 +56,11 @@ namespace SyntacticAnalyzer.Semantics
         }
 
         public virtual void Visit(GetStat getStat)
+        {
+            
+        }
+
+        public virtual void PreVisit(FuncDef funcDef)
         {
             
         }
@@ -103,6 +123,11 @@ namespace SyntacticAnalyzer.Semantics
         public virtual void Visit(StatBlock statBlock)
         {
             
+        }
+
+        public virtual void Visit(MainStatBlock mainStatBlock)
+        {
+
         }
 
         public virtual void Visit(Sign sign)

@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("variable -> 'id' variableP");
 
                 string id = Match("id");
-                return VariableP(id);
+                return VariableP(id, lookaheadToken.SourceLocation, lookaheadToken.SourceLocation);
             }
 
             return null;

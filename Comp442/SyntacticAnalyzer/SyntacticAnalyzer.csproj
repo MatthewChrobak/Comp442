@@ -49,6 +49,7 @@
     <Compile Include="Nodes\ClassList.cs" />
     <Compile Include="Nodes\DataMember.cs" />
     <Compile Include="Nodes\FCall.cs" />
+    <Compile Include="Nodes\Float.cs" />
     <Compile Include="Nodes\ForStat.cs" />
     <Compile Include="Nodes\FParam.cs" />
     <Compile Include="Nodes\FuncDecl.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Nodes\IfStat.cs" />
     <Compile Include="Nodes\IndexList.cs" />
     <Compile Include="Nodes\InherList.cs" />
+    <Compile Include="Nodes\Integer.cs" />
+    <Compile Include="Nodes\MainStatBlock.cs" />
     <Compile Include="Nodes\MultOp.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\Not.cs" />

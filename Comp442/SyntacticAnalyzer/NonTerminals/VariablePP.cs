@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private Var VariablePP()
+        private Var VariablePP((int, int) varStartLocation)
         {
             string first = ".";
             string follow = "= )";
@@ -17,8 +17,9 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("variablePP -> '.' 'id' variableP");
 
                 Match(".");
+                var startLocation = this.TokenStream.Peek().SourceLocation;
                 string id = Match("id");
-                return VariableP(id);
+                return VariableP(id, varStartLocation, startLocation);
             }
 
             if (follow.HasToken(lookahead)) {

@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
     public partial class Parser
     {
         // This can be either a function call or a variable.
-        private Var InfAccessorDot_AndID_AndVoFCP(string id)
+        private Var InfAccessorDot_AndID_AndVoFCP(string id, (int, int) startLocation)
         {
             string first = "[ ( .";
             string follow = "* / and + - or eq neq lt gt leq geq ] ) ; ,";
@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if ("[ (".HasToken(lookahead)) {
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
 
-                var variable = new Var(lookaheadToken.SourceLocation);
+                var variable = new Var(startLocation);
 
                 var funcOrDataMemeber = AccessorP(id);
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
@@ -32,8 +32,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
 
-                var variable = new Var(lookaheadToken.SourceLocation);
-                var dataMember = new DataMember(lookaheadToken.SourceLocation);
+                var variable = new Var(startLocation);
+                var dataMember = new DataMember(startLocation);
 
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
 
@@ -49,7 +49,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return new Var(lookaheadToken.SourceLocation) { Elements = { new DataMember(lookaheadToken.SourceLocation) { Id = id } } };
+                return new Var(lookaheadToken.SourceLocation) { Elements = { new DataMember(startLocation) { Id = id } } };
             }
 
             return null;

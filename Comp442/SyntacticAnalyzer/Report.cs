@@ -74,8 +74,11 @@ namespace SyntacticAnalyzer.Parser
                         typeof(ScopeSpec),
                         typeof(Sign),
                         typeof(StatBlock),
+                        typeof(MainStatBlock),
                         typeof(Var),
-                        typeof(VarDecl)
+                        typeof(VarDecl),
+                        typeof(Integer),
+                        typeof(Float)
                     });
                     serializer.Serialize(fs, this.AbstractSyntaxTree);
                 } catch (Exception e) {

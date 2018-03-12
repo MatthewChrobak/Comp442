@@ -39,7 +39,7 @@ namespace SemanticalAnalyzer.Visitors
                     var variable = entry as VarDecl;
                     classTable.Add(new TableEntry(variable.Id, Classification.Variable) {
                         Link = variable.Table,
-                        Type = variable.Type
+                        Type = variable.Type + "[]".Repeat(variable.Dimensions.Count)
                     }, variable.Location);
                     continue;
                 }
@@ -47,7 +47,7 @@ namespace SemanticalAnalyzer.Visitors
                     var func = entry as FuncDecl;
                     classTable.Add(new TableEntry(func.Id, Classification.Function) {
                         Link = func.Table,
-                        Type = func.Type + "-" + string.Join(",", func.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))))
+                        Type = func.Type + "-" + string.Join(",", func.Parameters.Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)))
                     }, func.Location);
                     continue;
                 }
@@ -81,9 +81,14 @@ namespace SemanticalAnalyzer.Visitors
                 entry.Link.Add(varEntry, funcDef.Implementation.Location);
             }
 
-            entry.Type = funcDef.ReturnType + "-" + string.Join(",", funcDef.Parameters.Select(val => val.Type + string.Join(string.Empty, val.Dimensions.Select(dim => "[]"))));
+            entry.Type = funcDef.ReturnType + "-" + string.Join(",", funcDef.Parameters.Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)));
 
             funcDef.Entry = entry;
+        }
+
+        public override void Visit(MainStatBlock mainStatBlock)
+        {
+            this.Visit((StatBlock)mainStatBlock);
         }
 
         public override void Visit(StatBlock statBlock)
@@ -94,7 +99,7 @@ namespace SemanticalAnalyzer.Visitors
 
             foreach (var stat in varDecl) {
                 table.Add(new TableEntry(stat.Id, Classification.Variable) {
-                    Type = stat.Type
+                    Type = stat.Type + "[]".Repeat(stat.Dimensions.Count)
                 }, stat.Location);
             }
 
@@ -104,7 +109,7 @@ namespace SemanticalAnalyzer.Visitors
         public override void Visit(FParam fParam)
         {
             var entry = new TableEntry(fParam.Id, Classification.Parameter) {
-                Type = fParam.Type
+                Type = fParam.Type + "[]".Repeat(fParam.Dimensions.Count)
             };
             fParam.Entry = entry;
         }

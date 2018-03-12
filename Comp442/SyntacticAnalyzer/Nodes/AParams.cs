@@ -12,7 +12,8 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
         [XmlArrayItem(type: typeof(MultOp), elementName: "MultOp")] // term
         [XmlArrayItem(type: typeof(Var), elementName: "Variable")] // factor
-        [XmlArrayItem(type: typeof(string), elementName: "Number")] // factor
+        [XmlElement(type: typeof(Integer), elementName: "Integer")] // factor
+        [XmlElement(type: typeof(Float), elementName: "Float")] // factor
         [XmlArrayItem(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor

@@ -11,7 +11,7 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Type { get; set; }
         public string Id { get; set; }
-        public List<string> Dimensions { get; set; } = new List<string>();
+        public List<Integer> Dimensions { get; set; } = new List<Integer>();
 
         [XmlIgnore]
         public SymbolTable Table { get; set; }

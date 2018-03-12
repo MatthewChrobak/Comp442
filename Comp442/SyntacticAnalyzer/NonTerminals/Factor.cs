@@ -15,13 +15,13 @@ namespace SyntacticAnalyzer.Parser
             if ("intNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'intNum'");
 
-                return Match("intNum");
+                return new Integer(lookaheadToken.SourceLocation) { Value = Match("intNum") };
             }
 
             if ("floatNum".HasToken(lookahead)) {
                 this.ApplyDerivation("factor -> 'floatNum'");
 
-                return Match("floatNum");
+                return new Float(lookaheadToken.SourceLocation) { Value = Match("floatNum") };
             }
 
             if ("(".HasToken(lookahead)) {

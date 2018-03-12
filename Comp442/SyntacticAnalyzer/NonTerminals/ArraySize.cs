@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private string ArraySize()
+        private Integer ArraySize()
         {
             string first = "[";
             this.SkipErrors(first);
@@ -14,13 +16,14 @@
                 this.ApplyDerivation("arraySize -> '[' 'intNum' ']'");
 
                 Match("[");
+                var location = this.TokenStream.Peek().SourceLocation;
                 string num = Match("intNum");
                 Match("]");
 
-                return num;
+                return new Integer(location) { Value = num };
             }
             
-            return System.String.Empty;
+            return null;
         }
     }
 }

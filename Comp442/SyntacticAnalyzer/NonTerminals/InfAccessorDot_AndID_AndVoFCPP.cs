@@ -17,8 +17,9 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> '.' 'id' infAccessorDot_AndID_AndVoFCP");
 
                 Match(".");
+                var nextLocation = this.TokenStream.Peek().SourceLocation;
                 string id = Match("id");
-                return InfAccessorDot_AndID_AndVoFCP(id);
+                return InfAccessorDot_AndID_AndVoFCP(id, nextLocation);
             }
 
             if (follow.HasToken(lookahead)) {

@@ -48,6 +48,7 @@
     <Compile Include="Visitors\FunctionLinkerVisitor.cs" />
     <Compile Include="Visitors\InheritanceVisitor.cs" />
     <Compile Include="Visitors\SymbolTableVisitor.cs" />
+    <Compile Include="Visitors\TypeVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Errors\Errors.csproj">

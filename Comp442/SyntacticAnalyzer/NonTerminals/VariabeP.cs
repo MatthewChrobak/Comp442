@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private Var VariableP(string id)
+        private Var VariableP(string id, (int, int) varStartLocation, (int, int) elementStartLocation)
         {
             string first = "( [ .";
             string follow = "= )";
@@ -16,15 +16,18 @@ namespace SyntacticAnalyzer.Parser
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> '(' aParams ')' '.' 'id' variableP");
 
-                var variable = new Var(lookaheadToken.SourceLocation);
-                var functionCall = new FCall(lookaheadToken.SourceLocation);
+                var variable = new Var(varStartLocation);
+                var functionCall = new FCall(elementStartLocation);
 
                 Match("(");
                 var parameters = AParams();
                 Match(")");
                 Match(".");
+
+                var nextLocation = this.TokenStream.Peek().SourceLocation;
+
                 string nextId = Match("id");
-                var trailingVariableElements = VariableP(nextId);
+                var trailingVariableElements = VariableP(nextId, varStartLocation, nextLocation);
 
                 functionCall.Id = id;
                 functionCall.Parameters = parameters;
@@ -38,11 +41,11 @@ namespace SyntacticAnalyzer.Parser
             if ("[ .".HasToken(lookahead)) {
                 this.ApplyDerivation("variableP -> infIndice variablePP");
 
-                var variable = new Var(lookaheadToken.SourceLocation);
-                var member = new DataMember(lookaheadToken.SourceLocation);
+                var variable = new Var(varStartLocation);
+                var member = new DataMember(elementStartLocation);
 
                 var indice = InfIndice();
-                var trailingElements = VariablePP();
+                var trailingElements = VariablePP(varStartLocation);
 
                 member.Id = id;
                 member.Indexes = indice;
@@ -58,8 +61,8 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infIndice -> EPSILON");
                 this.ApplyDerivation("variablePP -> EPSILON");
 
-                var variable = new Var(lookaheadToken.SourceLocation);
-                variable.Elements.Add(new DataMember(lookaheadToken.SourceLocation) { Id = id });
+                var variable = new Var(varStartLocation);
+                variable.Elements.Add(new DataMember(elementStartLocation) { Id = id });
                 return variable;
             }
 

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using SyntacticAnalyzer.Nodes;
+using System.Collections.Generic;
 
 namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private List<string> InfArraySize()
+        private List<Integer> InfArraySize()
         {
             string first = "[";
             string follow = ", ; )";
@@ -16,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> arraySize infArraySize");
 
-                var dimensionList = new List<string>();
+                var dimensionList = new List<Integer>();
 
                 var dimension = ArraySize();
                 var trailingDimensions = InfArraySize();
@@ -29,7 +30,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infArraySize -> EPSILON");
-                return new List<string>();
+                return new List<Integer>();
             }
 
             return null;

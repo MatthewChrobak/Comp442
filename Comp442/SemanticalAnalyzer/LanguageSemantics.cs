@@ -20,6 +20,12 @@ namespace SemanticalAnalyzer
 
             var classInheriter = new InheritanceVisitor(this.AST.Table);
             this.AST.Accept(classInheriter);
+
+            var accessabilityVerifier = new AccessabilityVisitor(this.AST.Table);
+            this.AST.Accept(accessabilityVerifier);
+
+            var typeVisitor = new TypeVisitor(this.AST.Table);
+            this.AST.Accept(typeVisitor);
         }
     }
 }

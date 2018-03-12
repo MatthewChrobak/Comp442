@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private StatBlock InfVarAndState()
+        private StatBlock InfVarAndState((int, int) startLocation)
         {
             string first = "id float int if for get put return";
             string follow = "}";
@@ -16,10 +16,10 @@ namespace SyntacticAnalyzer.Parser
             if ("id".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> 'id' infVarAndState_IdHandler");
 
-                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var block = new StatBlock(startLocation);
 
                 string id = Match("id");
-                var trailingBlock = InfVarAndState_IdHandler(id);
+                var trailingBlock = InfVarAndState_IdHandler(id, lookaheadToken.SourceLocation);
                 
                 block.Statements.JoinListWhereNotNull(trailingBlock?.Statements);
 
@@ -29,14 +29,14 @@ namespace SyntacticAnalyzer.Parser
             if ("float int".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> type_NoID 'id' infArraySize ';' infVarAndState");
 
-                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var block = new StatBlock(startLocation);
                 var variableDeclaration = new VarDecl(lookaheadToken.SourceLocation);
 
                 string type = Type_NoID();
                 string id = Match("id");
                 var dimensions = InfArraySize();
                 Match(";");
-                var trailingBlock = InfVarAndState();
+                var trailingBlock = InfVarAndState(this.TokenStream.Peek().SourceLocation);
 
                 variableDeclaration.Type = type;
                 variableDeclaration.Id = id;
@@ -51,7 +51,7 @@ namespace SyntacticAnalyzer.Parser
             if ("if for get put return".HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> noASS infStatement");
 
-                var block = new StatBlock(lookaheadToken.SourceLocation);
+                var block = new StatBlock(startLocation);
 
                 var statement = NoASS();
                 var trailingStatements = InfStatement();
@@ -64,7 +64,7 @@ namespace SyntacticAnalyzer.Parser
 
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("infVarAndState -> EPSILON");
-                return new StatBlock(lookaheadToken.SourceLocation);
+                return new StatBlock(startLocation);
             }
 
             return null;

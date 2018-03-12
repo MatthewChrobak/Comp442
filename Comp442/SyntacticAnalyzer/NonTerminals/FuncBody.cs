@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("funcBody -> '{' infVarAndState '}'");
 
                 Match("{");
-                var block = InfVarAndState();
+                var block = InfVarAndState(lookaheadToken.SourceLocation);
                 Match("}");
 
                 return block;
