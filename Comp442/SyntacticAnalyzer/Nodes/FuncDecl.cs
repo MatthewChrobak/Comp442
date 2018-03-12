@@ -25,6 +25,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            foreach (var param in this.Parameters) {
+                param.Accept(visitor);
+            }
+
             visitor.Visit(this);
         }
 

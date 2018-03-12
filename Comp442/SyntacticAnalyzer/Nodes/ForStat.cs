@@ -30,6 +30,13 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            if (this.Initialization is IVisitable initialization) {
+                initialization.Accept(visitor);
+            }
+            this.Condition.Accept(visitor);
+            this.Update.Accept(visitor);
+            this.LoopBlock.Accept(visitor);
+
             visitor.Visit(this);
         }
 

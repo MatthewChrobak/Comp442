@@ -25,6 +25,10 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            if (this.Factor is IVisitable visitable) {
+                visitable.Accept(visitor);
+            }
+
             visitor.Visit(this);
         }
 

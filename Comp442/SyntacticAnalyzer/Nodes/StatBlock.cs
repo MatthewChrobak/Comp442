@@ -27,6 +27,12 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            foreach (var element in this.Statements) {
+                if (element is IVisitable visitable) {
+                    visitable.Accept(visitor);
+                }
+            }
+
             visitor.Visit(this);
         }
 

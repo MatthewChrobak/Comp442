@@ -25,6 +25,13 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            if (this.Condition is IVisitable condition) {
+                condition.Accept(visitor);
+            }
+
+            this.TrueBlock.Accept(visitor);
+            this.ElseBlock.Accept(visitor);
+
             visitor.Visit(this);
         }
 

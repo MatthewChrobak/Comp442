@@ -25,6 +25,9 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            if (this.ExpressionValue is IVisitable expressionValue) {
+                expressionValue.Accept(visitor);
+            }
             visitor.Visit(this);
         }
 
