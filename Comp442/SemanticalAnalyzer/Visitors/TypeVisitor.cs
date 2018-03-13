@@ -121,7 +121,40 @@ namespace SemanticalAnalyzer.Visitors
                 }
 
                 if (element is FCall fcall) {
-                    // TODO
+                    TableEntry entry = currentScope.Get($"{fcall.Id}-{Classification.Function}");
+
+                    var types = entry.Type.Split('-');
+                    string returnType = types[0];
+                    var parameters = types[1] == "" ? new string[0] : types[1].Split(',');
+
+                    if (parameters.Length == fcall.Parameters.Expressions.Count) {
+                        bool valid = true;
+                        for (int i = 0; i < parameters.Length; i++) {
+                            string expectedType = parameters[i];
+
+                            var expression = fcall.Parameters.Expressions[i] as Node;
+                            if (expression != null) {
+
+                                string actualType = expression.SemanticalType;
+
+                                if (actualType != expectedType) {
+                                    valid = false;
+                                    ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {actualType}", expression.Location);
+                                    break;
+                                }
+
+                            } else {
+                                throw new System.Exception();
+                            }
+                        }
+
+                        if (valid) {
+                            var.SemanticalType = returnType;
+                        }
+                    } else {
+                        ErrorManager.Add($"The function {fcall.Id} takes in {parameters.Length} arguments.", fcall.Location);
+                        break;
+                    }
                 }
             }
         }
