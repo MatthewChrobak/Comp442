@@ -1,6 +1,5 @@
 ﻿using SyntacticAnalyzer.Semantics;
 using System;
-using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
 {

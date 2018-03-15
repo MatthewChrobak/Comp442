@@ -9,6 +9,9 @@ namespace SemanticalAnalyzer.Visitors
     {
         private SymbolTable _functionScope;
         private SymbolTable _globalScope;
+        private SymbolTable _classInstanceScope;
+
+        private string _lastFunctionRequiredReturnType;
 
         public TypeVisitor(SymbolTable globalScope)
         {
@@ -17,13 +20,20 @@ namespace SemanticalAnalyzer.Visitors
 
         public override void PreVisit(FuncDef funcDef)
         {
+            this._lastFunctionRequiredReturnType = funcDef.ReturnType;
             this._functionScope = funcDef.Entry.Link;
+
+            if (funcDef.ScopeResolution != null) {
+                this._classInstanceScope = this._globalScope.Get($"{funcDef.ScopeResolution.ID}-{Classification.Class}")?.Link;
+            }
         }
 
         public override void PreVisit(MainStatBlock statBlock)
         {
+            this._lastFunctionRequiredReturnType = "__MAIN__";
             this._functionScope = statBlock.Table;
         }
+   
 
 
         public override void Visit(AddOp addOp)
@@ -31,10 +41,9 @@ namespace SemanticalAnalyzer.Visitors
             if (addOp.RHS is Node rhs) {
                 if (addOp.LHS is Node lhs) {
                     if (lhs.SemanticalType != rhs.SemanticalType) {
-                        ErrorManager.Add($"Inconsistent types: Expected {lhs.SemanticalType}, got {rhs.SemanticalType}", rhs.Location);
-                    } else {
-                        addOp.SemanticalType = lhs.SemanticalType;
+                        ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {addOp.Operator} {rhs.SemanticalType}", rhs.Location);
                     }
+                    addOp.SemanticalType = lhs.SemanticalType;
                 } else {
                     addOp.SemanticalType = rhs.SemanticalType;
                 }
@@ -43,39 +52,60 @@ namespace SemanticalAnalyzer.Visitors
             }
         }
 
-        public override void Visit(FCall fCall)
-        {
-            
-        }
-
-        public override void Visit(DataMember dataMember)
-        {
-            
-        }
-
         public override void Visit(Not not)
         {
-            
+            not.SemanticalType = ((Node)not.Factor).SemanticalType;
         }
 
         public override void Visit(MultOp multOp)
         {
-            
+            if (multOp.RHS is Node rhs) {
+                if (multOp.LHS is Node lhs) {
+                    if (lhs.SemanticalType != rhs.SemanticalType) {
+                        ErrorManager.Add($"Inconsistent types: Expected {lhs.SemanticalType}, got {rhs.SemanticalType}", rhs.Location);
+                    } 
+                    multOp.SemanticalType = lhs.SemanticalType;
+                } else {
+                    multOp.SemanticalType = rhs.SemanticalType;
+                }
+            } else {
+                ErrorManager.Add("RHS does not exist.", multOp.Location);
+            }
         }
 
         public override void Visit(RelExpr relExpr)
         {
-            
+            if (relExpr.RHS is Node rhs) {
+                if (relExpr.LHS is Node lhs) {
+                    if (lhs.SemanticalType != rhs.SemanticalType) {
+                        ErrorManager.Add($"Inconsistent types: Expected {lhs.SemanticalType}, got {rhs.SemanticalType}", rhs.Location);
+                    }
+                    relExpr.SemanticalType = lhs.SemanticalType;
+                } else {
+                    relExpr.SemanticalType = rhs.SemanticalType;
+                }
+            } else {
+                ErrorManager.Add("RHS does not exist.", relExpr.Location);
+            }
         }
 
         public override void Visit(ReturnStat returnStat)
         {
-            
+            returnStat.SemanticalType = ((Node)returnStat.ReturnValueExpression).SemanticalType;
+
+            if (this._lastFunctionRequiredReturnType == "__MAIN__") {
+                ErrorManager.Add("Cannot return in main.", returnStat.Location);
+                return;
+            }
+
+            if (this._lastFunctionRequiredReturnType != returnStat.SemanticalType) {
+                ErrorManager.Add($"Must return a value of type {this._lastFunctionRequiredReturnType}. Cannot convert {returnStat.SemanticalType} to it.", returnStat.Location);
+            }
         }
 
         public override void Visit(Sign sign)
         {
-            
+            sign.SemanticalType = ((Node)sign.Factor).SemanticalType;
         }
 
         public override void Visit(Var var)
@@ -83,10 +113,11 @@ namespace SemanticalAnalyzer.Visitors
             SymbolTable currentScope = new SymbolTable();
             currentScope.AddRange(this._functionScope.GetAll());
             currentScope.AddRange(this._globalScope.GetAll());
+            currentScope.AddRange(this._classInstanceScope?.GetAll());
 
             foreach (var element in var.Elements) {
                 if (element is AParams aparams) {
-                    // TODO
+                    throw new System.Exception();
                 }
 
                 if (element is DataMember dataMember) {
@@ -122,38 +153,43 @@ namespace SemanticalAnalyzer.Visitors
 
                 if (element is FCall fcall) {
                     TableEntry entry = currentScope.Get($"{fcall.Id}-{Classification.Function}");
+                    
+                    if (entry != null) {
+                        var types = entry.Type.Split('-');
+                        string returnType = types[0];
+                        var parameters = types[1] == "" ? new string[0] : types[1].Split(',');
 
-                    var types = entry.Type.Split('-');
-                    string returnType = types[0];
-                    var parameters = types[1] == "" ? new string[0] : types[1].Split(',');
+                        if (parameters.Length == fcall.Parameters.Expressions.Count) {
 
-                    if (parameters.Length == fcall.Parameters.Expressions.Count) {
-                        bool valid = true;
-                        for (int i = 0; i < parameters.Length; i++) {
-                            string expectedType = parameters[i];
+                            for (int i = 0; i < parameters.Length; i++) {
+                                string expectedType = parameters[i];
 
-                            var expression = fcall.Parameters.Expressions[i] as Node;
-                            if (expression != null) {
+                                var expression = fcall.Parameters.Expressions[i] as Node;
+                                if (expression != null) {
 
-                                string actualType = expression.SemanticalType;
+                                    string actualType = expression.SemanticalType;
 
-                                if (actualType != expectedType) {
-                                    valid = false;
-                                    ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {actualType}", expression.Location);
-                                    break;
+                                    if (actualType != expectedType) {
+                                        ErrorManager.Add($"Invalid parameter type: Expected {expectedType}, got {actualType}", expression.Location);
+                                        break;
+                                    }
+
+                                } else {
+                                    throw new System.Exception();
                                 }
-
-                            } else {
-                                throw new System.Exception();
                             }
-                        }
 
-                        if (valid) {
                             var.SemanticalType = returnType;
+
+                            currentScope = new SymbolTable();
+                            currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll());
+
+                        } else {
+                            ErrorManager.Add($"The function {fcall.Id} takes in {parameters.Length} arguments.", fcall.Location);
+                            break;
                         }
                     } else {
-                        ErrorManager.Add($"The function {fcall.Id} takes in {parameters.Length} arguments.", fcall.Location);
-                        break;
+                        throw new System.Exception();
                     }
                 }
             }
@@ -164,9 +200,8 @@ namespace SemanticalAnalyzer.Visitors
             if (assignStat.ExpressionValue is Node expression) {
                 if (assignStat.Variable.SemanticalType != expression.SemanticalType) {
                     ErrorManager.Add($"Could not convert {expression.SemanticalType} to a {assignStat.Variable.SemanticalType}.", assignStat.Location);
-                } else {
-                    assignStat.SemanticalType = expression.SemanticalType;
                 }
+                assignStat.SemanticalType = expression.SemanticalType;
             } else {
                 ErrorManager.Add($"Could not establish an expression value.", assignStat.Location);
             }

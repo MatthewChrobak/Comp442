@@ -28,7 +28,7 @@ namespace SyntacticAnalyzer.Nodes
         {
             visitor.PreVisit(this);
 
-            this.ScopeResolution.Accept(visitor);
+            this.ScopeResolution?.Accept(visitor);
             foreach (var parameter in this.Parameters) {
                 parameter.Accept(visitor);
             }

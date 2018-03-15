@@ -42,7 +42,7 @@ namespace SemanticalAnalyzer.Visitors
 
                             // Make sure each parameter matches.
                             for (int i = 0; i < funcDef.Parameters.Count; i++) {
-                                string expectedType = types[1];
+                                string expectedType = parameters[i];
                                 string receivedType = funcDef.Parameters[i].Type + "[]".Repeat(funcDef.Parameters[i].Dimensions.Count);
 
                                 if (expectedType == string.Empty) {
