@@ -29,13 +29,13 @@ namespace SemanticalAnalyzer.Visitors
                 var implementation = new SymbolTable();
                 var focus = classEntry;
                 
-                implementation.AddRange(classEntry.Table.GetAll());
+                implementation.AddRange(classEntry.Table.GetAll(), classEntry.Location);
 
                 do {
                     visited.Add(focus.ClassName, null);
                     foreach (var parent in focus.InheritingClasses.IDs) {
                         if (Done.ContainsKey(parent)) {
-                            implementation.AddRange(classes[parent].Table.GetAll(), true);
+                            implementation.AddRange(classes[parent].Table.GetAll(), classEntry.Location, true);
                         } else {
                             if (visited.ContainsKey(parent)) {
 
@@ -44,7 +44,7 @@ namespace SemanticalAnalyzer.Visitors
                                 break;
                             } else {
                                 if (classes.ContainsKey(parent)) {
-                                    implementation.AddRange(classes[parent].Table.GetAll());
+                                    implementation.AddRange(classes[parent].Table.GetAll(), classEntry.Location);
                                     visiting.Push(classes[parent]);
                                 } else {
                                     ErrorManager.Add($"The class {parent} cannot be found or is not defined.", focus.Location);

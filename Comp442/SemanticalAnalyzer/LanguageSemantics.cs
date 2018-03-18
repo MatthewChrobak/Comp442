@@ -1,4 +1,5 @@
-﻿using SemanticalAnalyzer.Visitors;
+﻿using Errors;
+using SemanticalAnalyzer.Visitors;
 using SyntacticAnalyzer.Nodes;
 
 namespace SemanticalAnalyzer
@@ -10,6 +11,16 @@ namespace SemanticalAnalyzer
         public void Apply(Program node)
         {
             this.AST = node;
+
+            if (this.AST == null) {
+                ErrorManager.Add(new Error("Could not find the main program.", (0, 0)));
+                this.AST = new Program((0, 0));
+                this.AST.Classes = new ClassList((0, 0));
+                this.AST.Functions = new FuncDefList((0, 0));
+                this.AST.MainFunction = new MainStatBlock(null);
+                this.AST.Table = new SyntacticAnalyzer.Semantics.SymbolTable();
+                return;
+            }
 
             // Generate the symbol tables.
             var symbolTableVisitor = new SymbolTableVisitor();

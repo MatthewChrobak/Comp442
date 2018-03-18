@@ -43,6 +43,7 @@
     <Compile Include="Error.cs" />
     <Compile Include="ErrorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WarningManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">

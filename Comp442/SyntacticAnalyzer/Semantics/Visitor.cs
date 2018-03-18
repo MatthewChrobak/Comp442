@@ -75,6 +75,11 @@ namespace SyntacticAnalyzer.Semantics
             
         }
 
+        public virtual void PreVisit(ForStat forStat)
+        {
+
+        }
+
         public virtual void Visit(AssignStat assignStat)
         {
             

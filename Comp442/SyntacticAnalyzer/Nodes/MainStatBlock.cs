@@ -6,10 +6,17 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class MainStatBlock : StatBlock, IVisitable
     {
-        public MainStatBlock(StatBlock originalStatBlock) : base(originalStatBlock.Location)
+        public MainStatBlock(StatBlock originalStatBlock) : base(originalStatBlock == null ? (0, 0) : originalStatBlock.Location)
         {
-            this.Statements = originalStatBlock.Statements;
-            this.Table = originalStatBlock.Table;
+            this.Statements = originalStatBlock?.Statements;
+            this.Table = originalStatBlock?.Table;
+
+            if (this.Statements == null) {
+                this.Statements = new System.Collections.Generic.List<object>();
+            }
+            if (this.Table == null) {
+                this.Table = new SymbolTable();
+            }
         }
 
         public new void Accept(Visitor visitor)

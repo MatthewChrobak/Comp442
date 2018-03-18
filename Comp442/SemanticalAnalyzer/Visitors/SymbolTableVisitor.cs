@@ -51,7 +51,6 @@ namespace SemanticalAnalyzer.Visitors
                     }, func.Location);
                     continue;
                 }
-                throw new System.Exception();
             }
 
             classDecl.Table = classTable;
@@ -90,7 +89,7 @@ namespace SemanticalAnalyzer.Visitors
         {
             this.Visit((StatBlock)mainStatBlock);
         }
-
+            
         public override void Visit(StatBlock statBlock)
         {
             var table = new SymbolTable();

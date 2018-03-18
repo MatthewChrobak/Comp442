@@ -15,6 +15,7 @@ namespace LexicalAnalyzer
         public TokenStream Parse(string[] characterStream, bool RealTokenStream = false)
         {
             ErrorManager.Reset();
+            WarningManager.Reset();
 
             var scanner = new Scanner(characterStream);
             var tokenStream = new Queue<Token>();

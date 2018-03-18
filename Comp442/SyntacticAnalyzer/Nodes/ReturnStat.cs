@@ -33,7 +33,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public override string ToString()
         {
-            return $"return {ReturnValueExpression}";
+            return $"return ({ReturnValueExpression})";
         }
     }
 }

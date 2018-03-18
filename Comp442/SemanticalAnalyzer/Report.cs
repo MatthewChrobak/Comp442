@@ -1,5 +1,4 @@
 ﻿using ReportGenerator;
-using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Collections.Generic;
 
@@ -25,7 +24,7 @@ namespace SemanticalAnalyzer
             section.Add("</table>");
             section.AddRowEnd();
 
-            foreach (var entry in globalScope.GetAll(Classification.Class)) {
+            foreach (var entry in globalScope?.GetAll(Classification.Class)) {
                 section.AddRowStart();
                 section.Add("<table class='table table-dark'>");
                 section.Add($"<tr><th>Symbol Table: Class {entry.ID}</th></tr>");
@@ -38,7 +37,7 @@ namespace SemanticalAnalyzer
             }
 
 
-            foreach (var entry in globalScope.GetAll(Classification.Function)) {
+            foreach (var entry in globalScope?.GetAll(Classification.Function)) {
                 section.AddRowStart();
                 section.Add("<table class='table table-dark'>");
                 section.Add($"<tr><th>Symbol Table: Function {entry.ID}</th></tr>");

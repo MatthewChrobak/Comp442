@@ -1,5 +1,4 @@
-﻿using Errors;
-using ReportGenerator;
+﻿using ReportGenerator;
 using System.Collections.Generic;
 
 namespace LexicalAnalyzer

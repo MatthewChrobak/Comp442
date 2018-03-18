@@ -52,12 +52,17 @@
     <Compile Include="LexicalAnalysis\TokenizerCases.cs" />
     <Compile Include="LexicalAnalysis\TokenizerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SemanticAnalysis\VisitorTests.cs" />
     <Compile Include="SyntacticAnalysis\ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Errors\Errors.csproj">
+      <Project>{030675D8-4048-46D5-8250-930979DBE4BA}</Project>
+      <Name>Errors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj">
       <Project>{41a5320f-c903-48fb-b6bf-9743dea38855}</Project>
       <Name>LexicalAnalyzer</Name>
@@ -65,6 +70,10 @@
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
       <Project>{89066BF3-B4D6-4F96-A9BB-A560B3BA6455}</Project>
       <Name>ReportGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SemanticalAnalyzer\SemanticalAnalyzer.csproj">
+      <Project>{58cb6ce0-4075-4752-8eae-ef88ddc82649}</Project>
+      <Name>SemanticalAnalyzer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SyntacticAnalyzer\SyntacticAnalyzer.csproj">
       <Project>{6CB7D582-9865-4635-95E6-D04B86391E08}</Project>

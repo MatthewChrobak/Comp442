@@ -31,13 +31,12 @@ namespace Assignment3
 
                 var report = new Report();
                 Console.Write("Generating report... ");
-                report.Sections.AddRange(ErrorManager.GetReportSection());
                 report.Sections.AddRange(parser.GetReportSections(file));
                 report.Sections.AddRange(semantics.GetReportSections(file));
                 File.WriteAllText(file + ".html", report.GenerateReport());
                 Console.WriteLine("Done.");
 
-                Process.Start(file + ".html");
+                Process.Start(System.AppDomain.CurrentDomain.BaseDirectory + "/" + file + ".html");
             }
         }
     }

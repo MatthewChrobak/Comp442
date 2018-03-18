@@ -15,13 +15,13 @@ namespace SyntacticAnalyzer.Parser
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("fParamsTail -> ',' type 'id' infArraySize");
 
-                var parameter = new FParam(lookaheadToken.SourceLocation);
-
                 Match(",");
+                var location = this.TokenStream.Peek().SourceLocation;
                 string type = Type();
                 string id = Match("id");
                 var dimensions = InfArraySize();
 
+                var parameter = new FParam(location);
                 parameter.Type = type;
                 parameter.Id = id;
                 parameter.Dimensions = dimensions;

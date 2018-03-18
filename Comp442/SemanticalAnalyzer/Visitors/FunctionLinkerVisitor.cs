@@ -32,7 +32,7 @@ namespace SemanticalAnalyzer.Visitors
                     // Get the return type and the parameters.
                     var types = function.Type.Split('-');
                     var returnType = types[0];
-                    var parameters = types[1].Split(',');
+                    var parameters = types[1].Length == 0 ? new string[0] : types[1].Split(',');
 
                     // Make sure the return type matches with the number of parameters
                     if (funcDef.ReturnType == returnType) {
@@ -63,6 +63,8 @@ namespace SemanticalAnalyzer.Visitors
                             if (valid) {
                                 function.Link = funcDef.Entry.Link;
                             }
+                        } else {
+                            ErrorManager.Add($"Invalid amount of parameters. Expected {parameters.Length}. Got {funcDef.Parameters.Count}.", funcDef.Location);
                         }
                     } else {
                         ErrorManager.Add($"Invalid return type: Expected {returnType}, got {funcDef.ReturnType}", funcDef.Location);

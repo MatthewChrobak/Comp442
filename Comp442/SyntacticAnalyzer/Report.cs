@@ -24,6 +24,14 @@ namespace SyntacticAnalyzer.Parser
             validProgramSection.AddRow(validProgram ? "Program is valid." : "Program is invalid: " + ErrorManager.Count() + " errors were found.");
             yield return validProgramSection;
 
+            foreach (var section in ErrorManager.GetReportSection()) {
+                yield return section;
+            }
+
+            foreach (var section in WarningManager.GetReportSection()) {
+                yield return section;
+            }
+
             var atoccStreamInput = new Section("AToCC Input Stream");
             atoccStreamInput.AddRow("<p style='font-weight:lighter;'>This section contains the original token stream converted into AToCC format.</p><hr style='margin-top:0'>");
             atoccStreamInput.AddRow($"<code style='color:black'>{this.TokenStream.FullAToCCFormat}</code>");

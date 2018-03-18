@@ -32,7 +32,7 @@ namespace SyntacticAnalyzer.Parser
                 functionCall.Id = id;
                 functionCall.Parameters = parameters;
 
-                variable.Elements.Add(parameters);
+                variable.Elements.Add(functionCall);
                 variable.Elements.JoinListWhereNotNull(trailingVariableElements?.Elements);
 
                 return variable;

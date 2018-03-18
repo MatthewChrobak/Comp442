@@ -42,6 +42,7 @@ namespace SyntacticAnalyzer.Parser
                 Match("for");
                 Match("(");
                 string type = Type();
+                var idLocation = this.TokenStream.Peek().SourceLocation;
                 string id = Match("id");
                 Match("=");
                 var initExpr = Expr();
@@ -59,6 +60,7 @@ namespace SyntacticAnalyzer.Parser
                 forStat.Condition = condition;
                 forStat.Update = assignStat;
                 forStat.LoopBlock = statBlock;
+                forStat.IdLocation = idLocation;
 
                 return forStat;
             }

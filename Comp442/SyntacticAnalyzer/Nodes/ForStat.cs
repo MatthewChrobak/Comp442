@@ -7,8 +7,11 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class ForStat : Node, IVisitable
     {
-        public string Type;
-        public string Id;
+        public string Type { get; set; }
+        public string Id { get; set; }
+
+        [XmlIgnore]
+        public (int, int) IdLocation { get; set; }
 
         [XmlElement(type: typeof(AddOp), elementName: "AddOp")] // arithExpr
         [XmlElement(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
@@ -31,6 +34,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            visitor.PreVisit(this);
             if (this.Initialization is IVisitable initialization) {
                 initialization.Accept(visitor);
             }

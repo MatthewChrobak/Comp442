@@ -40,13 +40,15 @@ namespace SemanticalAnalyzer.Visitors
         {
             if (addOp.RHS is Node rhs) {
                 if (addOp.LHS is Node lhs) {
+
+                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
+                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
+
                     if (lhs.SemanticalType != rhs.SemanticalType) {
-                        ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {addOp.Operator} {rhs.SemanticalType}", rhs.Location);
+                        ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {addOp.Operator} {rhs.SemanticalType}", addOp.Location);
                     }
-                    addOp.SemanticalType = lhs.SemanticalType;
-                } else {
-                    addOp.SemanticalType = rhs.SemanticalType;
                 }
+                addOp.SemanticalType = rhs.SemanticalType;
             } else {
                 ErrorManager.Add("RHS does not exist.", addOp.Location);
             }
@@ -61,13 +63,15 @@ namespace SemanticalAnalyzer.Visitors
         {
             if (multOp.RHS is Node rhs) {
                 if (multOp.LHS is Node lhs) {
+
+                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
+                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
+
                     if (lhs.SemanticalType != rhs.SemanticalType) {
-                        ErrorManager.Add($"Inconsistent types: Expected {lhs.SemanticalType}, got {rhs.SemanticalType}", rhs.Location);
-                    } 
-                    multOp.SemanticalType = lhs.SemanticalType;
-                } else {
-                    multOp.SemanticalType = rhs.SemanticalType;
+                        ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {multOp.Operator} {rhs.SemanticalType}", multOp.Location);
+                    }
                 }
+                multOp.SemanticalType = rhs.SemanticalType;
             } else {
                 ErrorManager.Add("RHS does not exist.", multOp.Location);
             }
@@ -77,13 +81,15 @@ namespace SemanticalAnalyzer.Visitors
         {
             if (relExpr.RHS is Node rhs) {
                 if (relExpr.LHS is Node lhs) {
+
+                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
+                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
+
                     if (lhs.SemanticalType != rhs.SemanticalType) {
-                        ErrorManager.Add($"Inconsistent types: Expected {lhs.SemanticalType}, got {rhs.SemanticalType}", rhs.Location);
+                        ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {relExpr.RelationOperator} {rhs.SemanticalType}", relExpr.Location);
                     }
-                    relExpr.SemanticalType = lhs.SemanticalType;
-                } else {
-                    relExpr.SemanticalType = rhs.SemanticalType;
                 }
+                relExpr.SemanticalType = rhs.SemanticalType;
             } else {
                 ErrorManager.Add("RHS does not exist.", relExpr.Location);
             }
@@ -111,9 +117,9 @@ namespace SemanticalAnalyzer.Visitors
         public override void Visit(Var var)
         {
             SymbolTable currentScope = new SymbolTable();
-            currentScope.AddRange(this._functionScope.GetAll());
-            currentScope.AddRange(this._globalScope.GetAll());
-            currentScope.AddRange(this._classInstanceScope?.GetAll());
+            currentScope.AddRange(this._functionScope.GetAll(), var.Location);
+            currentScope.AddRange(this._globalScope.GetAll(), var.Location);
+            currentScope.AddRange(this._classInstanceScope?.GetAll(), var.Location);
 
             foreach (var element in var.Elements) {
                 if (element is AParams aparams) {
@@ -141,14 +147,14 @@ namespace SemanticalAnalyzer.Visitors
                     int diffIndices = expectedNumParams - actualNumParams;
 
                     if (diffIndices < 0) {
-                        ErrorManager.Add($"Too many indices for {dataMember.Id}. Got {expectedNumParams}, expected {actualNumParams}", dataMember.Location);
+                        ErrorManager.Add($"Too many indices for {dataMember.Id}. Got {actualNumParams}, expected {expectedNumParams}", dataMember.Location);
                         break;
                     }
 
                     var.SemanticalType = entry.Type.Replace("[]", string.Empty) + "[]".Repeat(diffIndices);
 
                     currentScope = new SymbolTable();
-                    currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll());
+                    currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);
                 }
 
                 if (element is FCall fcall) {
@@ -182,14 +188,16 @@ namespace SemanticalAnalyzer.Visitors
                             var.SemanticalType = returnType;
 
                             currentScope = new SymbolTable();
-                            currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll());
+                            currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);
 
                         } else {
                             ErrorManager.Add($"The function {fcall.Id} takes in {parameters.Length} arguments.", fcall.Location);
+                            var.SemanticalType = returnType;
                             break;
                         }
+
                     } else {
-                        throw new System.Exception();
+                        ErrorManager.Add($"The function {fcall.Id} could not be found or does not exist.", fcall.Location);
                     }
                 }
             }
@@ -205,6 +213,18 @@ namespace SemanticalAnalyzer.Visitors
             } else {
                 ErrorManager.Add($"Could not establish an expression value.", assignStat.Location);
             }
+        }
+
+        public override void PreVisit(ForStat forStat)
+        {
+            this._functionScope.Add(new TableEntry(forStat.Id, Classification.Variable) {
+                Type = forStat.Type
+            }, forStat.IdLocation);
+        }
+
+        public override void Visit(ForStat forStat)
+        {
+            this._functionScope.Remove(forStat.Id, Classification.Variable);
         }
     }
 }
