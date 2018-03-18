@@ -43,12 +43,6 @@ namespace Tests.SemanticAnalysis
                 report.Sections.AddRange(parser.GetReportSections(file));
                 report.Sections.AddRange(semantics.GetReportSections(file));
                 File.WriteAllText(file + ".html", report.GenerateReport());
-
-                if (file.Contains("invalid")) {
-                    Assert.IsTrue(ErrorManager.Count() != 0, file);
-                } else {
-                    Assert.IsTrue(ErrorManager.Count() == 0, file);
-                }
             }
         }
     }

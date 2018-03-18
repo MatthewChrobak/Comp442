@@ -49,7 +49,7 @@ namespace SyntacticAnalyzer.Parser
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCP -> accessorP infAccessorDot_AndID_AndVoFCPP");
                 this.ApplyDerivation("accessorP -> EPSILON");
                 this.ApplyDerivation("infAccessorDot_AndID_AndVoFCPP -> EPSILON");
-                return new Var(lookaheadToken.SourceLocation) { Elements = { new DataMember(startLocation) { Id = id } } };
+                return new Var(startLocation) { Elements = { new DataMember(startLocation) { Id = id } } };
             }
 
             return null;

@@ -19,7 +19,7 @@ namespace SyntacticAnalyzer.Nodes
         public void Accept(Visitor visitor)
         {
             foreach (var func in this.Functions) {
-                func.Accept(visitor);
+                func?.Accept(visitor);
             }
 
             visitor.Visit(this);

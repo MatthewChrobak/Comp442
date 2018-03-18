@@ -1,6 +1,7 @@
 ﻿using Errors;
 using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SemanticalAnalyzer.Visitors
@@ -10,6 +11,8 @@ namespace SemanticalAnalyzer.Visitors
         private SymbolTable _functionScope;
         private SymbolTable _globalScope;
         private SymbolTable _classInstanceScope;
+
+        private Stack<string> _forDecl = new Stack<string>();
 
         private string _lastFunctionRequiredReturnType;
 
@@ -32,6 +35,7 @@ namespace SemanticalAnalyzer.Visitors
         {
             this._lastFunctionRequiredReturnType = "__MAIN__";
             this._functionScope = statBlock.Table;
+            this._classInstanceScope = new SymbolTable();
         }
    
 
@@ -41,16 +45,13 @@ namespace SemanticalAnalyzer.Visitors
             if (addOp.RHS is Node rhs) {
                 if (addOp.LHS is Node lhs) {
 
-                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
-                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
-
                     if (lhs.SemanticalType != rhs.SemanticalType) {
                         ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {addOp.Operator} {rhs.SemanticalType}", addOp.Location);
                     }
                 }
                 addOp.SemanticalType = rhs.SemanticalType;
             } else {
-                ErrorManager.Add("RHS does not exist.", addOp.Location);
+                ErrorManager.Add("There is no RHS for this add operation.", addOp.Location);
             }
         }
 
@@ -64,16 +65,13 @@ namespace SemanticalAnalyzer.Visitors
             if (multOp.RHS is Node rhs) {
                 if (multOp.LHS is Node lhs) {
 
-                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
-                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
-
                     if (lhs.SemanticalType != rhs.SemanticalType) {
                         ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {multOp.Operator} {rhs.SemanticalType}", multOp.Location);
                     }
                 }
                 multOp.SemanticalType = rhs.SemanticalType;
             } else {
-                ErrorManager.Add("RHS does not exist.", multOp.Location);
+                ErrorManager.Add("There is no RHS for this multiplication operation.", multOp.Location);
             }
         }
 
@@ -81,17 +79,13 @@ namespace SemanticalAnalyzer.Visitors
         {
             if (relExpr.RHS is Node rhs) {
                 if (relExpr.LHS is Node lhs) {
-
-                    //lhs.SemanticalType = lhs.SemanticalType == "null" ? rhs.SemanticalType : lhs.SemanticalType;
-                    //rhs.SemanticalType = rhs.SemanticalType == "null" ? lhs.SemanticalType : rhs.SemanticalType;
-
                     if (lhs.SemanticalType != rhs.SemanticalType) {
                         ErrorManager.Add($"Inconsistent types: Cannot perform {lhs.SemanticalType} {relExpr.RelationOperator} {rhs.SemanticalType}", relExpr.Location);
                     }
                 }
                 relExpr.SemanticalType = rhs.SemanticalType;
             } else {
-                ErrorManager.Add("RHS does not exist.", relExpr.Location);
+                ErrorManager.Add("There is no RHS for this relational expression.", relExpr.Location);
             }
         }
 
@@ -151,6 +145,14 @@ namespace SemanticalAnalyzer.Visitors
                         break;
                     }
 
+                    for (int i = 0; i < actualNumParams && i < expectedNumParams; i++) {
+                        var exp = dataMember.Indexes.Expressions[i] as Node;
+                        if (exp.SemanticalType != "int") {
+                            ErrorManager.Add($"Index must be of type int and not {exp.SemanticalType}.", exp.Location);
+                        }
+                    }
+                        
+
                     var.SemanticalType = entry.Type.Replace("[]", string.Empty) + "[]".Repeat(diffIndices);
 
                     currentScope = new SymbolTable();
@@ -198,6 +200,7 @@ namespace SemanticalAnalyzer.Visitors
 
                     } else {
                         ErrorManager.Add($"The function {fcall.Id} could not be found or does not exist.", fcall.Location);
+                        break;
                     }
                 }
             }
@@ -215,8 +218,13 @@ namespace SemanticalAnalyzer.Visitors
             }
         }
 
+
         public override void PreVisit(ForStat forStat)
         {
+            if (this._functionScope.Get($"{forStat.Id}-{Classification.Variable}") == null) {
+                this._forDecl.Push(forStat.Id + forStat.Location);
+            }
+
             this._functionScope.Add(new TableEntry(forStat.Id, Classification.Variable) {
                 Type = forStat.Type
             }, forStat.IdLocation);
@@ -224,7 +232,25 @@ namespace SemanticalAnalyzer.Visitors
 
         public override void Visit(ForStat forStat)
         {
-            this._functionScope.Remove(forStat.Id, Classification.Variable);
+            if (this._forDecl.Count == 0) {
+                return;
+            }
+
+            if (this._forDecl.Peek() == forStat.Id + forStat.Location) {
+                this._forDecl.Pop();
+                this._functionScope.Remove(forStat.Id, Classification.Variable);
+            }
+        }
+
+        public override void Visit(VarDecl varDecl)
+        {
+            if (varDecl.Type == "float" || varDecl.Type == "int") {
+                return;
+            }
+
+            if (this._globalScope.Get($"{varDecl.Type}-{Classification.Class}") == null) {
+                ErrorManager.Add($"The type {varDecl.Type} could not be found or does not exist.", varDecl.Location);
+            }
         }
     }
 }

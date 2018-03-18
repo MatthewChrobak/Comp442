@@ -29,10 +29,13 @@ namespace SyntacticAnalyzer.Nodes
             visitor.PreVisit(this);
 
             this.ScopeResolution?.Accept(visitor);
-            foreach (var parameter in this.Parameters) {
-                parameter.Accept(visitor);
+            if (this.Parameters != null) {
+                foreach (var parameter in this.Parameters) {
+                    parameter.Accept(visitor);
+                }
             }
-            this.Implementation.Accept(visitor);
+
+            this.Implementation?.Accept(visitor);
 
             visitor.Visit(this);
         }

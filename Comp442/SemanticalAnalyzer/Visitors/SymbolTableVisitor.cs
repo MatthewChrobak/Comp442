@@ -12,14 +12,18 @@ namespace SemanticalAnalyzer.Visitors
         {
             this.GlobalScope = new SymbolTable();
 
-            foreach (var @class in node.Classes?.Classes) {
-                this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class) {
-                    Link = @class.Table
-                }, @class.Location);
+            if (node.Classes != null) {
+                foreach (var @class in node.Classes.Classes) {
+                    this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class) {
+                        Link = @class.Table
+                    }, @class.Location);
+                 }
             }
 
-            foreach (var func in node.Functions?.Functions) {
-                this.GlobalScope.Add(func.Entry, func.Location);
+            if (node.Functions != null) {
+                foreach (var func in node.Functions.Functions) {
+                    this.GlobalScope.Add(func.Entry, func.Location);
+                }
             }
 
             this.GlobalScope.Add(new TableEntry("main", Classification.Function) {
@@ -47,7 +51,7 @@ namespace SemanticalAnalyzer.Visitors
                     var func = entry as FuncDecl;
                     classTable.Add(new TableEntry(func.Id, Classification.Function) {
                         Link = func.Table,
-                        Type = func.Type + "-" + string.Join(",", func.Parameters.Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)))
+                        Type = func.Type + "-" + string.Join(",", func.Parameters.Where(val => val.Id != string.Empty).Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)))
                     }, func.Location);
                     continue;
                 }
@@ -72,16 +76,22 @@ namespace SemanticalAnalyzer.Visitors
             var entry = new TableEntry(funcName, Classification.Function);
             entry.Link = new SymbolTable();
 
-            foreach (var param in funcDef.Parameters) {
-                entry.Link.Add(param.Entry, param.Location);
+            if (funcDef.Parameters != null) {
+                foreach (var param in funcDef.Parameters) {
+                    entry.Link.Add(param.Entry, param.Location);
+                }
+            }
+            
+            if (funcDef.Implementation?.Table != null) {
+                foreach (var varEntry in funcDef.Implementation.Table.GetAll()) {
+                    entry.Link.Add(varEntry, funcDef.Implementation.Location);
+                }
             }
 
-            foreach (var varEntry in funcDef.Implementation.Table.GetAll()) {
-                entry.Link.Add(varEntry, funcDef.Implementation.Location);
+            entry.Type = funcDef.ReturnType + "-";
+            if (funcDef.Parameters != null) {
+                entry.Type += string.Join(",", funcDef.Parameters.Where(val => val.Id != string.Empty).Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)));
             }
-
-            entry.Type = funcDef.ReturnType + "-" + string.Join(",", funcDef.Parameters.Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)));
-
             funcDef.Entry = entry;
         }
 
@@ -107,10 +117,13 @@ namespace SemanticalAnalyzer.Visitors
 
         public override void Visit(FParam fParam)
         {
-            var entry = new TableEntry(fParam.Id, Classification.Parameter) {
-                Type = fParam.Type + "[]".Repeat(fParam.Dimensions.Count)
-            };
-            fParam.Entry = entry;
+            if (fParam.Id != string.Empty) {
+                var entry = new TableEntry(fParam.Id, Classification.Parameter) {
+                    Type = fParam.Type + "[]".Repeat(fParam.Dimensions.Count)
+                };
+
+                fParam.Entry = entry;
+            }
         }
     }
 }

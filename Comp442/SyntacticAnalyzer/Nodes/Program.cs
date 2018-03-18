@@ -20,9 +20,9 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
-            this.Classes.Accept(visitor);
-            this.Functions.Accept(visitor);
-            this.MainFunction.Accept(visitor);
+            this.Classes?.Accept(visitor);
+            this.Functions?.Accept(visitor);
+            this.MainFunction?.Accept(visitor);
 
             visitor.Visit(this);
         }

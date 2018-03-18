@@ -39,11 +39,11 @@ namespace SyntacticAnalyzer.Nodes
         public void Accept(Visitor visitor)
         {
             if (this.LHS is IVisitable lhs) {
-                lhs.Accept(visitor);
+                lhs?.Accept(visitor);
             }
 
             if (this.RHS is IVisitable rhs) {
-                rhs.Accept(visitor);
+                rhs?.Accept(visitor);
             }
 
             visitor.Visit(this);

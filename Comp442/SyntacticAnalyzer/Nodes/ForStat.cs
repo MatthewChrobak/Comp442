@@ -36,11 +36,11 @@ namespace SyntacticAnalyzer.Nodes
         {
             visitor.PreVisit(this);
             if (this.Initialization is IVisitable initialization) {
-                initialization.Accept(visitor);
+                initialization?.Accept(visitor);
             }
-            this.Condition.Accept(visitor);
-            this.Update.Accept(visitor);
-            this.LoopBlock.Accept(visitor);
+            this.Condition?.Accept(visitor);
+            this.Update?.Accept(visitor);
+            this.LoopBlock?.Accept(visitor);
 
             visitor.Visit(this);
         }

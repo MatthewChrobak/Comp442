@@ -71,6 +71,10 @@ namespace SemanticalAnalyzer.Visitors
 
         public override void Visit(ClassDecl classDecl)
         {
+            if (classes.ContainsKey(classDecl.ClassName)) {
+                ErrorManager.Add($"Multiple class declaration of class {classDecl.ClassName}.", classDecl.Location);
+                return;
+            }
             classes.Add(classDecl.ClassName, classDecl);
         }
     }
