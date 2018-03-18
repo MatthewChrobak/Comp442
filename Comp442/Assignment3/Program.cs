@@ -1,5 +1,4 @@
-﻿using Errors;
-using ReportGenerator;
+﻿using ReportGenerator;
 using SemanticalAnalyzer;
 using SyntacticAnalyzer.Parser;
 using System;

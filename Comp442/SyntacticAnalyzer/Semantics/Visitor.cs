@@ -1,5 +1,4 @@
-﻿using System;
-using SyntacticAnalyzer.Nodes;
+﻿using SyntacticAnalyzer.Nodes;
 
 namespace SyntacticAnalyzer.Semantics
 {
