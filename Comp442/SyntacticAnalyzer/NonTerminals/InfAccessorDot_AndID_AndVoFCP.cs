@@ -19,7 +19,7 @@ namespace SyntacticAnalyzer.Parser
 
                 var variable = new Var(startLocation);
 
-                var funcOrDataMemeber = AccessorP(id);
+                var funcOrDataMemeber = AccessorP(id, startLocation);
                 var trailingFuncOrDataMembers = InfAccessorDot_AndID_AndVoFCPP();
 
                 variable.Elements.Add(funcOrDataMemeber);

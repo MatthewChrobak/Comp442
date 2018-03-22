@@ -151,7 +151,6 @@ namespace SemanticalAnalyzer.Visitors
                             ErrorManager.Add($"Index must be of type int and not {exp.SemanticalType}.", exp.Location);
                         }
                     }
-                        
 
                     var.SemanticalType = entry.Type.Replace("[]", string.Empty) + "[]".Repeat(diffIndices);
 
@@ -188,6 +187,11 @@ namespace SemanticalAnalyzer.Visitors
                             }
 
                             var.SemanticalType = returnType;
+
+                            if (entry.Link == null) {
+                                ErrorManager.Add($"The function {fcall.Id} is not linked.", fcall.Location);
+                                //break;
+                            }
 
                             currentScope = new SymbolTable();
                             currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);

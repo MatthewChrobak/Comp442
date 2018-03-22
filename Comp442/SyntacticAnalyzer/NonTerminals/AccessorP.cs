@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
     public partial class Parser
     {
         // This reterns either a data member or a function call.
-        private object AccessorP(string id)
+        private object AccessorP(string id, (int, int) startLocation)
         {
             string first = "( [";
             string follow = ". * / and + - or eq neq lt gt leq geq ] ) ; ,";
@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
             if ("(".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> '(' aParams ')'");
 
-                var functionCall = new FCall(lookaheadToken.SourceLocation);
+                var functionCall = new FCall(startLocation);
                 functionCall.Id = id;
 
                 Match("(");
@@ -30,7 +30,7 @@ namespace SyntacticAnalyzer.Parser
             if ("[".HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> infIndice");
 
-                var dataMember = new DataMember(lookaheadToken.SourceLocation);
+                var dataMember = new DataMember(startLocation);
                 dataMember.Id = id;
                 dataMember.Indexes = InfIndice();
                 return dataMember;
@@ -39,7 +39,7 @@ namespace SyntacticAnalyzer.Parser
             if (follow.HasToken(lookahead)) {
                 this.ApplyDerivation("accessorP -> infIndice");
                 this.ApplyDerivation("infIndice -> EPSILON");
-                return new DataMember(lookaheadToken.SourceLocation) { Id = id };
+                return new DataMember(startLocation) { Id = id };
             }
 
             return null;
