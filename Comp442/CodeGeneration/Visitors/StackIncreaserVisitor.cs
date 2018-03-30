@@ -1,6 +1,7 @@
 ﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeGeneration.Visitors
 {
@@ -34,9 +35,22 @@ namespace CodeGeneration.Visitors
             integer.offset = this.currentScope.GetOffset(integer.Value, Classification.SubCalculationStackSpace);
         }
 
+        public override void Visit(AddOp addOp)
+        {
+            this.currentScope.AddToStack(addOp.ToString(), Sizes[addOp.SemanticalType]);
+            addOp.offset = this.currentScope.GetOffset(addOp.ToString(), Classification.SubCalculationStackSpace);
+        }
+
+        public override void Visit(MultOp multOp)
+        {
+            this.currentScope.AddToStack(multOp.ToString(), Sizes[multOp.SemanticalType]);
+            multOp.offset = this.currentScope.GetOffset(multOp.ToString(), Classification.SubCalculationStackSpace);
+        }
+
         public override void Visit(Var var)
-        {   
-            var.offset = currentScope.GetOffset(var.Elements[0].ToString(), Classification.Variable);
+        {
+            this.currentScope.AddToStack(var.ToString(), 4);
+            var.offset = currentScope.GetOffset(var.ToString(), Classification.SubCalculationStackSpace);
         }
 
         public override void Visit(AParams aParams)
@@ -46,11 +60,9 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(DataMember dataMember)
         {
-            int offset = currentScope.GetOffset(dataMember.Id, Classification.Variable);
-
-            foreach (var index in dataMember.Indexes.Expressions) {
-
-            }
+            this.currentScope.AddToStack(dataMember.ToString(), 4);
+            dataMember.offset = currentScope.GetOffset(dataMember.ToString(), Classification.SubCalculationStackSpace);
+            dataMember.baseOffset = currentScope.GetOffset(dataMember.Id, Classification.Variable);
         }
 
         public override void Visit(FCall fCall)

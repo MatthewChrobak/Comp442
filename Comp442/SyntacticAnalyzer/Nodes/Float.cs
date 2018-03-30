@@ -12,6 +12,7 @@ namespace SyntacticAnalyzer.Nodes
         public Float((int, int) location) : base(location)
         {
             this.SemanticalType = "float";
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)

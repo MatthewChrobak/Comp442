@@ -10,6 +10,9 @@ namespace SyntacticAnalyzer.Nodes
         public string Id { get; set; }
         public IndexList Indexes { get; set; }
 
+        [XmlIgnore]
+        public int baseOffset { get; set; }
+
         public DataMember((int, int) location) : base(location)
         {
         }

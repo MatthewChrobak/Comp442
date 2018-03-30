@@ -16,6 +16,9 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public int offset { get; set; } = -32000; // This won't always be used.
 
+        [XmlIgnore]
+        public bool IsLiteral { get; set; } = false;
+
         public Node((int, int) location)
         {
             this.Location = location;

@@ -11,6 +11,7 @@ namespace SyntacticAnalyzer.Nodes
         public Integer((int, int) location) : base(location)
         {
             this.SemanticalType = "int";
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)

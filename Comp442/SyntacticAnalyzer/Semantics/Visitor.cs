@@ -1,4 +1,5 @@
-﻿using SyntacticAnalyzer.Nodes;
+﻿using System;
+using SyntacticAnalyzer.Nodes;
 
 namespace SyntacticAnalyzer.Semantics
 {
@@ -37,6 +38,11 @@ namespace SyntacticAnalyzer.Semantics
         public virtual void PreVisit(MainStatBlock mainStatBlock)
         {
             
+        }
+
+        public virtual void PreVisit(Var var)
+        {
+
         }
 
         public virtual void PreVisit(ClassList classList)

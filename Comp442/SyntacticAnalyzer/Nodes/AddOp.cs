@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "LeftFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "LeftNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "LeftSignFactor")] // factor
-        public object LHS { get; set; }
+        public Node LHS { get; set; }
 
         public string Operator { get; set; }
 
@@ -29,10 +29,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "RightFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
-        public object RHS { get; set; }
+        public Node RHS { get; set; }
 
         public AddOp((int, int) location) : base(location)
         {
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)
