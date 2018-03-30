@@ -26,6 +26,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            visitor.PreVisit(this);
             this.InheritingClasses?.Accept(visitor);
             foreach (var entry in this.Members) {
                 if (entry is IVisitable visitable) {

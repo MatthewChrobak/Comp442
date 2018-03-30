@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private object Factor()
+        private Node Factor()
         {
             string first = "intNum floatNum ( not + - id";
             this.SkipErrors(first);

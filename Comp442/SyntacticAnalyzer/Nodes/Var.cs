@@ -11,7 +11,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type:typeof(AParams), elementName:"Params")]
         [XmlArrayItem(type:typeof(DataMember), elementName:"DataMember")]
         [XmlArrayItem(type:typeof(FCall), elementName:"FunctionCall")]
-        public List<object> Elements { get; set; } = new List<object>();
+        public List<Node> Elements { get; set; } = new List<Node>();
 
         public Var((int, int) location) : base(location)
         {

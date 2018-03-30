@@ -14,7 +14,7 @@ namespace SemanticalAnalyzer.Visitors
 
             if (node.Classes != null) {
                 foreach (var @class in node.Classes.Classes) {
-                    this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class) {
+                    this.GlobalScope.Add(new TableEntry(@class.ClassName, Classification.Class, -1) {
                         Link = @class.Table
                     }, @class.Location);
                  }
@@ -26,7 +26,7 @@ namespace SemanticalAnalyzer.Visitors
                 }
             }
 
-            this.GlobalScope.Add(new TableEntry("main", Classification.Function) {
+            this.GlobalScope.Add(new TableEntry("main", Classification.Function, -1) {
                 Link = node.MainFunction.Table
             }, node.MainFunction.Location);
 
@@ -41,7 +41,7 @@ namespace SemanticalAnalyzer.Visitors
             foreach (var entry in classDecl.Members) {
                 if (entry as VarDecl != null) {
                     var variable = entry as VarDecl;
-                    classTable.Add(new TableEntry(variable.Id, Classification.Variable) {
+                    classTable.Add(new TableEntry(variable.Id, Classification.Variable, -1) {
                         Link = variable.Table,
                         Type = variable.Type + "[]".Repeat(variable.Dimensions.Count)
                     }, variable.Location);
@@ -49,7 +49,7 @@ namespace SemanticalAnalyzer.Visitors
                 }
                 if (entry as FuncDecl != null) {
                     var func = entry as FuncDecl;
-                    classTable.Add(new TableEntry(func.Id, Classification.Function) {
+                    classTable.Add(new TableEntry(func.Id, Classification.Function, -1) {
                         Link = func.Table,
                         Type = func.Type + "-" + string.Join(",", func.Parameters.Where(val => val.Id != string.Empty).Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)))
                     }, func.Location);
@@ -73,7 +73,7 @@ namespace SemanticalAnalyzer.Visitors
                 funcName = $"{funcDef.ScopeResolution.ID}::{funcName}";
             }
 
-            var entry = new TableEntry(funcName, Classification.Function);
+            var entry = new TableEntry(funcName, Classification.Function, -1);
             entry.Link = new SymbolTable();
 
             if (funcDef.Parameters != null) {
@@ -107,7 +107,7 @@ namespace SemanticalAnalyzer.Visitors
             var varDecl = statBlock.Statements.Where(stat => stat.GetType() == typeof(VarDecl)).Select(val => (VarDecl)val);
 
             foreach (var stat in varDecl) {
-                table.Add(new TableEntry(stat.Id, Classification.Variable) {
+                table.Add(new TableEntry(stat.Id, Classification.Variable, -1) {
                     Type = stat.Type + "[]".Repeat(stat.Dimensions.Count)
                 }, stat.Location);
             }
@@ -118,7 +118,7 @@ namespace SemanticalAnalyzer.Visitors
         public override void Visit(FParam fParam)
         {
             if (fParam.Id != string.Empty) {
-                var entry = new TableEntry(fParam.Id, Classification.Parameter) {
+                var entry = new TableEntry(fParam.Id, Classification.Parameter, -1) {
                     Type = fParam.Type + "[]".Repeat(fParam.Dimensions.Count)
                 };
 

@@ -17,6 +17,8 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            visitor.PreVisit(this);
+
             foreach (var @class in this.Classes) {
                 @class?.Accept(visitor);
             }

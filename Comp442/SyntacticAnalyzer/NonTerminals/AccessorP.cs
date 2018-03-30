@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
     public partial class Parser
     {
         // This reterns either a data member or a function call.
-        private object AccessorP(string id, (int, int) startLocation)
+        private Node AccessorP(string id, (int, int) startLocation)
         {
             string first = "( [";
             string follow = ". * / and + - or eq neq lt gt leq geq ] ) ; ,";

@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Parser
 
                 var indexList = new IndexList(lookaheadToken.SourceLocation);
 
-                object expr = Indice();
+                var expr = Indice();
                 var trailingExpr = InfIndice();
 
                 indexList.Expressions.Add(expr);

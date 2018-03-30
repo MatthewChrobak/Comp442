@@ -8,7 +8,13 @@ namespace SyntacticAnalyzer.Nodes
         public (int line, int column) Location { get; private set; }
 
         [XmlIgnore]
+        public int NodeMemorySize { get; set; } = 0;
+
+        [XmlIgnore]
         public string SemanticalType { get; set; } = "null";
+
+        [XmlIgnore]
+        public int offset { get; set; } = -32000; // This won't always be used.
 
         public Node((int, int) location)
         {

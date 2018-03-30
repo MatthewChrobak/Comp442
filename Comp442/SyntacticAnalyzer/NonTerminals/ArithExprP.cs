@@ -4,7 +4,7 @@ namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private object ArithExprP(object term)
+        private Node ArithExprP(Node term)
         {
             string first = "+ - or";
             string follow = "eq neq lt gt leq geq ] ) ; ,";
@@ -19,8 +19,8 @@ namespace SyntacticAnalyzer.Parser
                 var arithExpr = new AddOp(lookaheadToken.SourceLocation);
 
                 string op = AddOp();
-                object nextTerm = Term();
-                object trailingExpr = ArithExprP(nextTerm);
+                Node nextTerm = Term();
+                Node trailingExpr = ArithExprP(nextTerm);
 
                 arithExpr.LHS = term;
                 arithExpr.Operator = op;

@@ -229,7 +229,7 @@ namespace SemanticalAnalyzer.Visitors
                 this._forDecl.Push(forStat.Id + forStat.Location);
             }
 
-            this._functionScope.Add(new TableEntry(forStat.Id, Classification.Variable) {
+            this._functionScope.Add(new TableEntry(forStat.Id, Classification.Variable, -1) {
                 Type = forStat.Type
             }, forStat.IdLocation);
         }

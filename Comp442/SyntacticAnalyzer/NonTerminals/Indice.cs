@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private object Indice()
+        private Node Indice()
         {
             string first = "[";
             this.SkipErrors(first);
@@ -14,7 +16,7 @@
                 this.ApplyDerivation("indice -> '[' arithExpr ']'");
 
                 Match("[");
-                object expr = ArithExpr();
+                var expr = ArithExpr();
                 Match("]");
 
                 return expr;

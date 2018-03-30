@@ -6,6 +6,7 @@
         Function,
         Variable,
         Class,
-        Parameter
+        Parameter,
+        SubCalculationStackSpace
     }
 }

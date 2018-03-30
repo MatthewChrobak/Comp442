@@ -6,7 +6,7 @@ namespace SyntacticAnalyzer.Parser
     {
         // This should make a decision between
         // MultOp or Factor
-        private object TermP(object factor)
+        private Node TermP(Node factor)
         {
             string first = "* / and";
             string follow = "+ - or eq neq lt gt leq geq ] ) ; ,";
@@ -21,8 +21,8 @@ namespace SyntacticAnalyzer.Parser
                 var term = new MultOp(lookaheadToken.SourceLocation);
                 
                 string op = MultOp();
-                object nextTerm = Factor();
-                object trailingTerm = TermP(nextTerm);
+                Node nextTerm = Factor();
+                Node trailingTerm = TermP(nextTerm);
 
                 term.LHS = factor;
                 term.Operator = op;

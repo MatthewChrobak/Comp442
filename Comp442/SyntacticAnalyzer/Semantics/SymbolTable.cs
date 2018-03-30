@@ -14,6 +14,11 @@ namespace SyntacticAnalyzer.Semantics
             this._entries = new Dictionary<string, TableEntry>();
         }
 
+        public void AddToStack(string id, int size)
+        {
+            this.Add(new TableEntry(id, Classification.SubCalculationStackSpace, size), (0, 0));
+        }
+
         public void Add(TableEntry value, (int, int) location, bool overrideEntry = false)
         {
             if (value == null) {
@@ -23,6 +28,9 @@ namespace SyntacticAnalyzer.Semantics
             string key = value.ToString();
 
             if (this._entries.ContainsKey(key)) {
+                if (value.Classification == Classification.SubCalculationStackSpace) {
+                    return;
+                }
                 if (overrideEntry) {
                     WarningManager.Add($"The {value.Classification} {value.ID} is overshadowing a previously existing member of this ID and type.", location);
                     return;
@@ -52,6 +60,11 @@ namespace SyntacticAnalyzer.Semantics
             return null;
         }
 
+        public TableEntry Get(string id, Classification type)
+        {
+            return this.Get($"{id}-{type}");
+        }
+
         public IEnumerable<TableEntry> GetAll(Classification? type = null)
         {
             if (type == null) {
@@ -65,6 +78,25 @@ namespace SyntacticAnalyzer.Semantics
             if (this.Get($"{id}-{variable}") != null) {
                 this._entries.Remove($"{id}-{variable}");
             }
+        }
+
+        public int GetOffset(string id, Classification type)
+        {
+            return this.GetOffset(new TableEntry(id, type, 0));
+        }
+
+        public int GetOffset(TableEntry entry)
+        {
+            int offset = 0;
+
+            foreach (var tableEntry in this._entries) {
+                if (tableEntry.Key == $"{entry.ID}-{entry.Classification}") {
+                    return offset;
+                }
+                offset += tableEntry.Value.EntryMemorySize;
+            }
+
+            return -1;
         }
     }
 }

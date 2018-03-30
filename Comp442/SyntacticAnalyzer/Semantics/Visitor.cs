@@ -39,9 +39,19 @@ namespace SyntacticAnalyzer.Semantics
             
         }
 
+        public virtual void PreVisit(ClassList classList)
+        {
+
+        }
+
         public virtual void Visit(ClassList classList)
         {
             
+        }
+
+        public virtual void PreVisit(ClassDecl classDecl)
+        {
+
         }
 
         public virtual void Visit(ClassDecl classDecl)

@@ -5,7 +5,7 @@ namespace SyntacticAnalyzer.Parser
     public partial class Parser
     {
         // Decides whether or not it's a relExpr or arithExpr.
-        private object ArithExprOrRelExpr(object givenArithExpr)
+        private Node ArithExprOrRelExpr(Node givenArithExpr)
         {
             string first = "eq neq lt gt leq geq";
             string follow = ") ; ,";

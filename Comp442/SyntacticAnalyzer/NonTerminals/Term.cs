@@ -1,9 +1,11 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
         // Decides between a MultOp or Factor.
-        private object Term()
+        private Node Term()
         {
             string first = "intNum floatNum ( not id + -";
             this.SkipErrors(first);
@@ -14,7 +16,7 @@
             if (first.HasToken(lookahead)) {
                 this.ApplyDerivation("term -> factor termP");
 
-                object factor = Factor();
+                var factor = Factor();
                 return TermP(factor);
             }
 

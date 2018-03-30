@@ -13,7 +13,7 @@ namespace SemanticalAnalyzer
             this.AST = node;
 
             if (this.AST == null) {
-                ErrorManager.Add(new Error("Could not find the main program.", (0, 0)));
+                ErrorManager.Add(new Error("Semantical Parser: Could not find the main program.", (0, 0)));
                 this.AST = new Program((0, 0));
                 this.AST.Classes = new ClassList((0, 0));
                 this.AST.Functions = new FuncDefList((0, 0));
