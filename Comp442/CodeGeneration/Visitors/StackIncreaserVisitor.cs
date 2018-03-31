@@ -33,7 +33,7 @@ namespace CodeGeneration.Visitors
             int size = Sizes[funcDef.ReturnType];
             table.Add(new TableEntry("retval", Classification.SubCalculationStackSpace, size), (0, 0));
 
-            link.Link = table;
+            //link?.Link = table;
 
             this.FunctionScope = table;//GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
 
@@ -41,6 +41,8 @@ namespace CodeGeneration.Visitors
 
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
+            } else {
+                this.ClassInstanceScope = new SymbolTable();
             }
         }
 
@@ -88,7 +90,8 @@ namespace CodeGeneration.Visitors
 
                     this.FunctionScope.AddToStack(dataMember.ToString(), size);
                     dataMember.stackOffset = this.FunctionScope.GetOffset(dataMember.ToString(), Classification.SubCalculationStackSpace);
-                    dataMember.baseOffset = this.FunctionScope.GetOffset(entry);
+                    dataMember.baseOffset = currentScope.GetOffset(entry);
+
 
                     currentScope = new SymbolTable();
                     currentScope.AddRange(GlobalScope.Get($"{dataMember.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);
@@ -102,8 +105,7 @@ namespace CodeGeneration.Visitors
                     fCall.stackOffset = this.FunctionScope.GetOffset(fCall.ToString(), Classification.SubCalculationStackSpace);
                 }
             }
-
-            this.FunctionScope.AddToStack(var.ToString(), var.Elements.Last().NodeMemorySize);
+            this.FunctionScope.AddToStack(var.ToString(), var.NodeMemorySize);
             var.stackOffset = this.FunctionScope.GetOffset(var.ToString(), Classification.SubCalculationStackSpace);
         }
     }

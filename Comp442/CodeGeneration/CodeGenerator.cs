@@ -18,14 +18,14 @@ namespace CodeGeneration
             this.AST = ast;
 
             // Generate the code.
-            var memVisitor = new MemorySizeVisitor(this.AST.Table);
+            var memVisitor = new NewMemorySizeVisitor(this.AST.Table);
             ast.Accept(memVisitor);
 
-            var stackVisitor = new StackIncreaserVisitor(this.AST.Table, memVisitor.Sizes);
+            var stackVisitor = new NewStackIncreaserVisitor(this.AST.Table, memVisitor.Sizes);
             ast.Accept(stackVisitor);
 
             var moonVisitor = new MoonVisitor(this.AST.Table);
-            ast.Accept(moonVisitor);
+            //ast.Accept(moonVisitor);
         }
     }
 }

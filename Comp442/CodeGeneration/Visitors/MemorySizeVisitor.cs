@@ -117,5 +117,16 @@ namespace CodeGeneration.Visitors
             string type = dataMember.SemanticalType.Replace("[]", string.Empty);
             dataMember.NonArrayTypeMemorySize = Sizes[type];
         }
+
+        public override void Visit(Var var)
+        {
+            if (var.Elements.Last() is DataMember memb) {
+                var.NodeMemorySize = memb.NonArrayTypeMemorySize;
+            }
+
+            if (var.Elements.Last() is FCall call) {
+                var.NodeMemorySize = Sizes[call.SemanticalType.Split('-')[0]];
+            }
+        }
     }
 }

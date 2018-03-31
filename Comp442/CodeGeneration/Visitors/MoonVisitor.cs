@@ -138,6 +138,15 @@ namespace CodeGeneration.Visitors
             InstructionStream.Add($"subi r14, r14, {FunctionScope.GetStackFrameSize()}", $"Decrease the stack pointer");
         }
 
+        private SymbolTable LocalScope;
+
+        public override void PreVisit(Var var)
+        {
+            this.LocalScope = new SymbolTable();
+            this.LocalScope.AddRange(this.FunctionScope.GetAll(), (0, 0));
+            this.LocalScope.AddRange(this.GlobalScope.GetAll(), (0, 0));
+        }
+
         public override void Visit(DataMember dataMember)
         {
             InstructionStream.Add($"addi r1, r14, {dataMember.baseOffset}", $"Get the base offset for {dataMember.Id}");
@@ -160,6 +169,9 @@ namespace CodeGeneration.Visitors
             }
 
             InstructionStream.Add($"sw {dataMember.stackOffset}(r14), r1", $"Save the pointer location for {dataMember}");
+
+            LocalScope = new SymbolTable();
+            LocalScope.AddRange(GlobalScope.Get(dataMember.SemanticalType, Classification.Class)?.Link?.GetAll(), dataMember.Location);
         }
 
         public override void Visit(FCall fCall)
@@ -174,9 +186,19 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(Var var)
         {
-            if (var.Elements.Count > 0) {
+            InstructionStream.Add("addi r1, r0, 0", $"Calculate the offset for {var}");
 
+            foreach (var entry in var.Elements) {
+                if (entry is DataMember member) {
+
+                }
+
+                if (entry is FCall call) {
+
+                }
             }
+
+
         }
 
         public override void Visit(AssignStat assignStat)
