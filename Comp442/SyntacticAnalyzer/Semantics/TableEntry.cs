@@ -1,4 +1,6 @@
-﻿namespace SyntacticAnalyzer.Semantics
+﻿using System.Collections.Generic;
+
+namespace SyntacticAnalyzer.Semantics
 {
     public class TableEntry
     {
@@ -7,6 +9,7 @@
         public SymbolTable Link { get; set; }
         public string Type { get; set; }
         public int EntryMemorySize { get; set; }
+        public List<int> MaxSizeDimensions { get; set; }
 
         public TableEntry(string id, Classification type, int size)
         {

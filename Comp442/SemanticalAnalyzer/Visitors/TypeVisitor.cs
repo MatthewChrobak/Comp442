@@ -152,7 +152,8 @@ namespace SemanticalAnalyzer.Visitors
                         }
                     }
 
-                    var.SemanticalType = entry.Type.Replace("[]", string.Empty) + "[]".Repeat(diffIndices);
+                    dataMember.SemanticalType = entry.Type.Replace("[]", string.Empty) + "[]".Repeat(diffIndices);
+                    var.SemanticalType = dataMember.SemanticalType;
 
                     currentScope = new SymbolTable();
                     currentScope.AddRange(_globalScope.Get($"{var.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);

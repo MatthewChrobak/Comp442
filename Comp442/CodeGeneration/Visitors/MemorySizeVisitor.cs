@@ -2,6 +2,7 @@
 using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeGeneration.Visitors
 {
@@ -95,9 +96,11 @@ namespace CodeGeneration.Visitors
         public override void Visit(VarDecl varDecl)
         {
             int count = 1;
+            var dims = new List<int>();
 
             foreach (var dim in varDecl.Dimensions) {
-                count *= int.Parse(dim.Value);
+                dims.Add(int.Parse(dim.Value));
+                count *= dims.Last();
             }
 
             if (!Sizes.ContainsKey(varDecl.Type)) {
@@ -105,6 +108,14 @@ namespace CodeGeneration.Visitors
             } else {
                 this.LastScopeLink.Link.Get(varDecl.Id, Classification.Variable).EntryMemorySize = Sizes[varDecl.Type] * count;
             }
+
+            this.LastScopeLink.Link.Get(varDecl.Id, Classification.Variable).MaxSizeDimensions = dims;
+        }
+
+        public override void Visit(DataMember dataMember)
+        {
+            string type = dataMember.SemanticalType.Replace("[]", string.Empty);
+            dataMember.NonArrayTypeMemorySize = Sizes[type];
         }
     }
 }

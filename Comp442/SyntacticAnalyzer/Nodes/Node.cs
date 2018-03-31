@@ -14,7 +14,7 @@ namespace SyntacticAnalyzer.Nodes
         public string SemanticalType { get; set; } = "null";
 
         [XmlIgnore]
-        public int offset { get; set; } = -32000; // This won't always be used.
+        public int stackOffset { get; set; } = -32000; // This won't always be used.
 
         [XmlIgnore]
         public bool IsLiteral { get; set; } = false;

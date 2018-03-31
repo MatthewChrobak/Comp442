@@ -8,6 +8,8 @@ namespace CodeGeneration.Visitors
     public class MoonVisitor : Visitor
     {
         private SymbolTable GlobalScope;
+        private SymbolTable FunctionScope;
+        private SymbolTable ClassInstanceScope;
 
         public MoonVisitor(SymbolTable globalScope)
         {
@@ -17,9 +19,28 @@ namespace CodeGeneration.Visitors
             InstructionStream.Instructions.Clear();
         }
 
+        private void LoadValue(Node node, string register)
+        {
+            InstructionStream.Add($"lw {register}, {node.stackOffset}(r14)", $"Loading the value of {node}");
+            
+            if (!node.IsLiteral) {
+                InstructionStream.Add($"lw {register}, 0({register})", $"Pointer detected. Dereferencing {node}");
+            }
+        }
+
+        public override void PreVisit(FuncDef funcDef)
+        {
+            this.FunctionScope = GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
+
+            if (funcDef.ScopeResolution != null) {
+                this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
+            }
+        }
 
         public override void PreVisit(MainStatBlock mainStatBlock)
         {
+            this.FunctionScope = GlobalScope.Get("main", Classification.Function).Link;
+            this.ClassInstanceScope = new SymbolTable();
             InstructionStream.Add("entry");
         }
 
@@ -53,25 +74,26 @@ namespace CodeGeneration.Visitors
                     shorts[1] = r.ReadInt16();
                 }
             }
-
+            
             InstructionStream.Add($"addi r2, r0, {shorts[1]}", $"Storing {integer.Value}");
             InstructionStream.Add("sl r2, 16");
             InstructionStream.Add($"addi r3, r0, {shorts[0]}");
 
 
             InstructionStream.Add($"add r1, r2, r3");
-            InstructionStream.Add($"sw {integer.offset}(r14), r1");
+            InstructionStream.Add($"sw {integer.stackOffset}(r14), r1");
         }
 
         public override void Visit(AddOp addOp)
         {
             string instruction = addOp.Operator == "+" ? "add" : "sub";
 
+            this.LoadValue(addOp.LHS, "r2");
+            this.LoadValue(addOp.RHS, "r3");
+
             InstructionStream.Add(new string[] {
-                $"lw r2, {addOp.LHS.offset}(r14)",
-                $"lw r3, {addOp.RHS.offset}(r14)",
                 $"{instruction} r1, r2, r3",
-                $"sw {addOp.offset}(r14), r1"
+                $"sw {addOp.stackOffset}(r14), r1"
             }, $"Calculating {addOp.ToString()}");
         }
 
@@ -79,69 +101,60 @@ namespace CodeGeneration.Visitors
         {
             string instruction = multOp.Operator == "*" ? "mul" : "div";
 
+            this.LoadValue(multOp.LHS, "r2");
+            this.LoadValue(multOp.RHS, "r3");
+
             InstructionStream.Add(new string[] {
-                $"lw r2, {multOp.LHS.offset}(r14)",
-                $"lw r3, {multOp.RHS.offset}(r14)",
                 $"{instruction} r1, r2, r3",
-                $"sw {multOp.offset}(r14), r1"
+                $"sw {multOp.stackOffset}(r14), r1"
             }, $"Calculating {multOp.ToString()}");
-        }
-
-        public override void Visit(DataMember dataMember)
-        {
-            InstructionStream.Add($"lw r1, {dataMember.baseOffset}(r14)", $"Loading base value for {dataMember}");
-
-            if (dataMember?.Indexes?.Expressions?.Count != 0) {
-                foreach (var exp in dataMember.Indexes.Expressions) {
-                    InstructionStream.Add(new string[] {
-                        $"lw r2, {exp.offset}(r14)",
-                        $"muli r2, r2, 4",
-                        $"add r1, r1, r2"
-                    }, $"Adding to the base value the offset of {exp}");
-                }
-            }
-
-            InstructionStream.Add($"sw {dataMember.offset}(r14), r1", $"");
-        }
-
-        public override void Visit(Var var)
-        {
-            InstructionStream.Add($"add r1, r0, r14");
-
-            foreach (var entry in var.Elements) {
-                InstructionStream.Add(new string[] {
-                    $"lw r2, {entry.offset}(r14)",
-                    $"add r1, r1, r2"
-                });
-            }
-
-            InstructionStream.Add($"sw {var.offset}(r14), r1", $"Storing the ACTUAL value for {var}");
-        }
-
-        public override void Visit(AssignStat assignStat)
-        {
-            InstructionStream.Add($"lw r1, {assignStat.ExpressionValue.offset}(r14)", $"Load the value of {assignStat.ExpressionValue}");
-
-            if (!assignStat.ExpressionValue.IsLiteral) {
-                InstructionStream.Add($"lw r1, 0(r1)", "Pointer detected - get the literal value.");
-            }
-
-            InstructionStream.Add(new string[] {
-                $"lw r2, {assignStat.Variable.offset}(r14)",
-                $"sw 0(r2), r1"
-            }, $"Dereference {assignStat.Variable} and assign it the value of {assignStat.ExpressionValue}");
         }
 
         public override void Visit(PutStat putStat)
         {
-            InstructionStream.Add($"lw r1, {putStat.Expression.offset}(r14)", putStat.ToString());
+            this.LoadValue(putStat.Expression, "r1");
+            InstructionStream.Add($"putc r1", $"Printing {putStat.Expression}");
+        }
 
-            // If the expression is not a literal value, what we loaded into r1 is a pointer. Get its value.
-            if (!putStat.Expression.IsLiteral) {
-                InstructionStream.Add($"lw r1, 0(r1)", "Pointer detected - get the literal value.");
+        public override void Visit(DataMember dataMember)
+        {
+            InstructionStream.Add($"addi r1, r14, {dataMember.baseOffset}", $"Get the base offset for {dataMember.Id}");
+
+            if (dataMember?.Indexes?.Expressions != null) {
+
+                var maxIndexes = FunctionScope.Get(dataMember.Id, Classification.Variable).MaxSizeDimensions;
+
+                for (int i = 0; i < dataMember.Indexes.Expressions.Count; i++) {
+                    var exp = dataMember.Indexes.Expressions[i];
+                    InstructionStream.Add($"lw r2, {exp.stackOffset}(r14)", $"Getting the index [{exp}]");
+                    InstructionStream.Add($"muli r2, r2, {dataMember.NonArrayTypeMemorySize}", $"Multiply by the size.");
+
+                    for (int sizeIndex = i + 1; sizeIndex < dataMember.Indexes.Expressions.Count; sizeIndex++) {
+                        InstructionStream.Add($"muli r2, r2, {maxIndexes[sizeIndex]}", $"Multiply by the chunk size {maxIndexes[sizeIndex]}");
+                    }
+
+                    InstructionStream.Add($"add r1, r1, r2", $"Add the index {dataMember.Indexes.Expressions[i]}");
+                }
             }
 
-            InstructionStream.Add($"putc r1");
+            InstructionStream.Add($"sw {dataMember.stackOffset}(r14), r1", $"Save the pointer location for {dataMember}");
+        }
+
+        public override void Visit(Var var)
+        {
+            if (var.Elements.Count > 0) {
+
+            }
+        }
+
+        public override void Visit(AssignStat assignStat)
+        {
+            this.LoadValue(assignStat.ExpressionValue, "r1");
+
+            InstructionStream.Add(new string[] {
+                $"lw r2 {assignStat.Variable.stackOffset}",
+                $"sw 0(r2), r1"
+            }, $"Dereference {assignStat.Variable} and assign it the value of {assignStat.ExpressionValue}");
         }
     }
 }

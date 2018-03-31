@@ -8,8 +8,8 @@ namespace CodeGeneration.Visitors
     public class StackIncreaserVisitor : Visitor
     {
         private SymbolTable GlobalScope;
-
-        private SymbolTable currentScope;
+        private SymbolTable FunctionScope;
+        private SymbolTable ClassInstanceScope;
 
         private Dictionary<string, int> Sizes;
 
@@ -21,53 +21,70 @@ namespace CodeGeneration.Visitors
 
         public override void PreVisit(MainStatBlock mainStatBlock)
         {
-            this.currentScope = GlobalScope.Get("main", Classification.Function).Link;
+            this.FunctionScope = GlobalScope.Get("main", Classification.Function).Link;
+            this.ClassInstanceScope = new SymbolTable();
         }
 
         public override void PreVisit(FuncDef funcDef)
         {
-            this.currentScope = GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
+            this.FunctionScope = GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
+
+            if (funcDef.ScopeResolution != null) {
+                this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
+            }
         }
 
         public override void Visit(Integer integer)
         {
-            this.currentScope.AddToStack(integer.Value, Sizes["int"]);
-            integer.offset = this.currentScope.GetOffset(integer.Value, Classification.SubCalculationStackSpace);
+            this.FunctionScope.AddToStack(integer.Value, Sizes["int"]);
+            integer.stackOffset = this.FunctionScope.GetOffset(integer.Value, Classification.SubCalculationStackSpace);
         }
 
         public override void Visit(AddOp addOp)
         {
-            this.currentScope.AddToStack(addOp.ToString(), Sizes[addOp.SemanticalType]);
-            addOp.offset = this.currentScope.GetOffset(addOp.ToString(), Classification.SubCalculationStackSpace);
+            this.FunctionScope.AddToStack(addOp.ToString(), Sizes[addOp.SemanticalType]);
+            addOp.stackOffset = this.FunctionScope.GetOffset(addOp.ToString(), Classification.SubCalculationStackSpace);
         }
 
         public override void Visit(MultOp multOp)
         {
-            this.currentScope.AddToStack(multOp.ToString(), Sizes[multOp.SemanticalType]);
-            multOp.offset = this.currentScope.GetOffset(multOp.ToString(), Classification.SubCalculationStackSpace);
+            this.FunctionScope.AddToStack(multOp.ToString(), Sizes[multOp.SemanticalType]);
+            multOp.stackOffset = this.FunctionScope.GetOffset(multOp.ToString(), Classification.SubCalculationStackSpace);
         }
 
         public override void Visit(Var var)
         {
-            this.currentScope.AddToStack(var.ToString(), 4);
-            var.offset = currentScope.GetOffset(var.ToString(), Classification.SubCalculationStackSpace);
-        }
+            SymbolTable currentScope = new SymbolTable();
+            currentScope.AddRange(FunctionScope.GetAll(), var.Location);
+            currentScope.AddRange(GlobalScope.GetAll(), var.Location);
+            currentScope.AddRange(ClassInstanceScope.GetAll(), var.Location);
 
-        public override void Visit(AParams aParams)
-        {
-            
-        }
+            foreach (var element in var.Elements) {
 
-        public override void Visit(DataMember dataMember)
-        {
-            this.currentScope.AddToStack(dataMember.ToString(), 4);
-            dataMember.offset = currentScope.GetOffset(dataMember.ToString(), Classification.SubCalculationStackSpace);
-            dataMember.baseOffset = currentScope.GetOffset(dataMember.Id, Classification.Variable);
-        }
+                if (element is DataMember dataMember) {
 
-        public override void Visit(FCall fCall)
-        {
-            
+                    var entry = currentScope.Get(dataMember.Id, Classification.Variable);
+                    int size = entry.EntryMemorySize;
+
+                    for (int i = 0; i < entry.MaxSizeDimensions.Count && i < dataMember.Indexes?.Expressions?.Count; i++) {
+                        size /= entry.MaxSizeDimensions[i];
+                    }
+
+                    this.FunctionScope.AddToStack(dataMember.ToString(), size);
+                    dataMember.stackOffset = this.FunctionScope.GetOffset(dataMember.ToString(), Classification.SubCalculationStackSpace);
+                    dataMember.baseOffset = this.FunctionScope.GetOffset(entry);
+
+                    currentScope = new SymbolTable();
+                    currentScope.AddRange(GlobalScope.Get($"{dataMember.SemanticalType}-{Classification.Class}")?.Link?.GetAll(), var.Location);
+                }
+
+                if (element is FCall fCall) {
+
+                }
+            }
+
+            this.FunctionScope.AddToStack(var.ToString(), var.Elements.Last().NodeMemorySize);
+            var.stackOffset = this.FunctionScope.GetOffset(var.ToString(), Classification.SubCalculationStackSpace);
         }
     }
 }
