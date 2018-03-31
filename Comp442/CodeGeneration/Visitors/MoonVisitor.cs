@@ -1,6 +1,5 @@
 ﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
-using System;
 using System.IO;
 
 namespace CodeGeneration.Visitors
@@ -17,6 +16,8 @@ namespace CodeGeneration.Visitors
 
             // Reset the instructions.
             InstructionStream.Instructions.Clear();
+
+            InstructionStream.Add(File.ReadAllLines("puts.m"), "Link the puts library");
         }
 
         private void LoadValue(Node node, string register)
@@ -113,7 +114,11 @@ namespace CodeGeneration.Visitors
         public override void Visit(PutStat putStat)
         {
             this.LoadValue(putStat.Expression, "r1");
-            InstructionStream.Add($"putc r1", $"Printing {putStat.Expression}");
+
+            InstructionStream.Add($"sw {FunctionScope.GetStackFrameSize() + 4}(r14), r1", $"Store the puts value");
+            InstructionStream.Add($"addi r14, r14, {FunctionScope.GetStackFrameSize()}", $"Increase the stack pointer");
+            InstructionStream.Add($"jl r15, put_function", $"Make the print call");
+            InstructionStream.Add($"subi r14, r14, {FunctionScope.GetStackFrameSize()}", $"Decrease the stack pointer");
         }
 
         public override void Visit(DataMember dataMember)
@@ -152,7 +157,7 @@ namespace CodeGeneration.Visitors
             this.LoadValue(assignStat.ExpressionValue, "r1");
 
             InstructionStream.Add(new string[] {
-                $"lw r2 {assignStat.Variable.stackOffset}",
+                $"lw r2, {assignStat.Variable.stackOffset}(r14)",
                 $"sw 0(r2), r1"
             }, $"Dereference {assignStat.Variable} and assign it the value of {assignStat.ExpressionValue}");
         }

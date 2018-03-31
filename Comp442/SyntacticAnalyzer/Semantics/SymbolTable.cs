@@ -98,5 +98,16 @@ namespace SyntacticAnalyzer.Semantics
 
             return -1;
         }
+
+        public int GetStackFrameSize()
+        {
+            int size = 0;
+
+            foreach (var entry in this._entries) {
+                size += entry.Value.EntryMemorySize;
+            }
+
+            return size;
+        }
     }
 }
