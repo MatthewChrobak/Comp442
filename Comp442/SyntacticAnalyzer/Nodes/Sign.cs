@@ -18,10 +18,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
-        public object Factor { get; set; }
+        public Node Factor { get; set; }
 
         public Sign((int, int) location) : base(location)
         {
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)

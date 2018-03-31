@@ -1,5 +1,6 @@
 ﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
+using System;
 using System.IO;
 
 namespace CodeGeneration.Visitors
@@ -36,6 +37,27 @@ namespace CodeGeneration.Visitors
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
             }
+
+            InstructionStream.Add($"fun_{funcDef.FunctionName}  sw 0(r14), r15", "Store the return value");
+        }
+
+        public override void Visit(FuncDef funcDef)
+        {
+            InstructionStream.Add(new string[] {
+                "lw r15, 0(r14)",
+                "jr r15"
+            }, "Load the return address.");
+        }
+
+        public override void Visit(ReturnStat returnStat)
+        {
+            this.LoadValue(returnStat.ReturnValueExpression, "r1");
+            InstructionStream.Add($"sw 4(r14), r1", $"Returning {returnStat.ReturnValueExpression}");
+
+            InstructionStream.Add(new string[] {
+                "lw r15, 0(r14)",
+                "jr r15"
+            }, "Load the return address.");
         }
 
         public override void PreVisit(MainStatBlock mainStatBlock)
@@ -59,30 +81,25 @@ namespace CodeGeneration.Visitors
         {
             int val = int.Parse(integer.Value);
 
-            byte[] bytes;
-            var shorts = new short[2];
-            
-            using (var ms = new MemoryStream()) {
-                using (var w = new BinaryWriter(ms)) {
-                    w.Write(val);
-                }
-                bytes = ms.ToArray();
+            byte[] bytes = BitConverter.GetBytes(val);
+
+            for (int i = 0; i < bytes.Length; i++) {
+                InstructionStream.Add(new string[] {
+                    $"addi r1, r0, {bytes[i]}",
+                    $"sb {integer.stackOffset + i}(r14), r1"
+                }, $"Storing {bytes[i]}");
             }
+        }
 
-            using (var ms = new MemoryStream(bytes)) {
-                using (var r = new BinaryReader(ms)) {
-                    shorts[0] = r.ReadInt16();
-                    shorts[1] = r.ReadInt16();
-                }
-            }
-            
-            InstructionStream.Add($"addi r2, r0, {shorts[1]}", $"Storing {integer.Value}");
-            InstructionStream.Add("sl r2, 16");
-            InstructionStream.Add($"addi r3, r0, {shorts[0]}");
+        public override void Visit(Sign sign)
+        {
+            string factor = sign.SignSymbol == "-" ? "-1" : "1";
 
-
-            InstructionStream.Add($"add r1, r2, r3");
-            InstructionStream.Add($"sw {integer.stackOffset}(r14), r1");
+            InstructionStream.Add(new string[] {
+                $"lw r2, {sign.Factor.stackOffset}(r14)",
+                $"muli r2, r2, {factor}",
+                $"sw {sign.stackOffset}(r14), r2"
+            }, $"Calculating {sign}");
         }
 
         public override void Visit(AddOp addOp)
@@ -143,6 +160,16 @@ namespace CodeGeneration.Visitors
             }
 
             InstructionStream.Add($"sw {dataMember.stackOffset}(r14), r1", $"Save the pointer location for {dataMember}");
+        }
+
+        public override void Visit(FCall fCall)
+        {
+            InstructionStream.Add($"addi r14, r14, {this.FunctionScope.GetStackFrameSize()}", "Increase the stack frame");
+            InstructionStream.Add($"jl r15, fun_{fCall.Id}", $"Make the function call to {fCall.Id}");
+            InstructionStream.Add($"subi r14, r14, {this.FunctionScope.GetStackFrameSize()}", "Decrease the stack frame");
+
+            InstructionStream.Add($"addi r1, r14, {FunctionScope.GetStackFrameSize() + 4}");
+            InstructionStream.Add($"sw {fCall.stackOffset}(r14), r1");
         }
 
         public override void Visit(Var var)

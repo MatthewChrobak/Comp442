@@ -1,8 +1,17 @@
 put_function sw 0(r14), r15 % store the return address.
 
-			lw r1, 4(r14) % load the value into a register	
-						  
-			addi r3, r0, 10 % initialize the iteration counter
+			lw r1, 4(r14) % load the value into a register
+			
+			cgei r2, r1, 0 % Check if it's good.
+			bnz r2, pcalc_cont
+			
+			muli r1, r1, -1 % Convert to positive.
+			
+			addi r2, r0, 45 % Print the minus sign
+			putc r2
+			
+			
+pcalc_cont	addi r3, r0, 10 % initialize the iteration counter
 
 			addi r4, r14, 44 % Set the base iteration pointer
 

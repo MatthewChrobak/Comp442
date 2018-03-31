@@ -187,6 +187,7 @@ namespace SemanticalAnalyzer.Visitors
                                 }
                             }
 
+                            fcall.SemanticalType = returnType;
                             var.SemanticalType = returnType;
 
                             if (entry.Link == null) {

@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
-        public object Factor { get; set; } // factor
+        public Node Factor { get; set; } // factor
 
         public Not((int, int) location) : base(location)
         {

@@ -27,11 +27,27 @@ namespace CodeGeneration.Visitors
 
         public override void PreVisit(FuncDef funcDef)
         {
-            this.FunctionScope = GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
+            var link = GlobalScope.Get(funcDef.FunctionName, Classification.Function);
+
+            var table = new SymbolTable();
+            int size = Sizes[funcDef.ReturnType];
+            table.Add(new TableEntry("retval", Classification.SubCalculationStackSpace, size), (0, 0));
+
+            link.Link = table;
+
+            this.FunctionScope = table;//GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
+
+
 
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
             }
+        }
+
+        public override void Visit(Sign sign)
+        {
+            this.FunctionScope.AddToStack(sign.ToString(), Sizes[sign.Factor.SemanticalType]);
+            sign.stackOffset = this.FunctionScope.GetOffset(sign.ToString(), Classification.SubCalculationStackSpace);
         }
 
         public override void Visit(Integer integer)
@@ -79,7 +95,11 @@ namespace CodeGeneration.Visitors
                 }
 
                 if (element is FCall fCall) {
+                    var entry = currentScope.Get(fCall.Id, Classification.Function);
+                    int size = Sizes[fCall.SemanticalType.Split('-')[0]];
 
+                    this.FunctionScope.AddToStack(fCall.ToString(), size);
+                    fCall.stackOffset = this.FunctionScope.GetOffset(fCall.ToString(), Classification.SubCalculationStackSpace);
                 }
             }
 
