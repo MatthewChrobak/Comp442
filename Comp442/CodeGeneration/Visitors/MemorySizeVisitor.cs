@@ -1,5 +1,4 @@
-﻿using Errors;
-using SyntacticAnalyzer.Nodes;
+﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,32 +7,25 @@ namespace CodeGeneration.Visitors
 {
     public class MemorySizeVisitor : Visitor
     {
-        public Dictionary<string, int> Sizes = new Dictionary<string, int>();
+        public Dictionary<string, int> Sizes;
 
-        public SymbolTable GlobalSymbolTable;
-        private TableEntry LastScopeLink = null;
+        private SymbolTable GlobalScope;
+        private SymbolTable FunctionScope;
+        private SymbolTable ClassInstanceScope;
 
-        public MemorySizeVisitor(SymbolTable symbolTable)
+        public MemorySizeVisitor(SymbolTable globalScope)
         {
-            this.GlobalSymbolTable = symbolTable;
+            this.GlobalScope = globalScope;
 
-            this.Sizes.Add("float", 4);
+            this.Sizes = new Dictionary<string, int>();
+            this.Sizes.Add("float", 8);
             this.Sizes.Add("int", 4);
         }
 
         public override void PreVisit(ClassDecl classDecl)
         {
-            this.LastScopeLink = this.GlobalSymbolTable.Get(classDecl.ClassName, Classification.Class);
-        }
-
-        public override void PreVisit(FuncDef funcDef)
-        {
-            this.LastScopeLink = this.GlobalSymbolTable.Get(funcDef.FunctionName, Classification.Function);
-        }
-
-        public override void PreVisit(MainStatBlock mainStatBlock)
-        {
-            this.LastScopeLink = this.GlobalSymbolTable.Get("main", Classification.Function);
+            this.FunctionScope = new SymbolTable();
+            this.ClassInstanceScope = this.GlobalScope.Get(classDecl.ClassName, Classification.Class).Link;
         }
 
         public override void Visit(ClassList classList)
@@ -43,7 +35,6 @@ namespace CodeGeneration.Visitors
 
                 foreach (var classNode in classList.Classes) {
                     string entryName = classNode.ClassName;
-                    var @class = GlobalSymbolTable.Get(entryName, Classification.Class);
 
                     // Make sure it doesn't exist first.
                     if (Sizes.ContainsKey(entryName)) {
@@ -52,18 +43,21 @@ namespace CodeGeneration.Visitors
 
                     int size = 0;
                     bool complete = true;
-                    
+                    var @class = GlobalScope.Get(entryName, Classification.Class);
+
                     foreach (var entry in @class.Link.GetAll(Classification.Variable)) {
 
                         // Is the memory size already calculated?
-                        if (entry.EntryMemorySize > 0) {
+                        if (entry.EntryMemorySize != -1) {
                             size += entry.EntryMemorySize;
                             continue;
                         }
 
                         // It's not. Let's try and figure it out.
+                        // Get the base type
                         string type = entry.Type.Replace("[]", string.Empty);
 
+                        // Is the base-type defined?
                         if (Sizes.ContainsKey(type)) {
                             entry.EntryMemorySize *= -Sizes[type];
                             size += entry.EntryMemorySize;
@@ -73,11 +67,13 @@ namespace CodeGeneration.Visitors
                         }
                     }
 
+                    // Is the type complete?
                     if (complete) {
                         Sizes.Add(entryName, size);
                         modifications = true;
 
-                        GlobalSymbolTable.Get(entryName, Classification.Class).EntryMemorySize = size;
+                        // Set the class size.
+                        GlobalScope.Get(entryName, Classification.Class).EntryMemorySize = size;
                     }
                 }
 
@@ -86,47 +82,99 @@ namespace CodeGeneration.Visitors
                 }
             }
 
-            foreach (var entry in GlobalSymbolTable.GetAll(Classification.Class)) {
+            foreach (var entry in GlobalScope.GetAll(Classification.Class)) {
                 if (entry.EntryMemorySize == -1) {
                     Sizes.Add(entry.ID, -1);
                 }
             }
         }
 
-        public override void Visit(VarDecl varDecl)
+
+        public override void PreVisit(FuncDef funcDef)
         {
-            int count = 1;
-            var dims = new List<int>();
+            this.FunctionScope = this.GlobalScope.Get(funcDef.Entry.ID, Classification.Function).Link;
 
-            foreach (var dim in varDecl.Dimensions) {
-                dims.Add(int.Parse(dim.Value));
-                count *= dims.Last();
+            this.ClassInstanceScope = new SymbolTable();
+            if (funcDef.ScopeResolution != null) {
+                this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
             }
+        }
+        
+        public override void PreVisit(MainStatBlock mainStatBlock)
+        {
+            this.FunctionScope = this.GlobalScope.Get("main", Classification.Function).Link;
 
-            if (!Sizes.ContainsKey(varDecl.Type)) {
-                this.LastScopeLink.Link.Get(varDecl.Id, Classification.Variable).EntryMemorySize *= count;
-            } else {
-                this.LastScopeLink.Link.Get(varDecl.Id, Classification.Variable).EntryMemorySize = Sizes[varDecl.Type] * count;
-            }
-
-            this.LastScopeLink.Link.Get(varDecl.Id, Classification.Variable).MaxSizeDimensions = dims;
+            this.ClassInstanceScope = new SymbolTable();
         }
 
-        public override void Visit(DataMember dataMember)
+        public override void Visit(VarDecl varDecl)
         {
-            string type = dataMember.SemanticalType.Replace("[]", string.Empty);
-            dataMember.NonArrayTypeMemorySize = Sizes[type];
+            int numElements = 1;
+            var dimensions = new List<int>();
+
+            // Calculate the dimensions and the total size.
+            foreach (var dimension in varDecl.Dimensions) {
+                dimensions.Add(int.Parse(dimension.Value));
+                numElements *= dimensions.Last();
+            }
+
+            var nodeEntry = this.GetCurrentScope().Get(varDecl.Id, Classification.Variable);
+
+
+            if (!this.Sizes.ContainsKey(varDecl.Type)) {
+                // If it doesn't exist, the memory size will be -1. By multiplying it by the number of elements,
+                // the true size will happen when (in the class) we resolve it by doing *= -sizeof(type);
+                nodeEntry.EntryMemorySize *= numElements;
+            } else {
+                nodeEntry.EntryMemorySize = Sizes[varDecl.Type] * numElements;
+            }
+
+            nodeEntry.MaxSizeDimensions = dimensions;
         }
 
         public override void Visit(Var var)
         {
-            if (var.Elements.Last() is DataMember memb) {
-                var.NodeMemorySize = memb.NonArrayTypeMemorySize;
+            var scope = GetCurrentScope();
+
+            foreach (var element in var.Elements) {
+
+                if (element is DataMember member) {
+                    // Get the base variable of this data member.
+                    var baseVariable = scope.Get(member.Id, Classification.Variable);
+                    string baseVariableType = member.SemanticalType.Replace("[]", string.Empty);
+
+                    // Calculate the number of elements in this data member based on the number of unspecified dimensions.
+                    int numDimensionsRemaining = member.SemanticalType.Count(val => val == '[');
+                    int numElements = 1;
+                    int i = baseVariable.MaxSizeDimensions.Count - 1;
+
+                    while (numDimensionsRemaining-- > 0) {
+                        numElements *= baseVariable.MaxSizeDimensions[i--];
+                    }
+
+                    // Calculate the memory size.
+                    member.NodeMemorySize = numElements * Sizes[baseVariableType];
+
+                    // Update the scope for the dot operator.
+                    scope = this.GlobalScope.Get(member.SemanticalType, Classification.Class)?.Link;
+                }
+
+                if (element is FCall call) {
+                    call.NodeMemorySize = Sizes[call.SemanticalType];
+                }
             }
 
-            if (var.Elements.Last() is FCall call) {
-                var.NodeMemorySize = Sizes[call.SemanticalType.Split('-')[0]];
-            }
+            var.NodeMemorySize = var.Elements.Last().NodeMemorySize;
+        }
+
+
+        public SymbolTable GetCurrentScope()
+        {
+            var table = new SymbolTable();
+            table.AddRange(this.GlobalScope.GetAll(), (0, 0));
+            table.AddRange(this.FunctionScope?.GetAll(), (0, 0));
+            table.AddRange(this.ClassInstanceScope?.GetAll(), (0, 0));
+            return table;
         }
     }
 }
