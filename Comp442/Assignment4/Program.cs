@@ -1,4 +1,5 @@
 ﻿using CodeGeneration;
+using Errors;
 using ReportGenerator;
 using SemanticalAnalyzer;
 using SyntacticAnalyzer.Parser;
@@ -31,8 +32,9 @@ namespace Assignment4
 
                 // Generate the code.
                 var codeGen = new CodeGenerator();
-                codeGen.Generate(parser.AbstractSyntaxTree);
-
+                if (ErrorManager.Count() == 0) {
+                    codeGen.Generate(parser.AbstractSyntaxTree);
+                }
 
                 var report = new Report();
                 Console.Write("Generating report... ");

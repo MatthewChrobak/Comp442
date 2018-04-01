@@ -35,9 +35,9 @@ namespace CodeGeneration
                 section.AddRowStart();
                 section.Add("<table class='table table-dark'>");
                 section.Add($"<tr><th>Symbol Table: Class {entry.ID}</th></tr>");
-                section.Add("<tr><th>Name</th><th>Kind</th><th>Type</th><th>Linked</th><th>Memory Size</th></tr>");
+                section.Add("<tr><th>Name</th><th>Kind</th><th>Type</th><th>Linked</th><th>Memory Size</th><th>Offset</th></tr>");
                 foreach (var classEntry in entry.Link.GetAll()) {
-                    section.Add($"<tr><td>{classEntry.ID}</td><td>{classEntry.Classification}</td><td>{classEntry.Type}</td><td>{classEntry.Link != null}</td><td>{classEntry.EntryMemorySize}</td></tr>");
+                    section.Add($"<tr><td>{classEntry.ID}</td><td>{classEntry.Classification}</td><td>{classEntry.Type}</td><td>{classEntry.Link != null}</td><td>{classEntry.EntryMemorySize}</td><td>{entry.Link.GetOffset(classEntry)}</td></tr>");
                 }
                 section.Add("</table>");
                 section.AddRowEnd();
@@ -48,10 +48,10 @@ namespace CodeGeneration
                 section.AddRowStart();
                 section.Add("<table class='table table-dark'>");
                 section.Add($"<tr><th>Symbol Table: Function {entry.ID}</th></tr>");
-                section.Add("<tr><th>Name</th><th>Kind</th><th>Type</th><th>Memory Size</th></tr>");
+                section.Add("<tr><th>Name</th><th>Kind</th><th>Type</th><th>Memory Size</th><th>Offset</th></tr>");
 
                 foreach (var variable in entry.Link.GetAll()) {
-                    section.Add($"<tr><td>{variable.ID}</td><td>{variable.Classification}</td><td>{variable.Type}</td><td>{variable.EntryMemorySize}</td></tr>");
+                    section.Add($"<tr><td>{variable.ID}</td><td>{variable.Classification}</td><td>{variable.Type}</td><td>{variable.EntryMemorySize}</td><td>{entry.Link.GetOffset(variable)}</td></tr>");
                 }
                 section.Add("</table>");
                 section.AddRowEnd();

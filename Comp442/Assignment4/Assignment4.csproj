@@ -50,6 +50,10 @@
       <Project>{251ab2c1-9ead-42a5-bd9c-fcf823302eba}</Project>
       <Name>CodeGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Errors\Errors.csproj">
+      <Project>{030675D8-4048-46D5-8250-930979DBE4BA}</Project>
+      <Name>Errors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj">
       <Project>{89066BF3-B4D6-4F96-A9BB-A560B3BA6455}</Project>
       <Name>ReportGenerator</Name>

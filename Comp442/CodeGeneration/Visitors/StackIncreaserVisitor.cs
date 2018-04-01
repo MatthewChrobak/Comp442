@@ -67,15 +67,22 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(Var var)
         {
+            var currentScope = this.FunctionScope;
+
             foreach (var element in var.Elements) {
                 if (element is DataMember member) {
                     this.AddToStack(member, this.FunctionScope, this.FunctionScope);
+                    member.baseOffset = currentScope.GetOffset(member.Id, Classification.Variable);
+
+                    currentScope = this.GlobalScope.Get(member.SemanticalType, Classification.Class)?.Link;
                 }
 
                 if (element is FCall call) {
                     this.AddToStack(call, this.FunctionScope, this.FunctionScope);
                 }
             }
+
+            this.AddToStack(var, this.FunctionScope, this.FunctionScope);
         }
 
 
