@@ -98,12 +98,13 @@ namespace CodeGeneration.Visitors
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
             }
+
+            funcDef.NodeMemorySize = Sizes[funcDef.ReturnType];
         }
         
         public override void PreVisit(MainStatBlock mainStatBlock)
         {
             this.FunctionScope = this.GlobalScope.Get("main", Classification.Function).Link;
-
             this.ClassInstanceScope = new SymbolTable();
         }
 
@@ -167,6 +168,25 @@ namespace CodeGeneration.Visitors
             var.NodeMemorySize = var.Elements.Last().NodeMemorySize;
         }
 
+        public override void Visit(Integer integer)
+        {
+            integer.NodeMemorySize = Sizes[integer.SemanticalType];
+        }
+
+        public override void Visit(Sign sign)
+        {
+            sign.NodeMemorySize = Sizes[sign.Factor.SemanticalType];
+        }
+
+        public override void Visit(AddOp addOp)
+        {
+            addOp.NodeMemorySize = Sizes[addOp.SemanticalType];
+        }
+
+        public override void Visit(MultOp multOp)
+        {
+            multOp.NodeMemorySize = Sizes[multOp.SemanticalType];
+        }
 
         public SymbolTable GetCurrentScope()
         {

@@ -21,7 +21,7 @@ namespace CodeGeneration
             var memVisitor = new MemorySizeVisitor(this.AST.Table);
             ast.Accept(memVisitor);
 
-            var stackVisitor = new NewStackIncreaserVisitor(this.AST.Table, memVisitor.Sizes);
+            var stackVisitor = new StackIncreaserVisitor(this.AST.Table);
             ast.Accept(stackVisitor);
 
             var moonVisitor = new MoonVisitor(this.AST.Table);
