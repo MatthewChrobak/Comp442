@@ -9,7 +9,7 @@ namespace CodeGeneration.Visitors
         public Dictionary<string, int> Sizes;
 
         private SymbolTable GlobalScope;
-        private SymbolTable FunctionScope;
+        private TableEntry FunctionScopeLink;
         private SymbolTable ClassInstanceScope;
 
         public StackIncreaserVisitor(SymbolTable globalScope)
@@ -19,28 +19,34 @@ namespace CodeGeneration.Visitors
 
         public override void PreVisit(MainStatBlock mainStatBlock)
         {
-            this.FunctionScope = this.GlobalScope.Get("main", Classification.Function).Link;
+            this.FunctionScopeLink = this.GlobalScope.Get("main", Classification.Function);
             this.ClassInstanceScope = new SymbolTable();
         }
 
         public override void PreVisit(ClassDecl classDecl)
         {
-            this.FunctionScope = new SymbolTable();
+            this.FunctionScopeLink = null;
             this.ClassInstanceScope = this.GlobalScope.Get(classDecl.ClassName, Classification.Class).Link;
         }
 
         public override void PreVisit(FuncDef funcDef)
         {
             // Transfer scopes.
-            this.FunctionScope = this.GlobalScope.Get(funcDef.Entry.ID, Classification.Function).Link;
+            this.FunctionScopeLink = this.GlobalScope.Get(funcDef.Entry.ID, Classification.Function);
 
             this.ClassInstanceScope = new SymbolTable();
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
             }
 
+            var newFunctionScope = new SymbolTable();
+
             // Add the return values.
-            this.FunctionScope.Add(new TableEntry("retval", Classification.SubCalculationStackSpace, funcDef.NodeMemorySize), (0, 0));
+            newFunctionScope.Add(new TableEntry("retaddr", Classification.SubCalculationStackSpace, 4), (0, 0));
+            newFunctionScope.Add(new TableEntry("retval", Classification.SubCalculationStackSpace, funcDef.NodeMemorySize), (0, 0));
+            newFunctionScope.AddRange(this.FunctionScopeLink.Link.GetAll(), (0, 0));
+
+            FunctionScopeLink.Link = newFunctionScope;
         }
 
 
@@ -67,22 +73,24 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(Var var)
         {
-            var currentScope = this.FunctionScope;
+            var currentScope = this.FunctionScopeLink?.Link;
 
             foreach (var element in var.Elements) {
                 if (element is DataMember member) {
-                    this.AddToStack(member, this.FunctionScope, this.FunctionScope);
+                    this.AddToStack(member, this.FunctionScopeLink?.Link, this.FunctionScopeLink?.Link);
                     member.baseOffset = currentScope.GetOffset(member.Id, Classification.Variable);
 
                     currentScope = this.GlobalScope.Get(member.SemanticalType, Classification.Class)?.Link;
                 }
 
                 if (element is FCall call) {
-                    this.AddToStack(call, this.FunctionScope, this.FunctionScope);
+                    this.AddToStack(call, this.FunctionScopeLink?.Link, this.FunctionScopeLink?.Link);
+
+                    currentScope = this.GlobalScope.Get(call.SemanticalType, Classification.Class)?.Link;
                 }
             }
 
-            this.AddToStack(var, this.FunctionScope, this.FunctionScope);
+            this.AddToStack(var, this.FunctionScopeLink?.Link, this.FunctionScopeLink?.Link);
         }
 
 
@@ -90,10 +98,10 @@ namespace CodeGeneration.Visitors
         private void AddToStack(Node node, SymbolTable insertScope = null, SymbolTable offsetScope = null)
         {
             if (insertScope == null) {
-                insertScope = this.FunctionScope;
+                insertScope = this.FunctionScopeLink.Link;
             }
             if (offsetScope == null) {
-                offsetScope = this.FunctionScope;
+                offsetScope = this.FunctionScopeLink.Link;
             }
             
             insertScope.AddToStack(node.ToString(), node.NodeMemorySize);
@@ -104,7 +112,7 @@ namespace CodeGeneration.Visitors
         {
             var table = new SymbolTable();
             table.AddRange(this.GlobalScope.GetAll(), (0, 0));
-            table.AddRange(this.FunctionScope?.GetAll(), (0, 0));
+            table.AddRange(this.FunctionScopeLink?.Link?.GetAll(), (0, 0));
             table.AddRange(this.ClassInstanceScope?.GetAll(), (0, 0));
             return table;
         }

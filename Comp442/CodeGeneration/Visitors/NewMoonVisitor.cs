@@ -40,8 +40,8 @@ namespace CodeGeneration.Visitors
                 if (derefSource) {
                     InstructionStream.Add("lw r1, 0(r1)", "Pointer detected. Dereferencing.");
                 }
-                InstructionStream.Add($"lw r2, {destinationAddress}(r14)");
                 if (derefDest) {
+                    InstructionStream.Add($"lw r2, {destinationAddress}(r14)");
                     InstructionStream.Add($"sw {i}(r2), r1", "Pointer detected. Storing the value in the dereferenced location.");
                 } else {
                     InstructionStream.Add($"sw {destinationAddress + (i)}(r14), r1", $"{comment} - storing {i} of {copySizeInBytes}");
@@ -155,6 +155,21 @@ namespace CodeGeneration.Visitors
         }
 
 
+        public override void Visit(FCall fCall)
+        {
+            int stackFrameSize = this.FunctionScope.GetStackFrameSize();
+
+            InstructionStream.Add($"addi r14, r14, {stackFrameSize}");
+            InstructionStream.Add($"jl r15, function_{fCall.Id}", $"Call the function {fCall.Id}");
+            InstructionStream.Add($"subi r14, r14, {stackFrameSize}");
+
+            for (int i = 4; i < fCall.NodeMemorySize + 4; i += 4) {
+                InstructionStream.Add("add r1, r0, r14");
+                InstructionStream.Add($"addi r1, r1, {stackFrameSize + i}");
+                InstructionStream.Add($"sw {fCall.stackOffset + (i - 4)}(r14), r1");
+            }
+        }
+
         public override void Visit(DataMember dataMember)
         {
             InstructionStream.Add($"addi r1, r0, {dataMember.baseOffset}", $"Start to calculate the offset for {dataMember}");
@@ -202,19 +217,34 @@ namespace CodeGeneration.Visitors
                 }
 
                 if (entry is FCall call) {
-
+                    InstructionStream.Add(new string[] {
+                        $"lw r1, {call.stackOffset}(r14)",
+                    }, "Get the function call's pointer");
                 }
             }
 
-            for (int i = 0; i < var.NodeMemorySize; i += 4) {
-                if (i != 0) {
-                    InstructionStream.Add($"addi r1, r1, 4");
+            if (var.Elements.Last() as DataMember != null) {
+                for (int i = 0; i < var.NodeMemorySize; i += 4) {
+                    if (i != 0) {
+                        InstructionStream.Add($"addi r1, r1, 4");
+                    }
+                    InstructionStream.Add($"sw {var.stackOffset + i}(r14), r1");
                 }
-                InstructionStream.Add($"sw {var.stackOffset + i}(r14), r1");
             }
         }
 
 
+
+
+        public override void Visit(ReturnStat returnStat)
+        {
+            this.LoadAndStore(returnStat.ReturnValueExpression, 4, returnStat.ReturnValueExpression.NodeMemorySize, $"Returning {returnStat.ReturnValueExpression}");
+
+            InstructionStream.Add(new string[] {
+                "lw r15, 0(r14)",
+                "jr r15"
+            }, "Load the return address, and return.");
+        }
 
         public override void Visit(PutStat putStat)
         {

@@ -30,7 +30,7 @@ namespace CodeGeneration.Visitors
             }
         }
 
-        public override void PreVisit(FuncDef funcDef)
+        public override void PreVisit(FuncDef funcDef)     
         {
             this.FunctionScope = GlobalScope.Get(funcDef.FunctionName, Classification.Function).Link;
 

@@ -12,6 +12,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public FCall((int, int) location) : base(location)
         {
+
         }
 
         public void Accept(Visitor visitor)

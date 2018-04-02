@@ -20,6 +20,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public DataMember((int, int) location) : base(location)
         {
+
         }
 
         public void Accept(Visitor visitor)

@@ -165,6 +165,8 @@ namespace CodeGeneration.Visitors
 
                 if (element is FCall call) {
                     call.NodeMemorySize = Sizes[call.SemanticalType];
+
+                    scope = this.GlobalScope.Get(call.SemanticalType, Classification.Class)?.Link;
                 }
             }
 
