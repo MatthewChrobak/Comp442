@@ -42,7 +42,7 @@ namespace CodeGeneration.Visitors
                 }
                 InstructionStream.Add($"lw r2, {destinationAddress}(r14)");
                 if (derefDest) {
-                    InstructionStream.Add($"sw 0(r2), r1", "Pointer detected. Storing the value in the dereferenced location.");
+                    InstructionStream.Add($"sw {i}(r2), r1", "Pointer detected. Storing the value in the dereferenced location.");
                 } else {
                     InstructionStream.Add($"sw {destinationAddress + (i)}(r14), r1", $"{comment} - storing {i} of {copySizeInBytes}");
                 }
