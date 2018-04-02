@@ -1,5 +1,6 @@
 ﻿using SyntacticAnalyzer.Semantics;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace SyntacticAnalyzer.Nodes
@@ -12,8 +13,10 @@ namespace SyntacticAnalyzer.Nodes
 
         [XmlIgnore]
         public int baseOffset { get; set; }
+
+
         [XmlIgnore]
-        public int NonArrayTypeMemorySize { get; set; }
+        public List<int> MaxSizeDimensions { get; set; }
 
         public DataMember((int, int) location) : base(location)
         {

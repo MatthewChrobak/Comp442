@@ -158,7 +158,7 @@ namespace CodeGeneration.Visitors
                 for (int i = 0; i < dataMember.Indexes.Expressions.Count; i++) {
                     var exp = dataMember.Indexes.Expressions[i];
                     InstructionStream.Add($"lw r2, {exp.stackOffset}(r14)", $"Getting the index [{exp}]");
-                    InstructionStream.Add($"muli r2, r2, {dataMember.NonArrayTypeMemorySize}", $"Multiply by the size.");
+                    //InstructionStream.Add($"muli r2, r2, {dataMember.NonArrayTypeMemorySize}", $"Multiply by the size.");
 
                     for (int sizeIndex = i + 1; sizeIndex < dataMember.Indexes.Expressions.Count; sizeIndex++) {
                         InstructionStream.Add($"muli r2, r2, {maxIndexes[sizeIndex]}", $"Multiply by the chunk size {maxIndexes[sizeIndex]}");

@@ -153,6 +153,9 @@ namespace CodeGeneration.Visitors
                         numElements *= baseVariable.MaxSizeDimensions[i--];
                     }
 
+                    // Transfer this for later.
+                    member.MaxSizeDimensions = baseVariable.MaxSizeDimensions;
+
                     // Calculate the memory size.
                     member.NodeMemorySize = numElements * Sizes[baseVariableType];
 

@@ -155,16 +155,31 @@ namespace CodeGeneration.Visitors
         }
 
 
-
         public override void Visit(DataMember dataMember)
         {
             InstructionStream.Add($"addi r1, r0, {dataMember.baseOffset}", $"Start to calculate the offset for {dataMember}");
 
             if (dataMember?.Indexes?.Expressions != null) {
+                var maxIndexes = dataMember.MaxSizeDimensions;
+                
+                for (int i = 0; i < dataMember.Indexes.Expressions.Count; i++) {
+                    var exp = dataMember.Indexes.Expressions[i];
 
+                    InstructionStream.Add($"lw r2, {exp.stackOffset}(r14)", $"Getting the index [{exp}]");
+
+                    if (!exp.IsLiteral) {
+                        InstructionStream.Add($"lw r2, 0(r2)", "Pointer deteced - dereferencing");
+                    }
+
+                    InstructionStream.Add($"muli r2, r2, {dataMember.NodeMemorySize}", $"Multiply by the size.");
+
+                    for (int sizeIndex = i + 1; sizeIndex < dataMember.Indexes.Expressions.Count; sizeIndex++) {
+                        InstructionStream.Add($"muli r2, r2, {maxIndexes[sizeIndex]}", $"Multiply by the chunk size {maxIndexes[sizeIndex]}");
+                    }
+
+                    InstructionStream.Add($"add r1, r1, r2", $"Add the index {dataMember.Indexes.Expressions[i]}");
+                }
             }
-
-            //InstructionStream.Add($"% The data member {dataMember}'s base pointer is contained in r1.");
 
             for (int i = 0; i < dataMember.NodeMemorySize; i += 4) {
                 if (i != 0) {
