@@ -1,8 +1,10 @@
-﻿namespace SyntacticAnalyzer.Parser
+﻿using SyntacticAnalyzer.Nodes;
+
+namespace SyntacticAnalyzer.Parser
 {
     public partial class Parser
     {
-        private object AParamsTail()
+        private Node AParamsTail()
         {
             string first = ",";
             this.SkipErrors(first);

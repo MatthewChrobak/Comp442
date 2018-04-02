@@ -18,7 +18,7 @@ namespace SyntacticAnalyzer.Parser
 
                 var aparams = new AParams(lookaheadToken.SourceLocation);
 
-                object expr = Expr();
+                var expr = Expr();
                 var trailingExpr = InfAParamsTail();
 
                 aparams.Expressions.Add(expr);

@@ -158,6 +158,16 @@ namespace CodeGeneration.Visitors
         public override void Visit(FCall fCall)
         {
             int stackFrameSize = this.FunctionScope.GetStackFrameSize();
+            var scope = this.GlobalScope.Get(fCall.Id, Classification.Function).Link;
+            int paramOffset = stackFrameSize + 4 + scope.Get("retval", Classification.SubCalculationStackSpace).EntryMemorySize;
+
+            foreach (var expression in fCall.Parameters.Expressions) {
+
+                this.LoadAndStore(expression, paramOffset, expression.NodeMemorySize, $"Passing parameter {expression}");
+
+                paramOffset += expression.NodeMemorySize;
+            }
+
 
             InstructionStream.Add($"addi r14, r14, {stackFrameSize}");
             InstructionStream.Add($"jl r15, function_{fCall.Id}", $"Call the function {fCall.Id}");

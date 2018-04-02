@@ -15,6 +15,8 @@ namespace SyntacticAnalyzer.Nodes
 
         [XmlIgnore]
         public TableEntry Entry { get; set; }
+        [XmlIgnore]
+        public List<int> MaxSizeDimensions { get; set; }
 
         public FParam((int, int) location) : base(location)
         {

@@ -25,6 +25,11 @@ namespace SyntacticAnalyzer.Semantics
 
         }
 
+        public virtual void PreVisit(FCall fCall)
+        {
+
+        }
+
         public virtual void Visit(DataMember dataMember)
         {
             

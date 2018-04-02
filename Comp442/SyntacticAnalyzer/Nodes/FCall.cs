@@ -17,6 +17,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            visitor.PreVisit(this);
             this.Parameters?.Accept(visitor);
             visitor.Visit(this);
         }

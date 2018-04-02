@@ -17,7 +17,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
-        public List<object> Expressions { get; set; } = new List<object>();
+        public List<Node> Expressions { get; set; } = new List<Node>();
 
         public AParams((int, int) location) : base(location)
         {

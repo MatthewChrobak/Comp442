@@ -92,6 +92,19 @@ namespace CodeGeneration.Visitors
 
         public override void PreVisit(FuncDef funcDef)
         {
+            var functionEntry = this.GlobalScope.Get(funcDef.Entry.ID, Classification.Function);
+            var newFunctionScope = new SymbolTable();
+
+            foreach (var oldEntry in functionEntry.Link.GetAll()) {
+                if (oldEntry.Classification == Classification.Parameter) {
+                    newFunctionScope.Add(new TableEntry(oldEntry.ID, Classification.Variable, oldEntry.EntryMemorySize), (0, 0));
+                } else {
+                    newFunctionScope.Add(oldEntry, (0, 0));
+                }
+            }
+
+            functionEntry.Link = newFunctionScope;
+
             this.FunctionScope = this.GlobalScope.Get(funcDef.Entry.ID, Classification.Function).Link;
 
             this.ClassInstanceScope = new SymbolTable();
@@ -142,6 +155,7 @@ namespace CodeGeneration.Visitors
                 if (element is DataMember member) {
                     // Get the base variable of this data member.
                     var baseVariable = scope.Get(member.Id, Classification.Variable);
+ 
                     string baseVariableType = member.SemanticalType.Replace("[]", string.Empty);
 
                     // Calculate the number of elements in this data member based on the number of unspecified dimensions.
@@ -171,6 +185,31 @@ namespace CodeGeneration.Visitors
             }
 
             var.NodeMemorySize = var.Elements.Last().NodeMemorySize;
+        }
+
+        public override void Visit(FParam fParam)
+        {
+            int numElements = 1;
+            var dimensions = new List<int>();
+
+            // Calculate the dimensions and the total size.
+            foreach (var dimension in fParam.Dimensions) {
+                dimensions.Add(int.Parse(dimension.Value));
+                numElements *= dimensions.Last();
+            }
+
+            var nodeEntry = this.GetCurrentScope().Get(fParam.Id, Classification.Variable);
+
+
+            if (!this.Sizes.ContainsKey(fParam.Type)) {
+                // If it doesn't exist, the memory size will be -1. By multiplying it by the number of elements,
+                // the true size will happen when (in the class) we resolve it by doing *= -sizeof(type);
+                nodeEntry.EntryMemorySize *= numElements;
+            } else {
+                nodeEntry.EntryMemorySize = Sizes[fParam.Type] * numElements;
+            }
+
+            nodeEntry.MaxSizeDimensions = dimensions;
         }
 
         public override void Visit(Integer integer)
