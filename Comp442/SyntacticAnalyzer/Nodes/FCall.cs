@@ -12,7 +12,7 @@ namespace SyntacticAnalyzer.Nodes
 
         public FCall((int, int) location) : base(location)
         {
-
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)

@@ -162,9 +162,7 @@ namespace CodeGeneration.Visitors
             int paramOffset = stackFrameSize + 4 + scope.Get("retval", Classification.SubCalculationStackSpace).EntryMemorySize;
 
             foreach (var expression in fCall.Parameters.Expressions) {
-
                 this.LoadAndStore(expression, paramOffset, expression.NodeMemorySize, $"Passing parameter {expression}");
-
                 paramOffset += expression.NodeMemorySize;
             }
 
@@ -173,11 +171,8 @@ namespace CodeGeneration.Visitors
             InstructionStream.Add($"jl r15, function_{fCall.Id}", $"Call the function {fCall.Id}");
             InstructionStream.Add($"subi r14, r14, {stackFrameSize}");
 
-            for (int i = 4; i < fCall.NodeMemorySize + 4; i += 4) {
-                InstructionStream.Add("add r1, r0, r14");
-                InstructionStream.Add($"addi r1, r1, {stackFrameSize + i}");
-                InstructionStream.Add($"sw {fCall.stackOffset + (i - 4)}(r14), r1");
-            }
+
+            this.LoadAndStore(stackFrameSize + 4, fCall, fCall.NodeMemorySize, "Retrieve the returnvalue");
         }
 
         public override void Visit(DataMember dataMember)
@@ -228,7 +223,7 @@ namespace CodeGeneration.Visitors
 
                 if (entry is FCall call) {
                     InstructionStream.Add(new string[] {
-                        $"lw r1, {call.stackOffset}(r14)",
+                        $"addi r1, r14, {call.stackOffset}"
                     }, "Get the function call's pointer");
                 }
             }
@@ -240,6 +235,9 @@ namespace CodeGeneration.Visitors
                     }
                     InstructionStream.Add($"sw {var.stackOffset + i}(r14), r1");
                 }
+                var.IsLiteral = false;
+            } else {
+                var.IsLiteral = true;
             }
         }
 
