@@ -232,6 +232,16 @@ namespace CodeGeneration.Visitors
             multOp.NodeMemorySize = Sizes[multOp.SemanticalType];
         }
 
+        public override void Visit(RelExpr relExpr)
+        {
+            relExpr.NodeMemorySize = Sizes[relExpr.SemanticalType];
+        }
+
+        public override void Visit(Not not)
+        {
+            not.NodeMemorySize = Sizes[not.SemanticalType];
+        }
+
         public SymbolTable GetCurrentScope()
         {
             var table = new SymbolTable();

@@ -71,6 +71,16 @@ namespace CodeGeneration.Visitors
             this.AddToStack(multOp);
         }
 
+        public override void Visit(RelExpr relExpr)
+        {
+            this.AddToStack(relExpr);
+        }
+
+        public override void Visit(Not not)
+        {
+            this.AddToStack(not);
+        }
+
         public override void Visit(Var var)
         {
             var currentScope = this.FunctionScopeLink?.Link;
@@ -93,6 +103,13 @@ namespace CodeGeneration.Visitors
             this.AddToStack(var, this.FunctionScopeLink?.Link, this.FunctionScopeLink?.Link);
         }
 
+
+
+
+        public override void Visit(IfStat ifStat)
+        {
+            ifStat.ElseBlock.SemanticalType = "else";
+        }
 
 
         private void AddToStack(Node node, SymbolTable insertScope = null, SymbolTable offsetScope = null)

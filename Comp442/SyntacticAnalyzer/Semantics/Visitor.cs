@@ -70,9 +70,24 @@ namespace SyntacticAnalyzer.Semantics
             
         }
 
+        public virtual void PreVisit(IfStat ifStat)
+        {
+
+        }
+
         public virtual void Visit(FCall fCall)
         {
             
+        }
+
+        public virtual void PostConditionalVisit(IfStat ifStat)
+        {
+
+        }
+
+        public virtual void PreElseBlockVisit(IfStat ifStat)
+        {
+
         }
 
         public virtual void Visit(GetStat getStat)
@@ -143,6 +158,11 @@ namespace SyntacticAnalyzer.Semantics
         public virtual void Visit(Var var)
         {
             
+        }
+
+        public virtual void PreVisit(StatBlock statBlock)
+        {
+
         }
 
         public virtual void Visit(StatBlock statBlock)

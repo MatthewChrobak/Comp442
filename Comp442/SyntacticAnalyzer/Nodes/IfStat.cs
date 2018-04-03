@@ -16,7 +16,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
-        public object Condition { get; set; }
+        public Node Condition { get; set; }
         public StatBlock TrueBlock { get; set; }
         public StatBlock ElseBlock { get; set; }
 
@@ -26,11 +26,16 @@ namespace SyntacticAnalyzer.Nodes
 
         public void Accept(Visitor visitor)
         {
+            visitor.PreVisit(this);
+
             if (this.Condition is IVisitable condition) {
                 condition?.Accept(visitor);
             }
-
+            visitor.PostConditionalVisit(this);
             this.TrueBlock?.Accept(visitor);
+
+            visitor.PreElseBlockVisit(this);
+
             this.ElseBlock?.Accept(visitor);
 
             visitor.Visit(this);

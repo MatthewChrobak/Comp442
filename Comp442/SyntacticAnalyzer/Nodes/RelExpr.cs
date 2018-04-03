@@ -15,7 +15,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "LeftFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "LeftNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "LeftSignFactor")] // factor
-        public object LHS { get; set; } // arithExpr
+        public Node LHS { get; set; } // arithExpr
 
         public string RelationOperator { get; set; }
 
@@ -27,10 +27,11 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "RightFunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "RightNotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
-        public object RHS { get; set; } // arithExpr
+        public Node RHS { get; set; } // arithExpr
 
         public RelExpr((int, int) location) : base(location)
         {
+            this.IsLiteral = true;
         }
 
         public void Accept(Visitor visitor)

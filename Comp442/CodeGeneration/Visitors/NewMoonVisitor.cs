@@ -243,6 +243,86 @@ namespace CodeGeneration.Visitors
 
 
 
+        public override void Visit(RelExpr relExpr)
+        {
+            string instruction = relExpr.RelationOperator;
+
+            switch (relExpr.RelationOperator) {
+                case "==":
+                    instruction = "ceq";
+                    break;
+                case "<>":
+                    instruction = "cne";
+                    break;
+                case "<":
+                    instruction = "clt";
+                    break;
+                case ">":
+                    instruction = "cgt";
+                    break;
+                case "<=":
+                    instruction = "cle";
+                    break;
+                case ">=":
+                    instruction = "cge";
+                    break;
+            }
+
+            this.Load(relExpr.LHS, "r2");
+            this.Load(relExpr.RHS, "r3");
+            InstructionStream.Add(new string[] {
+                $"{instruction} r1, r2, r3",
+                $"sw {relExpr.stackOffset}(r14), r1"
+            }, $"Evaluate {relExpr}");
+        }
+
+        public override void Visit(Not not)
+        {
+            this.Load(not.Factor, "r1");
+            InstructionStream.Add(new string[] {
+                "not r1, r1",
+                $"sw {not.stackOffset}(r14), r1"
+            }, $"Invert the sign");
+        }
+
+
+        /*
+         * eval cond
+         * JUMP TO ELSE
+         * 
+         * true block
+         * JUMP TO END_IF
+         * 
+         * 
+         * ELSE     else block
+         * 
+         */
+
+
+        public override void PostConditionalVisit(IfStat ifStat)
+        {
+            string elseIdentifier = $"else_{ifStat.Location.line}_{ifStat.Location.column}";
+
+            this.Load(ifStat.Condition, "r1");
+            InstructionStream.Add($"bz r1, {elseIdentifier}", $"If {ifStat.Condition}.");
+        }
+
+        public override void PreElseBlockVisit(IfStat ifStat)
+        {
+            string elseIdentifier = $"else_{ifStat.Location.line}_{ifStat.Location.column}";
+            string endifIdentifier = $"endif_{ifStat.Location.line}_{ifStat.Location.column}";
+
+            InstructionStream.Add($"j {endifIdentifier}", "Go to the end of the else block.");
+            InstructionStream.Add($"{elseIdentifier}    nop", "Start the else block");
+        }
+
+        public override void Visit(IfStat ifStat)
+        {
+            string endifIdentifier = $"endif_{ifStat.Location.line}_{ifStat.Location.column}";
+            InstructionStream.Add($"{endifIdentifier}    nop", "End the else block");
+        }
+
+
 
         public override void Visit(ReturnStat returnStat)
         {
