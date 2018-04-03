@@ -9,7 +9,7 @@ namespace SyntacticAnalyzer.Semantics
         public SymbolTable Link { get; set; }
         public string Type { get; set; }
         public int EntryMemorySize { get; set; }
-        public List<int> MaxSizeDimensions { get; set; }
+        public List<int> MaxSizeDimensions { get; set; } = new List<int>();
 
         public TableEntry(string id, Classification type, int size)
         {

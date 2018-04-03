@@ -286,18 +286,6 @@ namespace CodeGeneration.Visitors
         }
 
 
-        /*
-         * eval cond
-         * JUMP TO ELSE
-         * 
-         * true block
-         * JUMP TO END_IF
-         * 
-         * 
-         * ELSE     else block
-         * 
-         */
-
 
         public override void PostConditionalVisit(IfStat ifStat)
         {
@@ -320,6 +308,43 @@ namespace CodeGeneration.Visitors
         {
             string endifIdentifier = $"endif_{ifStat.Location.line}_{ifStat.Location.column}";
             InstructionStream.Add($"{endifIdentifier}    nop", "End the else block");
+        }
+
+        public override void PostInitializationVisit(ForStat forStat)
+        {
+            string startForIdentifier = $"for_{forStat.Location.line}_{forStat.Location.column}";
+            string conditionIdentifier = $"forcond_{forStat.Location.line}_{forStat.Location.column}";
+
+            this.LoadAndStore(forStat.Initialization, forStat.stackOffset, forStat.NodeMemorySize, $"{forStat.Type} {forStat.Id} = {forStat.Initialization}");
+
+            InstructionStream.Add($"j {conditionIdentifier}");
+            InstructionStream.Add($"{startForIdentifier}    nop", "Start the for loop");
+        }
+
+        public override void PostUpdateVisit(ForStat forStat)
+        {
+            string conditionIdentifier = $"forcond_{forStat.Location.line}_{forStat.Location.column}";
+
+            InstructionStream.Add($"{conditionIdentifier}   nop");
+        }
+
+        public override void PostForLoopConditionalVisit(ForStat forStat)
+        {
+            string endForIdentifier = $"endfor_{forStat.Location.line}_{forStat.Location.column}";
+            
+            this.Load(forStat.Condition, "r1");
+            InstructionStream.Add($"bz r1, {endForIdentifier}");
+        }
+
+        public override void Visit(ForStat forStat)
+        {
+            string startForIdentifier = $"for_{forStat.Location.line}_{forStat.Location.column}";
+            string endForIdentifier = $"endfor_{forStat.Location.line}_{forStat.Location.column}";
+
+            InstructionStream.Add(new string[] {
+                $"j {startForIdentifier}",
+                $"{endForIdentifier}    nop"
+            });
         }
 
 

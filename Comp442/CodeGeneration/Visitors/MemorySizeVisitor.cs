@@ -242,6 +242,25 @@ namespace CodeGeneration.Visitors
             not.NodeMemorySize = Sizes[not.SemanticalType];
         }
 
+        public override void PreVisit(ForStat forStat)
+        {
+            var variable = this.FunctionScope.Get(forStat.Id, Classification.Variable);
+
+            if (variable != null) {
+                if (variable.EntryMemorySize < Sizes[forStat.Type]) {
+                    variable.EntryMemorySize = Sizes[forStat.Type];
+                }
+            } else {
+                this.FunctionScope.Add(new TableEntry(forStat.Id, Classification.Variable, Sizes[forStat.Type]), (0, 0));
+            }
+        }
+
+        public override void Visit(ForStat forStat)
+        {
+            forStat.NodeMemorySize = Sizes[forStat.Type];
+            forStat.stackOffset = this.FunctionScope.GetOffset(forStat.Id, Classification.Variable);
+        }
+
         public SymbolTable GetCurrentScope()
         {
             var table = new SymbolTable();

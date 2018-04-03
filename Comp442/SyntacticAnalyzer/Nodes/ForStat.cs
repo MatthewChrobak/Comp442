@@ -22,7 +22,7 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlElement(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
-        public object Initialization { get; set; } // Resolves to EXPR
+        public Node Initialization { get; set; } // Resolves to EXPR
 
         public RelExpr Condition { get; set; }
         public AssignStat Update { get; set; }
@@ -38,8 +38,12 @@ namespace SyntacticAnalyzer.Nodes
             if (this.Initialization is IVisitable initialization) {
                 initialization?.Accept(visitor);
             }
-            this.Condition?.Accept(visitor);
+            visitor.PostInitializationVisit(this);
             this.Update?.Accept(visitor);
+
+            visitor.PostUpdateVisit(this);
+            this.Condition?.Accept(visitor);
+            visitor.PostForLoopConditionalVisit(this);
             this.LoopBlock?.Accept(visitor);
 
             visitor.Visit(this);

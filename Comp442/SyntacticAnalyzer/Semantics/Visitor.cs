@@ -95,6 +95,21 @@ namespace SyntacticAnalyzer.Semantics
             
         }
 
+        public virtual void PostInitializationVisit(ForStat forStat)
+        {
+
+        }
+
+        public virtual void PostUpdateVisit(ForStat forStat)
+        {
+
+        }
+
+        public virtual void PostForLoopConditionalVisit(ForStat forStat)
+        {
+
+        }
+
         public virtual void PreVisit(FuncDef funcDef)
         {
             
