@@ -105,13 +105,6 @@ namespace CodeGeneration.Visitors
 
 
 
-
-        public override void Visit(IfStat ifStat)
-        {
-            ifStat.ElseBlock.SemanticalType = "else";
-        }
-
-
         private void AddToStack(Node node, SymbolTable insertScope = null, SymbolTable offsetScope = null)
         {
             if (insertScope == null) {
