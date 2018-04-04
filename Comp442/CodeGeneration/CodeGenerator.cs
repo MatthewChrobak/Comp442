@@ -24,7 +24,7 @@ namespace CodeGeneration
             var stackVisitor = new StackIncreaserVisitor(this.AST.Table);
             ast.Accept(stackVisitor);
 
-            var moonVisitor = new NewMoonVisitor(this.AST.Table);
+            var moonVisitor = new MoonVisitor(this.AST.Table);
             ast.Accept(moonVisitor);
         }
     }
