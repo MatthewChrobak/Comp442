@@ -155,7 +155,79 @@ namespace CodeGeneration.Visitors
         }
 
 
-        public override void Visit(FCall fCall)
+        public override void PreVisit(Var var)
+        {
+            string lastDatatype = string.Empty;
+
+            for (int i = 0; i < var.Elements.Count; i++) {
+                var element = var.Elements[i];
+                if (element is DataMember member) {
+                    lastDatatype = member.SemanticalType;
+
+                    this.SubVisit(member);
+                }
+
+                if (element is FCall call) {
+                    if (lastDatatype.Length != 0) {
+                        call.Id = lastDatatype + "::" + call.Id;
+                    }
+
+                    lastDatatype = call.SemanticalType;
+
+
+                    if (lastDatatype.Length != 0) {
+                        InstructionStream.Add($"addi r7, r14, 0", "This is to calculate the data offset for any potential member functions.");
+
+                        for (int x = 0; x < i; x++) {
+                            if (var.Elements[x] is DataMember calcMem) {
+                                InstructionStream.Add($"lw r8, {calcMem.stackOffset}(r14)", "This is to calculate the next data offset AFTER a data member");
+                                InstructionStream.Add($"add r7, r7, r8");
+                            }
+                            if (var.Elements[x] is FCall calcFunc) {
+                                InstructionStream.Add($"addi r7, r14, {calcFunc.stackOffset}", "This is to calculate the next data offset AFTER a function call.");
+                            }
+                        }
+
+                        for (int x = 0; x < call.MemberMemorySize; x += 4) {
+                            InstructionStream.Add(new string[] {
+                                $"lw r1, {x}(r7)",
+                                $"sw {this.FunctionScope.GetStackFrameSize() + 4 + call.NodeMemorySize + x}(r14), r1"
+                            });
+                        }
+                    }
+
+
+                    this.SubVisit(call);
+
+                    // Check if we need to retrieve the member
+                    if (lastDatatype.Length != 0) {
+                        InstructionStream.Add($"addi r7, r14, 0", "This is to calculate the data offset for any potential member functions.");
+
+                        for (int x = 0; x < i; x++) {
+                            if (var.Elements[x] is DataMember calcMem) {
+                                InstructionStream.Add($"lw r8, {calcMem.stackOffset}(r14)", "This is to calculate the next data offset AFTER a data member");
+                                InstructionStream.Add($"add r7, r7, r8");
+                            }
+                            if (var.Elements[x] is FCall calcFunc) {
+                                InstructionStream.Add($"addi r7, r14, {calcFunc.stackOffset}", "This is to calculate the next data offset AFTER a function call.");
+                            }
+                        }
+
+                        for (int y = 0; y < call.MemberMemorySize; y += 4) {
+                            InstructionStream.Add(new string[] {
+                                $"lw r1, {this.FunctionScope.GetStackFrameSize() + 4 + call.NodeMemorySize + y}(r14)",
+                                $"sw {y}(r7), r1"
+                            });
+                        }
+                    }
+
+                }
+            }
+
+            
+        }
+
+        public void SubVisit(FCall fCall)
         {
             int stackFrameSize = this.FunctionScope.GetStackFrameSize();
             var scope = this.GlobalScope.Get(fCall.Id, Classification.Function).Link;
@@ -166,16 +238,20 @@ namespace CodeGeneration.Visitors
                 paramOffset += expression.NodeMemorySize;
             }
 
+            // PASS THE "THIS" VALUE??
+            // Whatever's in R7 is what we're calling from.
+            
+
 
             InstructionStream.Add($"addi r14, r14, {stackFrameSize}");
-            InstructionStream.Add($"jl r15, function_{fCall.Id}", $"Call the function {fCall.Id}");
+            InstructionStream.Add($"jl r15, function_{fCall.Id.Replace(':', '_')}", $"Call the function {fCall.Id}");
             InstructionStream.Add($"subi r14, r14, {stackFrameSize}");
 
 
             this.LoadAndStore(stackFrameSize + 4, fCall, fCall.NodeMemorySize, "Retrieve the returnvalue");
         }
 
-        public override void Visit(DataMember dataMember)
+        public void SubVisit(DataMember dataMember)
         {
             InstructionStream.Add($"addi r1, r0, {dataMember.baseOffset}", $"Start to calculate the offset for {dataMember}");
 
@@ -237,6 +313,12 @@ namespace CodeGeneration.Visitors
                 }
                 var.IsLiteral = false;
             } else {
+                for (int i = 0; i < var.NodeMemorySize; i += 4) {
+                    InstructionStream.Add(new string[] {
+                        $"lw r2, {var.Elements.Last().stackOffset + i}(r14)",
+                        $"sw {var.stackOffset + i}(r14), r2"
+                    });
+                }
                 var.IsLiteral = true;
             }
         }

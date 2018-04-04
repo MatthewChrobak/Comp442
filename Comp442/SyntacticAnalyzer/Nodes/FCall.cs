@@ -10,6 +10,9 @@ namespace SyntacticAnalyzer.Nodes
         public string Id { get; set; }
         public AParams Parameters { get; set; }
 
+        [XmlIgnore]
+        public int MemberMemorySize { get; set; }
+
         public FCall((int, int) location) : base(location)
         {
             this.IsLiteral = true;

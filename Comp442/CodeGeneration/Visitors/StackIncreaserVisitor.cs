@@ -44,6 +44,11 @@ namespace CodeGeneration.Visitors
             // Add the return values.
             newFunctionScope.Add(new TableEntry("retaddr", Classification.SubCalculationStackSpace, 4), (0, 0));
             newFunctionScope.Add(new TableEntry("retval", Classification.SubCalculationStackSpace, funcDef.NodeMemorySize), (0, 0));
+
+            if (funcDef.ScopeResolution != null) {
+                newFunctionScope.AddRange(this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link.GetAll(Classification.Variable), (0, 0));
+            }
+
             newFunctionScope.AddRange(this.FunctionScopeLink.Link.GetAll(), (0, 0));
 
             FunctionScopeLink.Link = newFunctionScope;
@@ -79,6 +84,11 @@ namespace CodeGeneration.Visitors
         public override void Visit(Not not)
         {
             this.AddToStack(not);
+        }
+
+        public override void Visit(ForStat forStat)
+        {
+            forStat.stackOffset = this.FunctionScopeLink.Link.GetOffset(forStat.Id, Classification.Variable);
         }
 
         public override void Visit(Var var)

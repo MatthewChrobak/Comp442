@@ -93,7 +93,9 @@ namespace SyntacticAnalyzer.Semantics
                 if (tableEntry.Key == $"{entry.ID}-{entry.Classification}") {
                     return offset;
                 }
-                offset += tableEntry.Value.EntryMemorySize;
+                if (tableEntry.Value.Classification == Classification.SubCalculationStackSpace || tableEntry.Value.Classification == Classification.Parameter || tableEntry.Value.Classification == Classification.Variable) {
+                    offset += tableEntry.Value.EntryMemorySize;
+                }
             }
 
             return -1;

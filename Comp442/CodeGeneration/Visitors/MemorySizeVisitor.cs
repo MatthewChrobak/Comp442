@@ -110,6 +110,7 @@ namespace CodeGeneration.Visitors
             this.ClassInstanceScope = new SymbolTable();
             if (funcDef.ScopeResolution != null) {
                 this.ClassInstanceScope = this.GlobalScope.Get(funcDef.ScopeResolution.ID, Classification.Class).Link;
+                funcDef.ScopeResolution.NodeMemorySize = Sizes[funcDef.ScopeResolution.ID];
             }
 
             funcDef.NodeMemorySize = Sizes[funcDef.ReturnType];
@@ -149,6 +150,7 @@ namespace CodeGeneration.Visitors
         public override void Visit(Var var)
         {
             var scope = GetCurrentScope();
+            string lastMemberType = string.Empty;
 
             foreach (var element in var.Elements) {
 
@@ -167,6 +169,9 @@ namespace CodeGeneration.Visitors
                         numElements *= baseVariable.MaxSizeDimensions[i--];
                     }
 
+                    // Save this for later.
+                    lastMemberType = baseVariableType;
+
                     // Transfer this for later.
                     member.MaxSizeDimensions = baseVariable.MaxSizeDimensions;
 
@@ -179,6 +184,12 @@ namespace CodeGeneration.Visitors
 
                 if (element is FCall call) {
                     call.NodeMemorySize = Sizes[call.SemanticalType];
+
+                    if (lastMemberType.Length != 0) {
+                        call.MemberMemorySize = Sizes[lastMemberType];
+                    }
+
+                    lastMemberType = call.SemanticalType;
 
                     scope = this.GlobalScope.Get(call.SemanticalType, Classification.Class)?.Link;
                 }
@@ -258,7 +269,6 @@ namespace CodeGeneration.Visitors
         public override void Visit(ForStat forStat)
         {
             forStat.NodeMemorySize = Sizes[forStat.Type];
-            forStat.stackOffset = this.FunctionScope.GetOffset(forStat.Id, Classification.Variable);
         }
 
         public SymbolTable GetCurrentScope()
