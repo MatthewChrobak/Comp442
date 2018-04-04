@@ -43,3 +43,36 @@ puti_put	addi r4, r4, 4 	% Increase the pointer by one word.
 			
 			lw r15, 0(r14) 	% Load the return address.
 			jr r15
+
+
+geti_func	addi r1, r0, 0	% Reset the register.
+
+			addi r6, r0, 1	% Register to hold the sign.
+
+			getc r3			% Get input from the user.
+
+			ceqi r2, r3, 45 % Check if negative.
+			
+			bz r2, geti_proin % It's not a negative sign. Continue to proceess it.'
+
+			addi r6, r0, -1	% Make the factor -1.
+
+geti_input	getc r3			% Get input from the user.
+
+geti_proin	ceqi r2, r3, 10	% Check if we should terminate.
+
+			bnz r2, geti_save
+
+			subi r3, r3, 48	% Convert it to decimal.
+			
+			muli r1, r1, 10 % Shift the stored value to make room for the new value.
+
+			add r1, r1, r3 % Add the digit.
+
+			j geti_input
+
+geti_save	mul r1, r1, r6	% Make sure the sign is correct.
+			
+			sw 0(r5), r1	% Store the result in the designated place.
+
+			jr r15

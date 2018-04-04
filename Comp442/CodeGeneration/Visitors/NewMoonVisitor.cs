@@ -451,6 +451,15 @@ namespace CodeGeneration.Visitors
             InstructionStream.Add($"subi r14, r14, {thisFrameSize}");
         }
 
+        public override void Visit(GetStat getStat)
+        {
+            InstructionStream.Add(new string[] {
+                $"addi r5, r14, {getStat.Variable.stackOffset}",
+                $"lw r5, 0(r5)",
+                $"jl r15, geti_func"
+            });
+        }
+
         public override void Visit(AssignStat assignStat)
         {
             this.LoadAndStore(assignStat.ExpressionValue, assignStat.Variable, assignStat.ExpressionValue.NodeMemorySize, $"{assignStat}");
