@@ -45,9 +45,8 @@
     <Compile Include="InstructionStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report.cs" />
-    <Compile Include="Visitors\MoonVisitor.cs" />
     <Compile Include="Visitors\MemorySizeVisitor.cs" />
-    <Compile Include="Visitors\NewMoonVisitor.cs" />
+    <Compile Include="Visitors\MoonVisitor.cs" />
     <Compile Include="Visitors\StackIncreaserVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

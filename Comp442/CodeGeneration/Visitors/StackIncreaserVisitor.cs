@@ -56,6 +56,11 @@ namespace CodeGeneration.Visitors
 
 
 
+        public override void Visit(Float @float)
+        {
+            this.AddToStack(@float);
+        }
+
         public override void Visit(Integer integer)
         {
             this.AddToStack(integer);

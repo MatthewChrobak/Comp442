@@ -228,6 +228,11 @@ namespace CodeGeneration.Visitors
             integer.NodeMemorySize = Sizes[integer.SemanticalType];
         }
 
+        public override void Visit(Float @float)
+        {
+            @float.NodeMemorySize = Sizes[@float.SemanticalType];
+        }
+
         public override void Visit(Sign sign)
         {
             sign.NodeMemorySize = Sizes[sign.Factor.SemanticalType];

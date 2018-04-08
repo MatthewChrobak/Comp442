@@ -24,12 +24,15 @@ namespace CodeGeneration.Visitors
             InstructionStream.Add(File.ReadAllLines("puts.m").Where(line => line.Trim().Length != 0).ToArray(), "Link the puts library");
         }
 
-        private void Load(Node node, string register)
+        private void Load(Node node, params string[] registers)
         {
-            InstructionStream.Add($"lw {register}, {node.stackOffset}(r14)", $"Loading the value of {node}");
+            for (int i = 0; i < registers.Length; i++) {
+                string register = registers[i];
+                InstructionStream.Add($"lw {register}, {node.stackOffset + i * 4}(r14)", $"Loading the value of {node}");
 
-            if (!node.IsLiteral) {
-                InstructionStream.Add($"lw {register}, 0({register})", $"Pointer detected. Dereferencing {node}");
+                if (!node.IsLiteral) {
+                    InstructionStream.Add($"lw {register}, 0({register})", $"Pointer detected. Dereferencing {node}");
+                }
             }
         }
 
@@ -117,8 +120,61 @@ namespace CodeGeneration.Visitors
             }
         }
 
+        public override void Visit(Float @float)
+        {
+            string floatVal = @float.Value;
+            float realValue;
+            int powerValue;
+
+            // Get the parts.
+            if (floatVal.Contains("e")) {
+                var floatParts = floatVal.Split('e');
+                realValue = float.Parse(floatParts[0]);
+                powerValue = int.Parse(floatParts[1]);
+            } else {
+                realValue = float.Parse(floatVal);
+                powerValue = 0;
+            }
+
+
+            // Convert into the proper format. If we keep things under 1 billion, we can retain 9 digit floats.
+            while (realValue < 100000000) { // 100,000,000
+                realValue *= 10;
+                powerValue -= 1;
+            }
+            while (realValue > 1000000000) { // 1,000,000,000
+                realValue /= 10;
+                powerValue += 1;
+            }
+
+            int firstWord = (int)realValue;
+            int secondWord = powerValue;
+
+
+            // Store the first word.
+            var bytes = BitConverter.GetBytes(firstWord);
+
+            for (int i = 0; i < bytes.Length; i++) {
+                InstructionStream.Add(new string[] {
+                    $"addi r1, r0, {bytes[i]}",
+                    $"sb {@float.stackOffset + i}(r14), r1"
+                }, $"Storing {bytes[i]}");
+            }
+
+            // Store the second word.
+            bytes = BitConverter.GetBytes(secondWord);
+
+            for (int i = 0; i < bytes.Length; i++) {
+                InstructionStream.Add(new string[] {
+                    $"addi r1, r0, {bytes[i]}",
+                    $"sb {@float.stackOffset + i + 4}(r14), r1"
+                }, $"Storing {bytes[i]}");
+            }
+        }
+
         public override void Visit(Sign sign)
         {
+            // This works for floats and ints.
             int factor = sign.SignSymbol == "-" ? -1 : 1;
 
             InstructionStream.Add(new string[] {
@@ -132,13 +188,57 @@ namespace CodeGeneration.Visitors
         {
             string instruction = addOp.Operator == "+" ? "add" : "sub";
 
-            this.Load(addOp.LHS, "r2");
-            this.Load(addOp.RHS, "r3");
+            if (addOp.LHS.SemanticalType == "int") {
+
+                this.Load(addOp.LHS, "r2");
+                this.Load(addOp.RHS, "r3");
+
+                InstructionStream.Add(new string[] {
+                    $"{instruction} r1, r2, r3",
+                    $"sw {addOp.stackOffset}(r14), r1"
+                }, $"Calculating {addOp.ToString()}");
+                return;
+            }
+
+            this.Load(addOp.LHS, "r2", "r3");
+            this.Load(addOp.RHS, "r4", "r5");
 
             InstructionStream.Add(new string[] {
-                $"{instruction} r1, r2, r3",
-                $"sw {addOp.stackOffset}(r14), r1"
-            }, $"Calculating {addOp.ToString()}");
+                $"pas1{GetTag(addOp)}    cgt r1, r3, r5",
+                $"bz r1, pas2{GetTag(addOp)}",
+                "addi r5, r5, 1",
+                "divi r4, r4, 10",
+                $"j pas1{GetTag(addOp)}",
+
+
+                $"pas2{GetTag(addOp)}   cgt r1, r5, r3",
+                $"bz r1, pas3{GetTag(addOp)}",
+                "addi r3, r3, 1",
+                "divi r2, r2, 10",
+                $"j pas2{GetTag(addOp)}",
+
+                $"pas3{GetTag(addOp)}  {instruction} r2, r2, r4",
+
+                "addi r6, r0, 10000",
+                "muli r6, r6, 10000", // Make 100,000,000
+                $"pas4{GetTag(addOp)} clt r1, r2, r6",
+                $"bz pas5{GetTag(addOp)}",
+                "subi, r3, r3, 1",
+                "muli r2, r2, 10",
+                $"j pas4{GetTag(addOp)}",
+
+
+                $"pas5{GetTag(addOp)}    muli r6, r6, 10", // Make 1,000,000,000
+                "cge r1, r2, r6",
+                $"bz pas6{GetTag(addOp)}",
+                "addi, r3, r3, 1",
+                "divi r2, r2, 10",
+                $"j pas5{GetTag(addOp)}",
+
+
+                $"pas6{GetTag(addOp)}   sw {addOp.stackOffset}(r14), r2",
+                $"sw {addOp.stackOffset + 4}(r14), r3"
+            });
         }
 
         public override void Visit(MultOp multOp)
@@ -155,7 +255,7 @@ namespace CodeGeneration.Visitors
         }
 
 
-        public override void PreVisit(Var var)
+        public override void Visit(Var var)
         {
             string lastDatatype = string.Empty;
 
@@ -224,7 +324,7 @@ namespace CodeGeneration.Visitors
                 }
             }
 
-            
+            this.PostVisit(var);
         }
 
         public void SubVisit(FCall fCall)
@@ -285,7 +385,7 @@ namespace CodeGeneration.Visitors
             }
         }
 
-        public override void Visit(Var var)
+        public void PostVisit(Var var)
         {
             InstructionStream.Add($"addi r1, r14, 0", $"Calculating the REAL offset for {var}");
 
@@ -349,6 +449,21 @@ namespace CodeGeneration.Visitors
                     instruction = "cge";
                     break;
             }
+
+            if (relExpr.LHS.SemanticalType == "float") {
+                this.Load(relExpr.LHS, "r1", "r2");
+                this.Load(relExpr.RHS, "r3", "r4");
+
+                InstructionStream.Add(new string[] {
+                    $"ceq r5, r2, r4", // Compare the exponents
+                    $"bne r5, fc_exp", // If they're not equal, make the comparison based off of them. If not, continue
+                    $"fc_real   {instruction} r5, r1, r3",
+                    $"j fc_store",
+                    $"fc_exp    {instruction} r5, r2, r4",
+                    $"fc_store sw {relExpr.stackOffset}(r14), r5", // Store the result of the comparison.
+                });
+            }
+
 
             this.Load(relExpr.LHS, "r2");
             this.Load(relExpr.RHS, "r3");
@@ -445,9 +560,11 @@ namespace CodeGeneration.Visitors
         {
             int thisFrameSize = this.FunctionScope.GetStackFrameSize();
 
+            string putFunction = $"put{putStat.Expression.SemanticalType[0]}_func";
+
             this.LoadAndStore(putStat.Expression, thisFrameSize + 4, putStat.Expression.NodeMemorySize, $"Store the put value of {putStat.Expression}");
             InstructionStream.Add($"addi r14, r14, {thisFrameSize}");
-            InstructionStream.Add($"jl r15, puti_func");
+            InstructionStream.Add($"jl r15, {putFunction}");
             InstructionStream.Add($"subi r14, r14, {thisFrameSize}");
         }
 
@@ -458,11 +575,41 @@ namespace CodeGeneration.Visitors
                 $"lw r5, 0(r5)",
                 $"jl r15, geti_func"
             });
+
+            if (getStat.Variable.SemanticalType == "float") {
+                InstructionStream.Add(new string[] {
+                    $"addi r5, r14, {getStat.Variable.stackOffset + 4}",
+                    $"lw r5, 0(r5)",
+                    $"jl r15, geti_func"
+                });
+
+                InstructionStream.Add(new string[] {
+                    $"addi r5, r14, {getStat.Variable.stackOffset}",
+                    $"lw r6, 0(r5)",
+                    $"lw r7, 4(r5)",
+                    "addi r8, r0, 10000",
+                    "muli r8, r8, 10000",
+                    "muli r8, r8, 10",
+                    $"check_less_than{getStat.Location.column}_{getStat.Location.line}   cle r1, r6, r8",
+                    $"bz r1, check_greater_then{getStat.Location.column}_{getStat.Location.line}",
+                    $"muli r6, r6, 10",
+                    $"subi r7, r7, 1",
+                    $"j check_less_than{getStat.Location.column}_{getStat.Location.line}",
+                    $"check_greater_then{getStat.Location.column}_{getStat.Location.line}   sw 0(r5), r6",
+                    "sw 4(r5), r7"
+                });
+            }
         }
 
         public override void Visit(AssignStat assignStat)
         {
             this.LoadAndStore(assignStat.ExpressionValue, assignStat.Variable, assignStat.ExpressionValue.NodeMemorySize, $"{assignStat}");
+        }
+
+
+        private string GetTag(Node node)
+        {
+            return $"{node.Location.column}_{node.Location.line}";
         }
     }
 }
