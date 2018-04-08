@@ -138,11 +138,11 @@ namespace CodeGeneration.Visitors
 
 
             // Convert into the proper format. If we keep things under 1 billion, we can retain 9 digit floats.
-            while (realValue < 100000000) { // 100,000,000
+            while (realValue < 100000000 || realValue < -100000000) { // 100,000,000
                 realValue *= 10;
                 powerValue -= 1;
             }
-            while (realValue > 1000000000) { // 1,000,000,000
+            while (realValue >= 1000000000 || realValue < -1000000000) { // 1,000,000,000
                 realValue /= 10;
                 powerValue += 1;
             }
@@ -182,13 +182,20 @@ namespace CodeGeneration.Visitors
                 $"muli r2, r2, {factor}",
                 $"sw {sign.stackOffset}(r14), r2"
             }, $"Calculating {sign}");
+
+            if (sign.SemanticalType == "float") {
+                InstructionStream.Add(new string[] {
+                    $"lw r2, {sign.Factor.stackOffset + 4}(r14)",
+                    $"sw {sign.stackOffset + 4}(r14), r2"
+                }, $"Calculating {sign}");
+            }
         }
 
         public override void Visit(AddOp addOp)
         {
             string instruction = addOp.Operator == "+" ? "add" : "sub";
 
-            if (addOp.LHS.SemanticalType == "int") {
+            if (addOp.SemanticalType == "int") {
 
                 this.Load(addOp.LHS, "r2");
                 this.Load(addOp.RHS, "r3");
@@ -220,7 +227,12 @@ namespace CodeGeneration.Visitors
                 $"pas3{GetTag(addOp)}  {instruction} r2, r2, r4     % Perform {addOp}",
 
                 "addi r6, r0, 10000     % Make 100,000,000",
-                "muli r6, r6, 10000", 
+                "muli r6, r6, 10000",
+
+                "cgei r7, r2, 0         % If we're dealing with a positive number, store the sign.",
+                $"bnz r7, pas4{GetTag(addOp)}",
+                $"addi r7, r0, -1       % Otherwise, it's negative. Store the sign.",
+                $"muli r2, r2, -1       % Also make r2 positive for now.",
 
                 $"pas4{GetTag(addOp)} clt r1, r2, r6        % While realval < 100,000",
                 $"bz r1, pas5{GetTag(addOp)}",
@@ -242,23 +254,92 @@ namespace CodeGeneration.Visitors
                 "divi r2, r2, 10",
                 $"j pas6{GetTag(addOp)}",
 
+                $"pas7{GetTag(addOp)}   mul r2, r2, r7     % Apply the sign.",
 
-                $"pas7{GetTag(addOp)}   sw {addOp.stackOffset}(r14), r2     % Store the new float val",
+                $"sw {addOp.stackOffset}(r14), r2     % Store the new float val",
                 $"sw {addOp.stackOffset + 4}(r14), r3"
-            });
+            }, $"Calculating {addOp}");
         }
 
         public override void Visit(MultOp multOp)
         {
             string instruction = multOp.Operator == "*" ? "mul" : "div";
+            string floatPowerInstruction = instruction == "mul" ? "add" : "sub";
 
-            this.Load(multOp.LHS, "r2");
-            this.Load(multOp.RHS, "r3");
+            if (multOp.SemanticalType == "int") {
+
+                this.Load(multOp.LHS, "r2");
+                this.Load(multOp.RHS, "r3");
+
+                InstructionStream.Add(new string[] {
+                    $"{instruction} r1, r2, r3",
+                    $"sw {multOp.stackOffset}(r14), r1"
+                }, $"Calculating {multOp.ToString()}");
+                return;
+            }
+
+            this.Load(multOp.LHS, "r2", "r3");
+            this.Load(multOp.RHS, "r4", "r5");
 
             InstructionStream.Add(new string[] {
-                $"{instruction} r1, r2, r3",
-                $"sw {multOp.stackOffset}(r14), r1"
-            }, $"Calculating {multOp.ToString()}");
+                $"pas1{GetTag(multOp)}    cgt r1, r3, r5     % While r3 > r5, shift it until they're equal",
+                $"bz r1, pas2{GetTag(multOp)}    % Otherwise, continue.",
+                "addi r5, r5, 1",
+                "divi r4, r4, 10",
+                $"j pas1{GetTag(multOp)}",
+
+
+                $"pas2{GetTag(multOp)}   cgt r1, r5, r3      % While r5 > r3, shift it until they're equal",
+                $"bz r1, pas3{GetTag(multOp)}    % Otherwise, continue.",
+                "addi r3, r3, 1",
+                "divi r2, r2, 10",
+                $"j pas2{GetTag(multOp)}",
+
+
+                $"pas3{GetTag(multOp)}   divi r2, r2, 10000      % Make sure it's in the right for for performing multiplication",
+                $"addi r3, r3, 4",
+                $"divi r4, r4, 10000",
+                $"addi r5, r5, 4",
+                $"{floatPowerInstruction} r3, r3, r5",
+
+
+
+                $"{instruction} r2, r2, r4     % Perform {multOp}",
+
+                "addi r6, r0, 10000     % Make 100,000,000",
+                "muli r6, r6, 10000",
+
+                "cgei r7, r2, 0         % If we're dealing with a positive number, store the sign.",
+                $"bnz r7, pas4{GetTag(multOp)}",
+                $"addi r7, r0, -1       % Otherwise, it's negative. Store the sign.",
+                $"muli r2, r2, -1       % Also make r2 positive for now.",
+    
+                $"pas4{GetTag(multOp)} clt r1, r2, r6        % While realval < 100,000",
+                $"bz r1, pas5{GetTag(multOp)}",
+                "ceqi r1, r2, 0     % And also not 0",
+                $"bnz r1, pas5{GetTag(multOp)}",
+                "subi r3, r3, 1     % Shift it.",
+                "muli r2, r2, 10",
+                $"j pas4{GetTag(multOp)}",
+
+
+                $"pas5{GetTag(multOp)}    muli r6, r6, 10    % Make 1,000,000,000",
+
+
+                $"pas6{GetTag(multOp)}    cge r1, r2, r6     % While realval >= 1,000,000,000",
+                $"bz r1, pas7{GetTag(multOp)}",
+                "ceqi r1, r2, 0     % And also not 0",
+                $"bnz r1, pas7{GetTag(multOp)}",
+                "addi r3, r3, 1     % Shift it.",
+                "divi r2, r2, 10",
+                $"j pas6{GetTag(multOp)}",
+
+                $"pas7{GetTag(multOp)}   mul r2, r2, r7     % Apply the sign.",
+
+
+                $"sw {multOp.stackOffset}(r14), r2     % Store the new float val",
+                $"sw {multOp.stackOffset + 4}(r14), r3"
+            }, $"Calculating {multOp}");
         }
 
 
@@ -458,16 +539,23 @@ namespace CodeGeneration.Visitors
             }
 
             if (relExpr.LHS.SemanticalType == "float") {
-                this.Load(relExpr.LHS, "r1", "r2");
-                this.Load(relExpr.RHS, "r3", "r4");
+                this.Load(relExpr.LHS, "r2", "r3");
+                this.Load(relExpr.RHS, "r4", "r5");
 
                 InstructionStream.Add(new string[] {
-                    $"ceq r5, r2, r4", // Compare the exponents
-                    $"bne r5, fc_exp", // If they're not equal, make the comparison based off of them. If not, continue
-                    $"fc_real   {instruction} r5, r1, r3",
-                    $"j fc_store",
-                    $"fc_exp    {instruction} r5, r2, r4",
-                    $"fc_store sw {relExpr.stackOffset}(r14), r5", // Store the result of the comparison.
+                    $"pas1{GetTag(relExpr)}    cgt r1, r3, r5     % While r3 > r5, shift it until they're equal",
+                    $"bz r1, pas2{GetTag(relExpr)}    % Otherwise, continue.",
+                    "addi r5, r5, 1",
+                    "divi r4, r4, 10",
+                    $"j pas1{GetTag(relExpr)}",
+
+
+                    $"pas2{GetTag(relExpr)}   cgt r1, r5, r3      % While r5 > r3, shift it until they're equal",
+                    $"bz r1, pas3{GetTag(relExpr)}    % Otherwise, continue.",
+                    "addi r3, r3, 1",
+                    "divi r2, r2, 10",
+                    $"j pas2{GetTag(relExpr)}",
+                    $"pas3{GetTag(relExpr)}     add r3, r0, r4    % Put everything into r2 and r3 registers"
                 });
             }
 
@@ -588,22 +676,6 @@ namespace CodeGeneration.Visitors
                     $"addi r5, r14, {getStat.Variable.stackOffset + 4}",
                     $"lw r5, 0(r5)",
                     $"jl r15, geti_func"
-                });
-
-                InstructionStream.Add(new string[] {
-                    $"addi r5, r14, {getStat.Variable.stackOffset}",
-                    $"lw r6, 0(r5)",
-                    $"lw r7, 4(r5)",
-                    "addi r8, r0, 10000",
-                    "muli r8, r8, 10000",
-                    "muli r8, r8, 10",
-                    $"check_less_than{getStat.Location.column}_{getStat.Location.line}   cle r1, r6, r8",
-                    $"bz r1, check_greater_then{getStat.Location.column}_{getStat.Location.line}",
-                    $"muli r6, r6, 10",
-                    $"subi r7, r7, 1",
-                    $"j check_less_than{getStat.Location.column}_{getStat.Location.line}",
-                    $"check_greater_then{getStat.Location.column}_{getStat.Location.line}   sw 0(r5), r6",
-                    "sw 4(r5), r7"
                 });
             }
         }
