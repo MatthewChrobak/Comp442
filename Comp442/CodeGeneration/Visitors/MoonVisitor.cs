@@ -204,39 +204,46 @@ namespace CodeGeneration.Visitors
             this.Load(addOp.RHS, "r4", "r5");
 
             InstructionStream.Add(new string[] {
-                $"pas1{GetTag(addOp)}    cgt r1, r3, r5",
-                $"bz r1, pas2{GetTag(addOp)}",
+                $"pas1{GetTag(addOp)}    cgt r1, r3, r5     % While r3 > r5, shift it until they're equal",
+                $"bz r1, pas2{GetTag(addOp)}    % Otherwise, continue.",
                 "addi r5, r5, 1",
                 "divi r4, r4, 10",
                 $"j pas1{GetTag(addOp)}",
 
 
-                $"pas2{GetTag(addOp)}   cgt r1, r5, r3",
-                $"bz r1, pas3{GetTag(addOp)}",
+                $"pas2{GetTag(addOp)}   cgt r1, r5, r3      % While r5 > r3, shift it until they're equal",
+                $"bz r1, pas3{GetTag(addOp)}    % Otherwise, continue.",
                 "addi r3, r3, 1",
                 "divi r2, r2, 10",
                 $"j pas2{GetTag(addOp)}",
 
-                $"pas3{GetTag(addOp)}  {instruction} r2, r2, r4",
+                $"pas3{GetTag(addOp)}  {instruction} r2, r2, r4     % Perform {addOp}",
 
-                "addi r6, r0, 10000",
-                "muli r6, r6, 10000", // Make 100,000,000
-                $"pas4{GetTag(addOp)} clt r1, r2, r6",
-                $"bz pas5{GetTag(addOp)}",
-                "subi, r3, r3, 1",
+                "addi r6, r0, 10000     % Make 100,000,000",
+                "muli r6, r6, 10000", 
+
+                $"pas4{GetTag(addOp)} clt r1, r2, r6        % While realval < 100,000",
+                $"bz r1, pas5{GetTag(addOp)}",
+                "ceqi r1, r2, 0     % And also not 0",
+                $"bnz r1, pas5{GetTag(addOp)}",
+                "subi r3, r3, 1     % Shift it.",
                 "muli r2, r2, 10",
                 $"j pas4{GetTag(addOp)}",
 
 
-                $"pas5{GetTag(addOp)}    muli r6, r6, 10", // Make 1,000,000,000
-                "cge r1, r2, r6",
-                $"bz pas6{GetTag(addOp)}",
-                "addi, r3, r3, 1",
+                $"pas5{GetTag(addOp)}    muli r6, r6, 10    % Make 1,000,000,000",
+
+
+                $"pas6{GetTag(addOp)}    cge r1, r2, r6     % While realval >= 1,000,000,000",
+                $"bz r1, pas7{GetTag(addOp)}",
+                "ceqi r1, r2, 0     % And also not 0",
+                $"bnz r1, pas7{GetTag(addOp)}",
+                "addi r3, r3, 1     % Shift it.",
                 "divi r2, r2, 10",
-                $"j pas5{GetTag(addOp)}",
+                $"j pas6{GetTag(addOp)}",
 
 
-                $"pas6{GetTag(addOp)}   sw {addOp.stackOffset}(r14), r2",
+                $"pas7{GetTag(addOp)}   sw {addOp.stackOffset}(r14), r2     % Store the new float val",
                 $"sw {addOp.stackOffset + 4}(r14), r3"
             });
         }
