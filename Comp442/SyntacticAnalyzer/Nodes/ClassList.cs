@@ -11,6 +11,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement("Class")]
         public List<ClassDecl> Classes { get; set; } = new List<ClassDecl>();
 
+        // Just used for serialization.
+        public ClassList() : base((-1, -1))
+        {
+
+        }
+
         public ClassList((int, int) location) : base(location)
         {
         }

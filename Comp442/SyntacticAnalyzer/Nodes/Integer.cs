@@ -8,6 +8,12 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Value { set; get; }
 
+        // Just used for serialization.
+        public Integer() : base((-1, -1))
+        {
+
+        }
+
         public Integer((int, int) location) : base(location)
         {
             this.SemanticalType = "int";

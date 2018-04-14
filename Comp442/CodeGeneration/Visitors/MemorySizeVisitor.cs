@@ -48,7 +48,7 @@ namespace CodeGeneration.Visitors
                     foreach (var entry in @class.Link.GetAll(Classification.Variable)) {
 
                         // Is the memory size already calculated?
-                        if (entry.EntryMemorySize != -1) {
+                        if (entry.EntryMemorySize >= 0) {
                             size += entry.EntryMemorySize;
                             continue;
                         }

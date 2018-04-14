@@ -1,11 +1,8 @@
 ﻿using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeGeneration.Visitors
 {
@@ -193,7 +190,19 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(AddOp addOp)
         {
-            string instruction = addOp.Operator == "+" ? "add" : "sub";
+            string instruction = string.Empty;
+
+            switch (addOp.Operator) {
+                case "+":
+                    instruction = "add";
+                    break;
+                case "-":
+                    instruction = "sub";
+                    break;
+                case "or":
+                    instruction = "or";
+                    break;
+            }
 
             if (addOp.SemanticalType == "int") {
 
@@ -263,7 +272,20 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(MultOp multOp)
         {
-            string instruction = multOp.Operator == "*" ? "mul" : "div";
+            string instruction = string.Empty;
+
+            switch (multOp.Operator) {
+                case "*":
+                    instruction = "mul";
+                    break;
+                case "/":
+                    instruction = "div";
+                    break;
+                case "and":
+                    instruction = "and";
+                    break;
+            }
+
             string floatPowerInstruction = instruction == "mul" ? "add" : "sub";
 
             if (multOp.SemanticalType == "int") {
@@ -655,7 +677,12 @@ namespace CodeGeneration.Visitors
         {
             int thisFrameSize = this.FunctionScope.GetStackFrameSize();
 
-            string putFunction = $"put{putStat.Expression.SemanticalType[0]}_func";
+            char putFunctionChar = 'i';
+            if (putStat.Expression.SemanticalType == "float") {
+                putFunctionChar = 'f';
+            }
+
+            string putFunction = $"put{putFunctionChar}_func";
 
             this.LoadAndStore(putStat.Expression, thisFrameSize + 4, putStat.Expression.NodeMemorySize, $"Store the put value of {putStat.Expression}");
             InstructionStream.Add($"addi r14, r14, {thisFrameSize}");

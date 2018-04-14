@@ -29,6 +29,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public Node RHS { get; set; } // arithExpr
 
+        // Just used for serialization.
+        public RelExpr() : base((-1, -1))
+        {
+
+        }
+
         public RelExpr((int, int) location) : base(location)
         {
             this.IsLiteral = true;

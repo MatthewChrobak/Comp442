@@ -6,6 +6,12 @@ namespace SyntacticAnalyzer.Nodes
     [Serializable]
     public class MainStatBlock : StatBlock, IVisitable
     {
+        // Just used for serialization.
+        public MainStatBlock() : base((-1, -1))
+        {
+
+        }
+
         public MainStatBlock(StatBlock originalStatBlock) : base(originalStatBlock == null ? (0, 0) : originalStatBlock.Location)
         {
             this.Statements = originalStatBlock?.Statements;

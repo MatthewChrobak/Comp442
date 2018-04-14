@@ -8,6 +8,10 @@ namespace SemanticalAnalyzer
     {
         public IEnumerable<Section> GetReportSections(string inputFileName)
         {
+            if (this.AST == null) {
+                yield break;
+            }
+
             var section = new Section("Symbol Table");
             section.AddRow("Variable declaration in for-loops is handled in a more dynamic way at traversal time and will not appear in these symbol tables. <hr>");
 

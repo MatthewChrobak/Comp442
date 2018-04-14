@@ -6,19 +6,16 @@ namespace CodeGeneration
 {
     public partial class CodeGenerator : IReportable
     {
-
-
         public IEnumerable<Section> GetReportSections(string inputFileName)
         {
-            if (this.AST == null) {
+            if (this.Table == null) {
                 yield break;
             }
 
-            var section = new Section("Symbol Table");
-            section.AddRow("Variable declaration in for-loops is handled in a more dynamic way at traversal time and will not appear in these symbol tables. <hr>");
+            var section = new Section("Post-Code Generation Symbol Table");
 
 
-            var globalScope = this.AST.Table;
+            var globalScope = this.Table;
 
 
             section.AddRowStart();

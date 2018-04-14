@@ -18,6 +18,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public Node Expression { get; set; } // resolves to expr
 
+        // Just used for serialization.
+        public PutStat() : base((-1, -1))
+        {
+
+        }
+
         public PutStat((int, int) location) : base(location)
         {
         }

@@ -28,6 +28,12 @@ namespace SyntacticAnalyzer.Nodes
         public AssignStat Update { get; set; }
         public StatBlock LoopBlock { get; set; }
 
+        // Just used for serialization.
+        public ForStat() : base((-1, -1))
+        {
+
+        }
+
         public ForStat((int, int) location) : base(location)
         {
         }

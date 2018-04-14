@@ -13,6 +13,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public int MemberMemorySize { get; set; }
 
+        // Just used for serialization.
+        public FCall() : base((-1, -1))
+        {
+
+        }
+
         public FCall((int, int) location) : base(location)
         {
             this.IsLiteral = true;

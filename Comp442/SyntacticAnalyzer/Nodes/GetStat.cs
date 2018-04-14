@@ -8,6 +8,12 @@ namespace SyntacticAnalyzer.Nodes
     {
         public Var Variable { get; set; }
 
+        // Just used for serialization.
+        public GetStat() : base((-1, -1))
+        {
+
+        }
+
         public GetStat((int, int) location) : base(location)
         {
         }

@@ -18,6 +18,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "SignFactor")] // factor
         public Node Factor { get; set; } // factor
 
+        // Just used for serialization.
+        public Not() : base((-1, -1))
+        {
+
+        }
+
         public Not((int, int) location) : base(location)
         {
             this.IsLiteral = true;

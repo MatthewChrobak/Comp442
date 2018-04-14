@@ -8,6 +8,12 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string ID { get; set; }
 
+        // Just used for serialization.
+        public ScopeSpec() : base((-1, -1))
+        {
+
+        }
+
         public ScopeSpec((int, int) location) : base(location)
         {
         }

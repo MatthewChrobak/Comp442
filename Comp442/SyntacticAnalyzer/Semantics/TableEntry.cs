@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SyntacticAnalyzer.Semantics
 {
@@ -21,6 +22,17 @@ namespace SyntacticAnalyzer.Semantics
         public override string ToString()
         {
             return $"{this.ID}-{this.Classification}";
+        }
+
+        public TableEntry Copy()
+        {
+            var newTableEntry = new TableEntry(this.ID, this.Classification, this.EntryMemorySize);
+
+            newTableEntry.Link = this.Link?.Copy();
+            newTableEntry.Type = this.Type;
+            newTableEntry.MaxSizeDimensions = new List<int>(this.MaxSizeDimensions);
+
+            return newTableEntry;
         }
     }
 }

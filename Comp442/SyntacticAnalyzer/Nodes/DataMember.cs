@@ -14,9 +14,14 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public int baseOffset { get; set; }
 
-
         [XmlIgnore]
         public List<int> MaxSizeDimensions { get; set; }
+
+        // Just used for serialization.
+        public DataMember() : base((-1, -1))
+        {
+
+        }
 
         public DataMember((int, int) location) : base(location)
         {

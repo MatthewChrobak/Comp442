@@ -20,6 +20,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public TableEntry Entry { get; set; }
 
+        // Just used for serialization.
+        public FuncDef() : base((-1, -1))
+        {
+
+        }
+
         public FuncDef((int, int) location) : base(location)
         {
         }

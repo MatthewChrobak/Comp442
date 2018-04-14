@@ -19,6 +19,19 @@ namespace SyntacticAnalyzer.Semantics
             this.Add(new TableEntry(id, Classification.SubCalculationStackSpace, size), (0, 0));
         }
 
+        public SymbolTable Copy()
+        {
+            var newSymbolTable = new SymbolTable();
+
+            if (this._entries.Count != 0) {
+                foreach (var element in this.GetAll()) {
+                    newSymbolTable.Add(element.Copy(), (0, 0));
+                }
+            }
+
+            return newSymbolTable;
+        }
+
         public void Add(TableEntry value, (int, int) location, bool overrideEntry = false)
         {
             if (value == null) {

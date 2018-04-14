@@ -10,6 +10,12 @@ namespace SyntacticAnalyzer.Nodes
     {
         public List<string> IDs { get; set; } = new List<string>();
 
+        // Just used for serialization.
+        public InherList() : base((-1, -1))
+        {
+
+        }
+
         public InherList((int, int) location) : base(location)
         {
         }

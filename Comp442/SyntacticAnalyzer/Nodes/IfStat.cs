@@ -20,6 +20,12 @@ namespace SyntacticAnalyzer.Nodes
         public StatBlock TrueBlock { get; set; }
         public StatBlock ElseBlock { get; set; }
 
+        // Just used for serialization.
+        public IfStat() : base((-1, -1))
+        {
+
+        }
+
         public IfStat((int, int) location) : base(location)
         {
         }

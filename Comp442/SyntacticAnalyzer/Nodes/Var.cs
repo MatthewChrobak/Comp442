@@ -13,6 +13,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type:typeof(FCall), elementName:"FunctionCall")]
         public List<Node> Elements { get; set; } = new List<Node>();
 
+        // Just used for serialization.
+        public Var() : base((-1, -1))
+        {
+
+        }
+
         public Var((int, int) location) : base(location)
         {
         }

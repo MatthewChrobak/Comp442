@@ -12,6 +12,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement("Function")]
         public List<FuncDef> Functions { get; set; } = new List<FuncDef>();
 
+        // Just used for serialization.
+        public FuncDefList() : base((-1, -1))
+        {
+
+        }
+
         public FuncDefList((int, int) location) : base(location)
         {
         }

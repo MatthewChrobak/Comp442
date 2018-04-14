@@ -31,6 +31,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlElement(type: typeof(Sign), elementName: "RightSignFactor")] // factor
         public Node RHS { get; set; }
 
+        // Just used for serialization.
+        public AddOp() : base((-1, -1))
+        {
+
+        }
+
         public AddOp((int, int) location) : base(location)
         {
             this.IsLiteral = true;

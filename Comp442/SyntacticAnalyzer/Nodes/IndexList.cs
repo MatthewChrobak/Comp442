@@ -13,12 +13,18 @@ namespace SyntacticAnalyzer.Nodes
         [XmlArrayItem(type: typeof(RelExpr), elementName: "RelationalExpression")] // expr
         [XmlArrayItem(type: typeof(MultOp), elementName: "MultOp")] // term
         [XmlArrayItem(type: typeof(Var), elementName: "Variable")] // factor
-        [XmlElement(type: typeof(Integer), elementName: "Integer")] // factor
-        [XmlElement(type: typeof(Float), elementName: "Float")] // factor
+        [XmlArrayItem(type: typeof(Integer), elementName: "Integer")] // factor
+        [XmlArrayItem(type: typeof(Float), elementName: "Float")] // factor
         [XmlArrayItem(type: typeof(FCall), elementName: "FunctionCall")] // factor
         [XmlArrayItem(type: typeof(Not), elementName: "NotFactor")] // factor
         [XmlArrayItem(type: typeof(Sign), elementName: "SignFactor")] // factor
         public List<Node> Expressions { get; set; } = new List<Node>();
+
+        // Just used for serialization.
+        public IndexList() : base((-1, -1))
+        {
+
+        }
 
         public IndexList((int, int) location) : base(location)
         {

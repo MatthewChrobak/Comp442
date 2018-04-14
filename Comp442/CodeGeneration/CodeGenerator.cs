@@ -1,12 +1,13 @@
 ﻿using CodeGeneration.Visitors;
 using Errors;
 using SyntacticAnalyzer.Nodes;
+using SyntacticAnalyzer.Semantics;
 
 namespace CodeGeneration
 {
     public partial class CodeGenerator
     {
-        private Program AST;
+        private SymbolTable Table;
 
         public void Generate(Program ast)
         {
@@ -15,16 +16,16 @@ namespace CodeGeneration
                 return;
             }
 
-            this.AST = ast;
+            this.Table = ast.Table.Copy();
 
             // Generate the code.
-            var memVisitor = new MemorySizeVisitor(this.AST.Table);
+            var memVisitor = new MemorySizeVisitor(this.Table);
             ast.Accept(memVisitor);
 
-            var stackVisitor = new StackIncreaserVisitor(this.AST.Table);
+            var stackVisitor = new StackIncreaserVisitor(this.Table);
             ast.Accept(stackVisitor);
 
-            var moonVisitor = new MoonVisitor(this.AST.Table);
+            var moonVisitor = new MoonVisitor(this.Table);
             ast.Accept(moonVisitor);
         }
     }

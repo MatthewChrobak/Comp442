@@ -19,6 +19,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public SymbolTable Table { get; set; }
 
+        // Just used for serialization.
+        public FuncDecl() : base((-1, -1))
+        {
+
+        }
+
         public FuncDecl((int, int) location) : base(location)
         {
         }

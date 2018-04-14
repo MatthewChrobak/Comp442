@@ -9,6 +9,12 @@ namespace SyntacticAnalyzer.Nodes
     {
         public string Value { get; set; }
 
+        // Just used for serialization.
+        public Float() : base((-1, -1))
+        {
+
+        }
+
         public Float((int, int) location) : base(location)
         {
             this.SemanticalType = "float";

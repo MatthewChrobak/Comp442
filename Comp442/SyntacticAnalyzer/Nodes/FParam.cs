@@ -18,6 +18,12 @@ namespace SyntacticAnalyzer.Nodes
         [XmlIgnore]
         public List<int> MaxSizeDimensions { get; set; }
 
+        // Just used for serialization.
+        public FParam() : base((-1, -1))
+        {
+
+        }
+
         public FParam((int, int) location) : base(location)
         {
         }

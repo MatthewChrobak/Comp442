@@ -22,6 +22,8 @@ namespace Assignment4
                     continue;
                 }
 
+                var report = new Report();
+
                 // Parse the program.
                 var parser = new Parser(File.ReadAllLines(file));
                 parser.Parse();
@@ -29,6 +31,7 @@ namespace Assignment4
                 // Apply the semantics.
                 var semantics = new LanguageSemantics();
                 semantics.Apply(parser.AbstractSyntaxTree);
+                
 
                 // Generate the code.
                 var codeGen = new CodeGenerator();
@@ -36,10 +39,11 @@ namespace Assignment4
                     codeGen.Generate(parser.AbstractSyntaxTree);
                 }
 
-                var report = new Report();
-                Console.Write("Generating report... ");
                 report.Sections.AddRange(parser.GetReportSections(file));
+                report.Sections.AddRange(semantics.GetReportSections(file));
                 report.Sections.AddRange(codeGen.GetReportSections(file));
+
+
                 File.WriteAllText(file + ".html", report.GenerateReport());
                 Console.WriteLine("Done.");
 

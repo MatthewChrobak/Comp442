@@ -56,42 +56,39 @@ namespace SyntacticAnalyzer.Parser
 
 
             using (var fs = new FileStream(inputFileName + ".xml", FileMode.Create)) {
-                try {
-                    var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
-                        typeof(AddOp),
-                        typeof(Nodes.AParams),
-                        typeof(AssignStat),
-                        typeof(ClassDecl),
-                        typeof(ClassList),
-                        typeof(DataMember),
-                        typeof(FCall),
-                        typeof(ForStat),
-                        typeof(FParam),
-                        typeof(FuncDecl),
-                        typeof(FuncDef),
-                        typeof(FuncDefList),
-                        typeof(GetStat),
-                        typeof(IfStat),
-                        typeof(IndexList),
-                        typeof(InherList),
-                        typeof(MultOp),
-                        typeof(Not),
-                        typeof(PutStat),
-                        typeof(RelExpr),
-                        typeof(ReturnStat),
-                        typeof(ScopeSpec),
-                        typeof(Sign),
-                        typeof(StatBlock),
-                        typeof(MainStatBlock),
-                        typeof(Var),
-                        typeof(VarDecl),
-                        typeof(Integer),
-                        typeof(Float)
-                    });
-                    serializer.Serialize(fs, this.AbstractSyntaxTree);
-                } catch (Exception e) {
-
-                }
+                var serializer = new XmlSerializer(typeof(Program), new System.Type[] {
+                    typeof(AddOp),
+                    typeof(Nodes.AParams),
+                    typeof(AssignStat),
+                    typeof(ClassDecl),
+                    typeof(ClassList),
+                    typeof(DataMember),
+                    typeof(FCall),
+                    typeof(ForStat),
+                    typeof(FParam),
+                    typeof(FuncDecl),
+                    typeof(FuncDef),
+                    typeof(FuncDefList),
+                    typeof(GetStat),
+                    typeof(IfStat),
+                    typeof(IndexList),
+                    typeof(InherList),
+                    typeof(MultOp),
+                    typeof(Not),
+                    typeof(PutStat),
+                    typeof(RelExpr),
+                    typeof(ReturnStat),
+                    typeof(ScopeSpec),
+                    typeof(Sign),
+                    typeof(StatBlock),
+                    typeof(MainStatBlock),
+                    typeof(Var),
+                    typeof(VarDecl),
+                    typeof(Integer),
+                    typeof(Float)
+                });
+                serializer.Serialize(fs, this.AbstractSyntaxTree);
+                
             }
 
         var astSection = new Section("Abstract Syntax Tree");
