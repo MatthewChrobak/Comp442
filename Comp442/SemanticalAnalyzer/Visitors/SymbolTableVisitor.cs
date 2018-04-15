@@ -45,13 +45,20 @@ namespace SemanticalAnalyzer.Visitors
                         Link = variable.Table,
                         Type = variable.Type + "[]".Repeat(variable.Dimensions.Count)
                     }, variable.Location);
+
+                    var varEntry = classTable.Get(variable.Id, Classification.Variable);
+                    foreach (var dim in variable.Dimensions) {
+                        varEntry.MaxSizeDimensions.Add(int.Parse(dim.Value));
+                    }
+
                     continue;
                 }
                 if (entry as FuncDecl != null) {
                     var func = entry as FuncDecl;
                     classTable.Add(new TableEntry(func.Id, Classification.Function, -1) {
                         Link = func.Table,
-                        Type = func.Type + "-" + string.Join(",", func.Parameters.Where(val => val.Id != string.Empty).Select(val => val.Type + "[]".Repeat(val.Dimensions.Count)))
+                        Type = func.Type + "-" + string.Join(",", func.Parameters.Where(val => val.Id != string.Empty).Select(val => val.Type + "[]".Repeat(val.Dimensions.Count))),
+                        OriginalFunctionOwner = classDecl.ClassName
                     }, func.Location);
                     continue;
                 }

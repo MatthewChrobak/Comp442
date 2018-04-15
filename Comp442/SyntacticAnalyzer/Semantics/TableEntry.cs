@@ -11,6 +11,7 @@ namespace SyntacticAnalyzer.Semantics
         public string Type { get; set; }
         public int EntryMemorySize { get; set; }
         public List<int> MaxSizeDimensions { get; set; } = new List<int>();
+        public string OriginalFunctionOwner { get; set; }
 
         public TableEntry(string id, Classification type, int size)
         {
@@ -31,6 +32,7 @@ namespace SyntacticAnalyzer.Semantics
             newTableEntry.Link = this.Link?.Copy();
             newTableEntry.Type = this.Type;
             newTableEntry.MaxSizeDimensions = new List<int>(this.MaxSizeDimensions);
+            newTableEntry.OriginalFunctionOwner = this.OriginalFunctionOwner;
 
             return newTableEntry;
         }

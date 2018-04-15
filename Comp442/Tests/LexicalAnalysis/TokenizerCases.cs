@@ -121,6 +121,11 @@ namespace Tests.LexicalAnalysis
             });
             Test("//EOF", TokenType.Comment);
             Test("/*EOF", TokenType.Comment);
+            Test("y = 10.0e+10", new TokenType[] {
+                TokenType.Identifier,
+                TokenType.AssignmentOperator,
+                TokenType.Float
+            });
         }
     }
 }

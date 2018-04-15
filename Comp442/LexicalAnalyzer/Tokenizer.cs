@@ -120,7 +120,7 @@ namespace LexicalAnalyzer
                             } while (symbol == '0');
 
                             // Did we see a non-digit? 
-                            if (!symbol.IsNonZero()) {
+                            if (!symbol.IsNonZero() && symbol != 'e') {
                                 if (this.OutputToErrorList) {
                                     ErrorManager.Add($"Invalid float in float sequence: '{symbol}'", (startLine, scanner.CursorPosition.characterNumber));
                                 }

@@ -441,19 +441,27 @@ namespace CodeGeneration.Visitors
         public void SubVisit(FCall fCall)
         {
             int stackFrameSize = this.FunctionScope.GetStackFrameSize();
-            var scope = this.GlobalScope.Get(fCall.Id, Classification.Function).Link;
+            var scope = this.GlobalScope.Get(fCall.Id, Classification.Function)?.Link;
+
+            if (scope == null) {
+                string inheritedClass = fCall.Id.Split(':')[0];
+                string functionName = fCall.Id.Split(':').Last();
+
+                scope = this.GlobalScope.Get(inheritedClass, Classification.Class)?.Link;
+                var functionEntry = scope.Get(functionName, Classification.Function);
+
+                string newLink = $"{functionEntry.OriginalFunctionOwner}::{functionName}";
+                scope = this.GlobalScope.Get(newLink, Classification.Function).Link;
+                fCall.Id = newLink;
+            }
+
             int paramOffset = stackFrameSize + 4 + scope.Get("retval", Classification.SubCalculationStackSpace).EntryMemorySize;
 
             foreach (var expression in fCall.Parameters.Expressions) {
                 this.LoadAndStore(expression, paramOffset, expression.NodeMemorySize, $"Passing parameter {expression}");
                 paramOffset += expression.NodeMemorySize;
             }
-
-            // PASS THE "THIS" VALUE??
-            // Whatever's in R7 is what we're calling from.
             
-
-
             InstructionStream.Add($"addi r14, r14, {stackFrameSize}");
             InstructionStream.Add($"jl r15, function_{fCall.Id.Replace(':', '_')}", $"Call the function {fCall.Id}");
             InstructionStream.Add($"subi r14, r14, {stackFrameSize}");

@@ -1,4 +1,5 @@
-﻿using SyntacticAnalyzer.Nodes;
+﻿using Errors;
+using SyntacticAnalyzer.Nodes;
 using SyntacticAnalyzer.Semantics;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace CodeGeneration.Visitors
         private SymbolTable GlobalScope;
         private SymbolTable FunctionScope;
         private SymbolTable ClassInstanceScope;
+        private bool DoneClassList = false;
 
         public MemorySizeVisitor(SymbolTable globalScope)
         {
@@ -84,9 +86,12 @@ namespace CodeGeneration.Visitors
 
             foreach (var entry in GlobalScope.GetAll(Classification.Class)) {
                 if (entry.EntryMemorySize == -1) {
+                    ErrorManager.Add($"The size of the class {entry.ID} could not be established.", (0, 0));
                     Sizes.Add(entry.ID, -1);
                 }
             }
+
+            this.DoneClassList = true;
         }
 
 
@@ -200,6 +205,10 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(FParam fParam)
         {
+            if (!this.DoneClassList) {
+                return;
+            }
+
             int numElements = 1;
             var dimensions = new List<int>();
 
@@ -208,9 +217,8 @@ namespace CodeGeneration.Visitors
                 dimensions.Add(int.Parse(dimension.Value));
                 numElements *= dimensions.Last();
             }
-
+            
             var nodeEntry = this.GetCurrentScope().Get(fParam.Id, Classification.Variable);
-
 
             if (!this.Sizes.ContainsKey(fParam.Type)) {
                 // If it doesn't exist, the memory size will be -1. By multiplying it by the number of elements,
