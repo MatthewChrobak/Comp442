@@ -133,15 +133,16 @@ namespace CodeGeneration.Visitors
                 powerValue = 0;
             }
 
-
-            // Convert into the proper format. If we keep things under 1 billion, we can retain 9 digit floats.
-            while (realValue < 100000000 || realValue < -100000000) { // 100,000,000
-                realValue *= 10;
-                powerValue -= 1;
-            }
-            while (realValue >= 1000000000 || realValue < -1000000000) { // 1,000,000,000
-                realValue /= 10;
-                powerValue += 1;
+            if (realValue != 0) {
+                // Convert into the proper format. If we keep things under 1 billion, we can retain 9 digit floats.
+                while (realValue < 100000000 || realValue < -100000000) { // 100,000,000
+                    realValue *= 10;
+                    powerValue -= 1;
+                }
+                while (realValue >= 1000000000 || realValue < -1000000000) { // 1,000,000,000
+                    realValue /= 10;
+                    powerValue += 1;
+                }
             }
 
             int firstWord = (int)realValue;
@@ -288,7 +289,7 @@ namespace CodeGeneration.Visitors
 
             string floatPowerInstruction = instruction == "mul" ? "add" : "sub";
 
-            if (multOp.SemanticalType == "int") {
+            if (multOp.SemanticalType == "int" || instruction == "and") {
 
                 this.Load(multOp.LHS, "r2");
                 this.Load(multOp.RHS, "r3");
