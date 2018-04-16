@@ -14,10 +14,6 @@ namespace SyntacticAnalyzer.Parser
     {
         public IEnumerable<Section> GetReportSections(string inputFileName)
         {
-            foreach (var section in this._tokenizer.GetReportSections(inputFileName)) {
-                yield return section;
-            }
-
             bool validProgram = this.Verify();
             var validProgramSection = new Section("Valid Program");
             validProgramSection.AddRow("<p style='font-weight:lighter;'>This section displays whether or not the given program is lexically and syntactically correct.</p><hr style='margin-top:0'>");
@@ -32,8 +28,12 @@ namespace SyntacticAnalyzer.Parser
                 yield return section;
             }
 
-            var atoccStreamInput = new Section("AToCC Input Stream");
-            atoccStreamInput.AddRow("<p style='font-weight:lighter;'>This section contains the original token stream converted into AToCC format.</p><hr style='margin-top:0'>");
+            foreach (var section in this._tokenizer.GetReportSections(inputFileName)) {
+                yield return section;
+            }
+
+            var atoccStreamInput = new Section("Pruned Lexical AToCC Input Stream");
+            atoccStreamInput.AddRow("<p style='font-weight:lighter;'>This section contains the original token stream converted into AToCC format with comments removed.</p><hr style='margin-top:0'>");
             atoccStreamInput.AddRow($"<code style='color:black'>{this.TokenStream.FullAToCCFormat}</code>");
             yield return atoccStreamInput;
 

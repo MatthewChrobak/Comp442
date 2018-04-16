@@ -62,6 +62,7 @@ namespace CodeGeneration.Visitors
                         // Is the base-type defined?
                         if (Sizes.ContainsKey(type)) {
                             entry.EntryMemorySize *= -Sizes[type];
+                            entry.EntryMemorySize *= entry.MaxSizeDimensions.Aggregate(1, (a, b) => a * b);
                             size += entry.EntryMemorySize;
                         } else {
                             complete = false;
@@ -129,6 +130,9 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(VarDecl varDecl)
         {
+            if (!this.DoneClassList) {
+                return;
+            }
             int numElements = 1;
             var dimensions = new List<int>();
 

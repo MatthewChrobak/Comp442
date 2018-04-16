@@ -107,7 +107,12 @@ namespace CodeGeneration.Visitors
 
         public override void Visit(Integer integer)
         {
-            var bytes = BitConverter.GetBytes(int.Parse(integer.Value));
+            int result;
+            if (!int.TryParse(integer.Value, out result)) {
+                result = 0;
+            }
+
+            var bytes = BitConverter.GetBytes(result);
 
             for (int i = 0; i < bytes.Length; i++) {
                 InstructionStream.Add(new string[] {
@@ -126,10 +131,18 @@ namespace CodeGeneration.Visitors
             // Get the parts.
             if (floatVal.Contains("e")) {
                 var floatParts = floatVal.Split('e');
-                realValue = float.Parse(floatParts[0]);
-                powerValue = int.Parse(floatParts[1]);
+
+                if (!float.TryParse(floatParts[0], out realValue)) {
+                    realValue = 0;
+                }
+                if (!int.TryParse(floatParts[1], out powerValue)) {
+                    powerValue = 0;
+                }
+                
             } else {
-                realValue = float.Parse(floatVal);
+                if (!float.TryParse(floatVal, out realValue)) {
+                    realValue = 0;
+                }
                 powerValue = 0;
             }
 

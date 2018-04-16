@@ -89,6 +89,8 @@ namespace LexicalAnalyzer.Models
 
                 case TokenType.Semicolon:
                     return (";");
+                case TokenType.Comment:
+                    return "Comment";
             }
 
             return String.Empty;

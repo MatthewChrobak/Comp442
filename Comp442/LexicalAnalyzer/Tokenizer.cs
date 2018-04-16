@@ -11,6 +11,7 @@ namespace LexicalAnalyzer
     public partial class Tokenizer : IReportable
     {
         private bool OutputToErrorList = false;
+        private Queue<Token> allTokens;
 
         public TokenStream Parse(string[] characterStream, bool RealTokenStream = false)
         {
@@ -19,6 +20,7 @@ namespace LexicalAnalyzer
 
             var scanner = new Scanner(characterStream);
             var tokenStream = new Queue<Token>();
+            this.allTokens = new Queue<Token>();
 
             Token token;
             do {
@@ -39,6 +41,7 @@ namespace LexicalAnalyzer
             Token token;
             do {
                 token = this.NextTokenFromScanner(scanner);
+                this.allTokens.Enqueue(token);
             } while (token.Type == TokenType.Comment);
             return token;
         }
