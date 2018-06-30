@@ -1,0 +1,26 @@
+int Fibonacci(int val)
+{
+	if (val == 1) then {
+		return (1);
+	} else;
+	if (val == 2) then {
+		return (1);
+	} else;
+	
+	return (Fibonacci(val - 1) + Fibonacci(val - 2));
+};
+
+int Factorial(int val)
+{
+	if (val == 0) then {
+		return (1);
+	} else;
+	
+	return (val * Factorial(val - 1));
+};
+
+program
+{
+	put(Fibonacci(20));
+	put(Factorial(10));
+};

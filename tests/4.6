@@ -1,0 +1,20 @@
+class C
+{
+	int d;
+};
+
+class B
+{
+	C c;
+};
+
+class A
+{
+	B b;
+};
+program {
+	A a;
+	a.b.c.d = 20;
+	
+	put(a.b.c.d);
+};

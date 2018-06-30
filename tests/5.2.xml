@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Classes />
+  <Functions />
+  <MainFunction>
+    <Statements>
+      <VarDecl>
+        <Type>int</Type>
+        <Id>x</Id>
+        <Dimensions />
+      </VarDecl>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>x</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <Integer>
+          <Value>5</Value>
+        </Integer>
+      </Assignment>
+      <Put>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>x</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+      </Put>
+      <Put>
+        <Integer>
+          <Value>10</Value>
+        </Integer>
+      </Put>
+    </Statements>
+  </MainFunction>
+</Program>

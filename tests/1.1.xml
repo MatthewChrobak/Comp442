@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<Program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Classes />
+  <Functions />
+  <MainFunction>
+    <Statements>
+      <VarDecl>
+        <Type>int</Type>
+        <Id>x</Id>
+        <Dimensions />
+      </VarDecl>
+      <VarDecl>
+        <Type>float</Type>
+        <Id>y</Id>
+        <Dimensions />
+      </VarDecl>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>x</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <Integer>
+          <Value>10</Value>
+        </Integer>
+      </Assignment>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>y</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <Float>
+          <Value>20.0</Value>
+        </Float>
+      </Assignment>
+      <Put>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>x</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+      </Put>
+      <Put>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>y</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+      </Put>
+    </Statements>
+  </MainFunction>
+</Program>

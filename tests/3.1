@@ -1,0 +1,91 @@
+class Foo
+{
+	int x;
+	int y;
+};
+
+program
+{
+	int x;
+	int y;
+	int sourceArray[4][4];
+	int destinationArray[4][4];
+	Foo objX;
+	Foo objY;
+	Foo sourceFoo[4][4];
+	Foo destinationFoo[4][4];
+	
+	
+	x = 10;
+	objX.x = 10;
+	objX.y = 20;
+	
+	put(x);
+	put(objX.x);
+	put(objX.y);
+	
+	y = x;
+	objY = objX;
+	
+	put(y);
+	
+	// Perform more complex assignment.
+	
+	// Initialize the data.
+	for (int i = 0; i < 4; i = i + 1) {
+		for (int z = 0; z < 4; z = z + 1) {
+			sourceArray[i][z] = i * 4 + z;
+			sourceFoo[i][z].x = i * 4 + z + 1;
+			sourceFoo[i][z].y = i * 4 + z + 2;
+		};
+	};
+	
+	// Assign the whole thing.
+	destinationArray = sourceArray;
+	destinationFoo = sourceFoo;
+	
+	// Print it.
+	for (int i = 0; i < 4; i = i + 1) {
+		for (int z = 0; z < 4; z = z + 1) {
+			put(destinationArray[i][z]);
+			put(destinationFoo[i][z].x);
+			put(destinationFoo[i][z].y);
+			
+			// Reset it for the next assignment.
+			destinationArray[i][z] = 0; 
+			destinationFoo[i][z].x = 0;
+			destinationFoo[i][z].y = 0;
+		};
+	};
+	
+	// Assign it in chunks.
+	for (int i = 0; i < 4; i = i + 1) {
+		destinationArray[i] = sourceArray[i];
+		destinationFoo[i] = sourceFoo[i];
+	};
+	
+	// Print it.
+	for (int i = 0; i < 4; i = i + 1) {
+		for (int z = 0; z < 4; z = z + 1) {
+			put(destinationArray[i][z]);
+			put(destinationFoo[i][z].x);
+			put(destinationFoo[i][z].y);
+			
+			// Reset it for the next assignment.
+			destinationArray[i][z] = 0; 
+			destinationFoo[i][z].x = 0;
+			destinationFoo[i][z].y = 0;
+		};
+	};
+	
+	// Assign it in smallest chunks.
+	for (int i = 0; i < 4; i = i + 1) {
+		for (int z = 0; z < 4; z = z + 1) {	
+			destinationArray[i][z] = sourceArray[i][z];
+			destinationFoo[i][z] = sourceFoo[i][z];
+			put(destinationArray[i][z]);
+			put(destinationFoo[i][z].x);
+			put(destinationFoo[i][z].y);
+		};
+	};
+};

@@ -1,0 +1,36 @@
+class Foo
+{
+	int x;
+	int y;
+	WeHaveToGoDeeper deeper;
+	int Initialize();
+	int GetXPlusYPlusZ();
+};
+
+class WeHaveToGoDeeper
+{
+	int z;
+};
+
+
+int Foo::Initialize()
+{
+	x = 10;
+	y = 20;
+	deeper.z = 30;
+	return (1);
+};
+
+int Foo::GetXPlusYPlusZ()
+{
+	return (x + y + deeper.z);
+};
+
+program
+{
+	Foo object;
+	int result;
+	
+	result = object.Initialize();
+	put(object.GetXPlusYPlusZ());
+};

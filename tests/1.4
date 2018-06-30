@@ -1,0 +1,32 @@
+class Parent
+{
+	int x;
+	int z;
+};
+
+class Child : Parent
+{
+	int y;
+};
+
+program
+{
+	Child object;
+	Child otherObject;
+	
+	object.x = 10;
+	object.y = 20;
+	object.z = 25;
+	
+	otherObject.x = 30;
+	otherObject.y = 40;
+	otherObject.z = 45;
+	
+	put(object.x);
+	put(object.y);
+	put(object.z);
+	
+	put(otherObject.x);
+	put(otherObject.y);
+	put(otherObject.z);
+};

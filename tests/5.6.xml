@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<Program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Classes>
+    <Class>
+      <InheritingClasses>
+        <IDs />
+      </InheritingClasses>
+      <ClassName>Foo</ClassName>
+      <MemberList />
+    </Class>
+  </Classes>
+  <Functions />
+  <MainFunction>
+    <Statements>
+      <VarDecl>
+        <Type>Foo</Type>
+        <Id>hack</Id>
+        <Dimensions />
+      </VarDecl>
+      <VarDecl>
+        <Type>int</Type>
+        <Id>data</Id>
+        <Dimensions />
+      </VarDecl>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>data</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <Integer>
+          <Value>10</Value>
+        </Integer>
+      </Assignment>
+      <Put>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>hack</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+      </Put>
+    </Statements>
+  </MainFunction>
+</Program>

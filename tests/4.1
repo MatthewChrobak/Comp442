@@ -1,0 +1,43 @@
+class Foo
+{
+	int val1;
+	int val2;
+};
+
+program 
+{
+	int simpleArray[1][2][3][4][5];
+	Foo complexArray[1][2][3][4][5];
+	int i;
+	
+	i = 0;
+	
+	for (int a = 0; a < 1; a = a + 1) {
+		for (int b = 0; b < 2; b = b + 1) {
+			for (int c = 0; c < 3; c = c + 1) {
+				for (int d = 0; d < 4; d = d + 1) {
+					for (int e = 0; e < 5; e = e + 1) {
+						simpleArray[a][b][c][d][e] = i;
+						complexArray[a][b][c][d][e].val1 = i;
+						complexArray[a][b][c][d][e].val2 = i;
+						i = i + 1;
+					};
+				};
+			};
+		};
+	};
+	
+	for (int a = 0; a < 1; a = a + 1) {
+		for (int b = 0; b < 2; b = b + 1) {
+			for (int c = 0; c < 3; c = c + 1) {
+				for (int d = 0; d < 4; d = d + 1) {
+					for (int e = 0; e < 5; e = e + 1) {
+						put(simpleArray[a][b][c][d][e]);
+						put(complexArray[a][b][c][d][e].val1);
+						put(complexArray[a][b][c][d][e].val2);
+					};
+				};
+			};
+		};
+	};
+};

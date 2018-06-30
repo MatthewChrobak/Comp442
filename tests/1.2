@@ -1,0 +1,23 @@
+program
+{
+	int array[10];
+	int multiArray[5][10][20];
+	int num;
+	
+	for (int i = 0; i < 10; i = i + 1) {
+		array[i] = i;
+		put(array[i]);
+	};
+	
+	num = 0;
+	
+	for (int x = 0; x < 5; x = x + 1) {
+		for (int y = 0; y < 10; y = y + 1) {
+			for (int z = 0; z < 20; z = z + 1) {
+				multiArray[x][y][z] = num;
+				num = num + 1;
+				put(multiArray[x][y][z]);
+			};
+		};
+	};
+};

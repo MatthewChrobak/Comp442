@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<Program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Classes />
+  <Functions>
+    <Function>
+      <ReturnType>int</ReturnType>
+      <FunctionName>A</FunctionName>
+      <Parameters />
+      <Implementation>
+        <Statements>
+          <VarDecl>
+            <Type>int</Type>
+            <Id>result</Id>
+            <Dimensions />
+          </VarDecl>
+          <Put>
+            <Integer>
+              <Value>1</Value>
+            </Integer>
+          </Put>
+          <Assignment>
+            <Variable>
+              <Elements>
+                <DataMember>
+                  <Id>result</Id>
+                </DataMember>
+              </Elements>
+            </Variable>
+            <OtherVariable>
+              <Elements>
+                <FunctionCall>
+                  <Id>B</Id>
+                  <Parameters>
+                    <Expressions />
+                  </Parameters>
+                </FunctionCall>
+              </Elements>
+            </OtherVariable>
+          </Assignment>
+        </Statements>
+      </Implementation>
+    </Function>
+    <Function>
+      <ReturnType>int</ReturnType>
+      <FunctionName>B</FunctionName>
+      <Parameters />
+      <Implementation>
+        <Statements>
+          <VarDecl>
+            <Type>int</Type>
+            <Id>result</Id>
+            <Dimensions />
+          </VarDecl>
+          <Put>
+            <Integer>
+              <Value>2</Value>
+            </Integer>
+          </Put>
+          <Assignment>
+            <Variable>
+              <Elements>
+                <DataMember>
+                  <Id>result</Id>
+                </DataMember>
+              </Elements>
+            </Variable>
+            <OtherVariable>
+              <Elements>
+                <FunctionCall>
+                  <Id>C</Id>
+                  <Parameters>
+                    <Expressions />
+                  </Parameters>
+                </FunctionCall>
+              </Elements>
+            </OtherVariable>
+          </Assignment>
+        </Statements>
+      </Implementation>
+    </Function>
+    <Function>
+      <ReturnType>int</ReturnType>
+      <FunctionName>C</FunctionName>
+      <Parameters />
+      <Implementation>
+        <Statements>
+          <Put>
+            <Integer>
+              <Value>3</Value>
+            </Integer>
+          </Put>
+        </Statements>
+      </Implementation>
+    </Function>
+  </Functions>
+  <MainFunction>
+    <Statements>
+      <VarDecl>
+        <Type>int</Type>
+        <Id>result</Id>
+        <Dimensions />
+      </VarDecl>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>result</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <OtherVariable>
+          <Elements>
+            <FunctionCall>
+              <Id>A</Id>
+              <Parameters>
+                <Expressions />
+              </Parameters>
+            </FunctionCall>
+          </Elements>
+        </OtherVariable>
+      </Assignment>
+    </Statements>
+  </MainFunction>
+</Program>

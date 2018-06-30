@@ -1,0 +1,41 @@
+class InnerMost
+{
+	int val;
+};
+
+class SubType
+{
+	int y;
+	int z;
+	InnerMost other;
+};
+
+class Foo
+{
+	int x;
+	SubType element;
+};
+
+int Foo()
+{
+};
+
+program
+{
+	Foo foo;
+	Foo foo2;
+	int array[10][10];
+	
+	foo.x = 1;
+	foo.element.y = 2;
+	foo.element.z = 3;
+	foo.element.other.val = 4;
+	foo2.element.other.val = 5;
+	
+	foo2.element.y = 8;
+	foo2.element.z = 4;
+	
+	array[((foo.x * (foo.element.y + foo.element.z)) - foo.element.other.val) * foo2.element.other.val][foo2.element.y / foo2.element.z] = 2147000000;
+	
+	put(array[5][2]);
+};

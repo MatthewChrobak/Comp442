@@ -1,0 +1,29 @@
+class Foo
+{
+	int x;
+	int y;
+	int Initialize();
+	int GetXPlusY();
+};
+
+
+int Foo::Initialize()
+{
+	x = 10;
+	y = 20;
+	return (1);
+};
+
+int Foo::GetXPlusY()
+{
+	return (x + y);
+};
+
+program
+{
+	Foo object;
+	int result;
+	
+	result = object.Initialize();
+	put(object.GetXPlusY());
+};

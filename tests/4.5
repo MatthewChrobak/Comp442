@@ -1,0 +1,23 @@
+class SubLawre
+{
+	int value;
+};
+
+class Lawre
+{
+	int otherValue;
+	SubLawre value[12];
+};
+
+program
+{
+	Lawre laurie;
+	
+	for (int i = 0; i < 12; i = i + 1) {
+		laurie.value[i].value = i;
+	};
+	
+	for (int i = 0; i < 12; i = i + 1) {
+		put(laurie.value[i].value);
+	};
+};

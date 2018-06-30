@@ -1,0 +1,49 @@
+class InnerMost
+{
+	int val;
+};
+
+class SubType
+{
+	int y;
+	int z;
+	InnerMost other;
+};
+
+class Foo
+{
+	int x;
+	SubType element;
+};
+
+int Foo()
+{
+	Foo foo;
+	Foo foo2;
+	
+	foo.x = 10;
+	foo.element.y = 20;
+	foo.element.z = 30;
+	foo.element.other.val = 35;
+	
+	foo2.x = 40;
+	foo2.element.y = 50;
+	foo2.element.z = 60;
+	foo2.element.other.val = 65;
+	
+	put(foo.x);
+	put(foo.element.y);
+	put(foo.element.z);
+	put(foo.element.other.val);
+	
+	put(foo2.x);
+	put(foo2.element.y);
+	put(foo2.element.z);
+	put(foo2.element.other.val);
+};
+
+program
+{
+	int result;
+	result = Foo();
+};

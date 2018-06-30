@@ -1,0 +1,14 @@
+class Foo
+{
+
+};
+
+program {
+	Foo hack;
+	int data;
+	
+	data = 10;
+	
+	// Prints out 0 even though 'hack' and 'data' share the same memory offset.
+	put(hack);
+};

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<Program xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Classes />
+  <Functions>
+    <Function>
+      <ReturnType>int</ReturnType>
+      <FunctionName>Foo</FunctionName>
+      <Parameters />
+      <Implementation>
+        <Statements>
+          <Put>
+            <Integer>
+              <Value>1234</Value>
+            </Integer>
+          </Put>
+        </Statements>
+      </Implementation>
+    </Function>
+  </Functions>
+  <MainFunction>
+    <Statements>
+      <VarDecl>
+        <Type>int</Type>
+        <Id>result</Id>
+        <Dimensions />
+      </VarDecl>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>result</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <OtherVariable>
+          <Elements>
+            <FunctionCall>
+              <Id>Foo</Id>
+              <Parameters>
+                <Expressions />
+              </Parameters>
+            </FunctionCall>
+          </Elements>
+        </OtherVariable>
+      </Assignment>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>result</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <OtherVariable>
+          <Elements>
+            <FunctionCall>
+              <Id>Foo</Id>
+              <Parameters>
+                <Expressions />
+              </Parameters>
+            </FunctionCall>
+          </Elements>
+        </OtherVariable>
+      </Assignment>
+      <Assignment>
+        <Variable>
+          <Elements>
+            <DataMember>
+              <Id>result</Id>
+            </DataMember>
+          </Elements>
+        </Variable>
+        <OtherVariable>
+          <Elements>
+            <FunctionCall>
+              <Id>Foo</Id>
+              <Parameters>
+                <Expressions />
+              </Parameters>
+            </FunctionCall>
+          </Elements>
+        </OtherVariable>
+      </Assignment>
+    </Statements>
+  </MainFunction>
+</Program>
